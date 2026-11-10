@@ -27,7 +27,7 @@ jobs:
       - run: sudo apt-get install -y sshpass
       - name: Run setup-server.sh
         run: |
-          sshpass -e ssh -o StrictHostKeyChecking=accept-new -o PreferredAuthentications=password \
+          sshpass -e ssh -o StrictHostKeyChecking=accept-new -o PreferredAuthentications=password,keyboard-interactive \
             root@"$HOST" 'bash -s' < deploy/setup-server.sh
       - name: Check site
         run: curl -sS -o /dev/null -w "HTTP %{http_code}\n" "http://$HOST/"
