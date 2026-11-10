@@ -17,7 +17,8 @@ export default defineConfig({
 			// На Pages без своего домена сайт живёт в /landos-aboy-trade.
 			// BASE_PATH задаётся в GitHub Actions; локально пусто.
 			paths: {
-				base: (process.env.BASE_PATH ?? '') as '' | `/${string}`
+				base: (process.env.BASE_PATH ?? '') as '' | `/${string}`,
+				relative: false
 			}
 		})
 	]
