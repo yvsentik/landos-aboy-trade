@@ -1,15 +1,17 @@
 #!/bin/bash
 # Разовая настройка сервера (Ubuntu/Debian) под лендинг landos-aboy-trade.
-# Запуск от root:  bash setup-server.sh
+# Запуск от root:  DOMAIN=example.ru bash setup-server.sh
+# Без DOMAIN сайт работает только по HTTP на IP.
 set -euo pipefail
 
+DOMAIN=${DOMAIN:-}
 REPO=https://github.com/yvsentik/landos-aboy-trade.git
 SRC=/opt/landos
 WEB=/var/www/landos
 
 # 1. Пакеты: nginx, git, rsync, Node.js 24
 apt-get update
-apt-get install -y nginx git rsync curl ca-certificates
+apt-get install -y nginx git rsync curl ca-certificates certbot python3-certbot-nginx
 if ! node -v 2>/dev/null | grep -q '^v24'; then
   curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
   apt-get install -y nodejs
@@ -43,7 +45,7 @@ chmod +x /usr/local/bin/landos-deploy
 cat > /etc/nginx/sites-available/landos <<'EOF'
 server {
     listen 80 default_server;
-    server_name _;
+    server_name __SERVER_NAME__;
     root /var/www/landos;
     index index.html;
 
@@ -59,6 +61,7 @@ server {
     gzip_types text/css application/javascript application/json image/svg+xml;
 }
 EOF
+sed -i "s/__SERVER_NAME__/${DOMAIN:-_}/" /etc/nginx/sites-available/landos
 rm -f /etc/nginx/sites-enabled/default
 ln -sf /etc/nginx/sites-available/landos /etc/nginx/sites-enabled/landos
 nginx -t
@@ -97,5 +100,14 @@ if command -v ufw >/dev/null && ufw status | grep -q active; then
   ufw allow 'Nginx Full'
 fi
 
-echo
-echo "Готово: http://$(hostname -I | awk '{print $1}')/"
+# 8. HTTPS через Let's Encrypt (продление — certbot.timer, ставится пакетом)
+if [ -n "$DOMAIN" ]; then
+  certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos \
+    --register-unsafely-without-email --keep-until-expiring --redirect
+  systemctl enable --now certbot.timer 2>/dev/null || true
+  echo
+  echo "Готово: https://$DOMAIN/"
+else
+  echo
+  echo "Готово: http://$(hostname -I | awk '{print $1}')/"
+fi

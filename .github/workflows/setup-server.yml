@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HOST: 194.58.95.244
+      DOMAIN: fotooboi.oboitrade.ru
       SSHPASS: ${{ secrets.SERVER_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
@@ -24,10 +25,20 @@ jobs:
             echo "::error::Добавьте секрет SERVER_PASSWORD в Settings → Secrets and variables → Actions"
             exit 1
           fi
+      - name: Check DNS
+        run: |
+          IPS=$(dig +short A "$DOMAIN" @1.1.1.1)
+          echo "$DOMAIN → ${IPS:-нет A-записи}"
+          if ! echo "$IPS" | grep -qx "$HOST"; then
+            echo "::error::A-запись $DOMAIN должна указывать на $HOST"
+            exit 1
+          fi
       - run: sudo apt-get install -y sshpass
       - name: Run setup-server.sh
         run: |
           sshpass -e ssh -o StrictHostKeyChecking=accept-new -o PreferredAuthentications=password,keyboard-interactive \
-            root@"$HOST" 'bash -s' < deploy/setup-server.sh
+            root@"$HOST" "DOMAIN=$DOMAIN bash -s" < deploy/setup-server.sh
       - name: Check site
-        run: curl -sS -o /dev/null -w "HTTP %{http_code}\n" "http://$HOST/"
+        run: |
+          curl -sS -o /dev/null -w "http  → HTTP %{http_code} %{redirect_url}\n" "http://$DOMAIN/"
+          curl -sS -o /dev/null -w "https → HTTP %{http_code}\n" "https://$DOMAIN/"
