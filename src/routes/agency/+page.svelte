@@ -4,7 +4,7 @@
 
 	// Лендинг агентства «Фальков»: блоки и дизайн okonti.ru, контент marketingovoe-agentstvo-spb.ru
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const a = (f: string) => asset(`/agency/${f}` as any);
+	const a = (f: string) => asset(`/img/agency/${f}` as any);
 
 	const phone = '+7 993 982-32-04';
 	const tel = 'tel:+79939823204';
