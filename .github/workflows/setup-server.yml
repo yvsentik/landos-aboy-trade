@@ -1,0 +1,33 @@
+name: Setup server
+
+# Запускает deploy/setup-server.sh на сервере по SSH.
+# Нужен секрет репозитория SERVER_PASSWORD (пароль root).
+on:
+  push:
+    branches: [deploy-server-setup]
+    paths:
+      - deploy/**
+      - .github/workflows/setup-server.yml
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    env:
+      HOST: 194.58.95.244
+      SSHPASS: ${{ secrets.SERVER_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check secret
+        run: |
+          if [ -z "$SSHPASS" ]; then
+            echo "::error::Добавьте секрет SERVER_PASSWORD в Settings → Secrets and variables → Actions"
+            exit 1
+          fi
+      - run: sudo apt-get install -y sshpass
+      - name: Run setup-server.sh
+        run: |
+          sshpass -e ssh -o StrictHostKeyChecking=accept-new -o PreferredAuthentications=password \
+            root@"$HOST" 'bash -s' < deploy/setup-server.sh
+      - name: Check site
+        run: curl -sS -o /dev/null -w "HTTP %{http_code}\n" "http://$HOST/"
