@@ -4,8 +4,8 @@
 	import Icon from '#lib/components/Icon.svelte';
 	import UtpGrid from '#lib/components/UtpGrid.svelte';
 	import ProductTiles from '#lib/components/ProductTiles.svelte';
-	import StyleGrid from '#lib/components/StyleGrid.svelte';
-	import RoomRow from '#lib/components/RoomRow.svelte';
+	import CatalogTopics from '#lib/components/CatalogTopics.svelte';
+	import CatalogRooms from '#lib/components/CatalogRooms.svelte';
 	import ColorGuarantee from '#lib/components/ColorGuarantee.svelte';
 	import Steps from '#lib/components/Steps.svelte';
 	import Production from '#lib/components/Production.svelte';
@@ -49,8 +49,8 @@
 
 <UtpGrid compact />
 <ProductTiles />
-<StyleGrid />
-<RoomRow />
+<CatalogTopics />
+<CatalogRooms />
 <ColorGuarantee />
 <Steps />
 <Production />
