@@ -27,7 +27,6 @@
 	<div class="top wrap">
 		<span><Icon name="factory" size={16} />Собственное производство в Москве</span>
 		<span><Icon name="clock" size={16} />{brand.hours}</span>
-		<a href="#lead" class="gift"><Icon name="gift" size={16} />Пробник бесплатно</a>
 	</div>
 
 	<div class="main wrap">
@@ -38,6 +37,8 @@
 				<small>{brand.tagline}</small>
 			</span>
 		</a>
+
+		<a href="#lead" class="gift"><Icon name="gift" size={16} />Пробник бесплатно</a>
 
 		<a class="phone" href={brand.phoneHref}>
 			{brand.phone}
@@ -118,14 +119,17 @@
 		color: var(--green);
 	}
 
-	.top .gift {
-		margin-left: auto;
-		color: var(--pink);
+	.gift {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		background: var(--pink);
+		color: #fff;
 		font-weight: 600;
-	}
-
-	.top .gift :global(svg) {
-		color: var(--pink);
+		font-size: 14px;
+		padding: 6px 12px;
+		border-radius: 8px;
+		white-space: nowrap;
 	}
 
 	.main {
@@ -184,6 +188,7 @@
 		color: var(--navy);
 		line-height: 1.1;
 		margin-left: auto;
+		white-space: nowrap;
 	}
 
 	.phone small {
@@ -295,6 +300,28 @@
 		nav a {
 			padding: 12px 0;
 			border-top: 1px solid var(--line);
+		}
+	}
+
+	@media (max-width: 600px) {
+		.mbar a {
+			font-size: 15px;
+			gap: 5px;
+			padding: 16px 2px;
+		}
+		.mbar :global(svg) {
+			width: 20px;
+			height: 20px;
+		}
+		.gift {
+			font-size: 12px;
+			padding: 5px 8px;
+		}
+		.phone {
+			display: none;
+		}
+		.burger {
+			margin-left: auto;
 		}
 	}
 

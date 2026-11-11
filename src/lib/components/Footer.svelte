@@ -6,7 +6,7 @@
 	<div class="wrap cols">
 		<div>
 			<b class="logo">{brand.name}</b>
-			<p>Производим фотообои и фрески в Москве. Печать по размеру стены от 3 дней.</p>
+			<p>Производим фотообои и фрески в Москве. Печатаем по вашему размеру от 3 дней.</p>
 			<a class="phone" href={brand.phoneHref}>{brand.phone}</a>
 			<p>{brand.hours}</p>
 		</div>
@@ -36,6 +36,7 @@
 	</div>
 	<div class="wrap bottom">
 		<span>© 2026 {brand.name}. {brand.city}</span>
+		<span>* Бесплатная доставка по Москве — при заказе от 30 000 ₽</span>
 		<span>Политика конфиденциальности</span>
 	</div>
 </footer>
