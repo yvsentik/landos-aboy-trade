@@ -24,7 +24,7 @@
 				<p>{text}</p>
 				<div class="alt">
 					<a href={brand.phoneHref}><Icon name="phone" size={18} />{brand.phone}</a>
-					<a href={brand.whatsapp}><Icon name="chat" size={18} />WhatsApp</a>
+					<a href={brand.max}><Icon name="chat" size={18} />Макс</a>
 					<a href={brand.telegram}><Icon name="send" size={18} />Telegram</a>
 				</div>
 			</div>

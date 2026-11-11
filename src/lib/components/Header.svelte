@@ -18,9 +18,9 @@
 
 <!-- Мобильная панель действий, как у okonti.ru: всегда сверху -->
 <div class="mbar">
-	<a href={calcHref}><Icon name="calc" size={18} />Рассчитать</a>
-	<a href={brand.phoneHref}><Icon name="phone" size={18} />Позвонить</a>
-	<a href={brand.whatsapp}><Icon name="chat" size={18} />Написать</a>
+	<a href={calcHref}><Icon name="calc" size={26} />Рассчитать</a>
+	<a href={brand.phoneHref}><Icon name="phone" size={26} />Позвонить</a>
+	<a href={brand.max}><Icon name="chat" size={26} />Написать</a>
 </div>
 
 <header>
@@ -45,9 +45,9 @@
 		</a>
 
 		<div class="actions">
-			<a href={calcHref}><Icon name="calc" size={20} />Рассчитать</a>
-			<a href={brand.phoneHref}><Icon name="phone" size={20} />Позвонить</a>
-			<a href={brand.whatsapp}><Icon name="chat" size={20} />Написать</a>
+			<a href={calcHref}><Icon name="calc" size={30} />Рассчитать</a>
+			<a href={brand.phoneHref}><Icon name="phone" size={30} />Позвонить</a>
+			<a href={brand.max}><Icon name="chat" size={30} />Написать</a>
 		</div>
 
 		<button class="burger" aria-label="Меню" aria-expanded={open} onclick={() => (open = !open)}>
@@ -82,8 +82,8 @@
 		gap: 6px;
 		color: #fff;
 		font-weight: 600;
-		font-size: 14px;
-		padding: 12px 4px;
+		font-size: 18px;
+		padding: 18px 4px;
 	}
 
 	.mbar a + a {
@@ -93,7 +93,8 @@
 	header {
 		background: #fff;
 		border-bottom: 1px solid var(--line);
-		position: relative;
+		position: sticky;
+		top: 0;
 		z-index: 20;
 	}
 
@@ -202,10 +203,11 @@
 	.actions a {
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		gap: 12px;
 		color: #fff;
-		font-weight: 600;
-		padding: 12px 16px;
+		font-weight: 700;
+		font-size: 21px;
+		padding: 18px 24px;
 		border-radius: 8px;
 	}
 
@@ -261,6 +263,9 @@
 	@media (max-width: 820px) {
 		.mbar {
 			display: grid;
+		}
+		header {
+			position: relative;
 		}
 		.top {
 			display: none;

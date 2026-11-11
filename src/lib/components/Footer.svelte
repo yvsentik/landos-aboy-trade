@@ -6,7 +6,7 @@
 	<div class="wrap cols">
 		<div>
 			<b class="logo">{brand.name}</b>
-			<p>Производим фотообои и фрески в Москве. Печать по размеру стены за 2 дня.</p>
+			<p>Производим фотообои и фрески в Москве. Печать по размеру стены от 3 дней.</p>
 			<a class="phone" href={brand.phoneHref}>{brand.phone}</a>
 			<p>{brand.hours}</p>
 		</div>

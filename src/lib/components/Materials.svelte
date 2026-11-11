@@ -37,9 +37,13 @@
 	.card {
 		border-radius: var(--radius);
 		padding: 22px;
-		display: grid;
+		display: flex;
+		flex-direction: column;
 		gap: 14px;
-		align-content: start;
+	}
+
+	.card ul {
+		flex: 1;
 	}
 
 	ul {

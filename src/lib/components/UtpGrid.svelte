@@ -11,7 +11,7 @@
 		<div class="grid" class:compact>
 			{#each utp as u}
 				<div class="item">
-					<span class="ic"><Icon name={u.icon} size={compact ? 22 : 28} /></span>
+					<span class="ic"><Icon name={u.icon} size={compact ? 36 : 28} /></span>
 					<div>
 						<h3>{u.title}</h3>
 						{#if !compact}<p>{u.text}</p>{/if}
@@ -76,8 +76,14 @@
 	}
 
 	.compact h3 {
-		font-size: 15px;
-		font-weight: 500;
+		font-size: 21px;
+		font-weight: 600;
+	}
+
+	.compact .ic {
+		width: 78px;
+		height: 78px;
+		border-radius: 20px;
 	}
 
 	@media (max-width: 980px) {
@@ -97,8 +103,8 @@
 			padding: 16px;
 		}
 		.compact {
-			grid-template-columns: 1fr 1fr;
-			gap: 8px;
+			grid-template-columns: 1fr;
+			gap: 10px;
 		}
 		.compact .item {
 			flex-direction: row;
@@ -109,12 +115,12 @@
 			border-radius: 12px;
 		}
 		.compact .ic {
-			width: 36px;
-			height: 36px;
-			border-radius: 10px;
+			width: 54px;
+			height: 54px;
+			border-radius: 14px;
 		}
 		.compact h3 {
-			font-size: 13px;
+			font-size: 18px;
 			line-height: 1.25;
 		}
 	}
