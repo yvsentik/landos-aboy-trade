@@ -18,8 +18,7 @@
 		['Позиции', '#positions'],
 		['Услуги', '#services'],
 		['Цены', '#prices'],
-		['Кейсы', '#cases'],
-		['Бесплатный тест', '#test']
+		['Кейсы', '#cases']
 	];
 
 	const logos = ['rosneft.svg', 'tatneft.svg', 'ekoniva.svg', 'korrus.svg', 'aravia.svg', 'psy-chat.svg', 'sotovik.svg'];
