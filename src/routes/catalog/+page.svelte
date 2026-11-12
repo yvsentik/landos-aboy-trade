@@ -4,10 +4,13 @@
 	import Header from '#lib/components/Header.svelte';
 	import Footer from '#lib/components/Footer.svelte';
 	import Icon from '#lib/components/Icon.svelte';
+	import { lsColors } from '#lib/lastanza.ts';
+
+	const HEX: Record<string, string> = Object.fromEntries(lsColors.map((c) => [c.name, c.hex]));
 
 	// Полный каталог фресок, спарсенный с lastanza.ru/catalog (static/catalog.json).
 	// s — адрес страницы, a — артикул, t — коллекция, i — фото, p — цена от, ₽/м², g — теги
-	type Item = { s: string; a: string; t: string; i: string; p: number; g: Record<string, string[]> };
+	type Item = { s: string; a: string; t: string; i: string; p: number; g: Record<string, string[]>; c: string[] };
 
 	const GROUPS = ['Коллекция', 'Категория', 'По назначению', 'Цвет', 'По ориентации'];
 	const LABEL: Record<string, string> = {
@@ -55,6 +58,8 @@
 			})
 		) as Record<string, [string, number][]>
 	);
+
+	const bySlug = $derived(new Map(items.map((it) => [it.s, it])));
 
 	const filtered = $derived(
 		items.filter((it) => {
@@ -158,6 +163,20 @@
 						<a class="pic" href={resolve('/catalog/[slug]', { slug: it.s })}>
 							<img src={it.i} alt={`${it.t} арт. ${it.a}`} loading="lazy" />
 						</a>
+						{#if it.c.length || it.g['Цвет']?.length}
+							<div class="vars">
+								{#each it.c.slice(0, 5) as v}
+									{@const x = bySlug.get(v)}
+									{#if x}
+										<a href={resolve('/catalog/[slug]', { slug: v })} title="Арт. {x.a}" style:background-image="url({x.i})"></a>
+									{/if}
+								{/each}
+								{#if it.c.length > 5}<span class="more-v">+{it.c.length - 5}</span>{/if}
+								<span class="dots">
+									{#each it.g['Цвет'] ?? [] as c}<i title={c} style:background={HEX[c] ?? '#ccc'}></i>{/each}
+								</span>
+							</div>
+						{/if}
 						<div class="body">
 							<small>{it.t}</small>
 							<a href={resolve('/catalog/[slug]', { slug: it.s })}><b>Арт. {it.a}</b></a>
@@ -348,6 +367,44 @@
 		aspect-ratio: 390 / 300;
 		object-fit: cover;
 		background: var(--soft-2);
+	}
+
+	.vars {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		padding: 10px 14px 0;
+	}
+
+	.vars a {
+		width: 30px;
+		height: 30px;
+		border-radius: 6px;
+		background-size: cover;
+		background-position: center;
+		box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.1);
+	}
+
+	.vars a:hover {
+		outline: 2px solid var(--blue);
+	}
+
+	.more-v {
+		font-size: 12px;
+		color: var(--muted);
+	}
+
+	.dots {
+		margin-left: auto;
+		display: flex;
+		gap: 3px;
+	}
+
+	.dots i {
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15);
 	}
 
 	.body {
