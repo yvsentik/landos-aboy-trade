@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { brand, styles, rooms } from '#lib/data.ts';
 
-	let { home = '' }: { home?: string } = $props();
+	let { home = '', lite = false }: { home?: string; lite?: boolean } = $props();
 </script>
 
 <footer>
@@ -15,25 +15,34 @@
 			<p>{brand.hours}</p>
 		</div>
 		<div>
-			<h4>Каталог</h4>
+			<h4>{lite ? 'Печатаем' : 'Каталог'}</h4>
 			<a href="{home}#catalog">Фотообои</a>
 			<a href="{home}#catalog">Фрески</a>
 			<a href="{home}#catalog">Детские обои</a>
 			<a href="{home}#catalog">Бесшовные обои</a>
 			<a href="{home}#lead">Своё изображение</a>
 		</div>
-		<div>
-			<h4>Стили</h4>
-			{#each styles.slice(0, 6) as s}<a href="{home}#styles">{s.name}</a>{/each}
-		</div>
-		<div>
-			<h4>Комнаты</h4>
-			{#each rooms.slice(0, 6) as r}<a href="{home}#styles">{r.name}</a>{/each}
-		</div>
+		{#if lite}
+			<div>
+				<h4>Отправить изображение</h4>
+				<a href={brand.max}>Макс</a>
+				<a href={brand.telegram}>Telegram</a>
+				<a href={brand.phoneHref}>Позвонить</a>
+			</div>
+		{:else}
+			<div>
+				<h4>Стили</h4>
+				{#each styles.slice(0, 6) as s}<a href="{home}#styles">{s.name}</a>{/each}
+			</div>
+			<div>
+				<h4>Комнаты</h4>
+				{#each rooms.slice(0, 6) as r}<a href="{home}#styles">{r.name}</a>{/each}
+			</div>
+		{/if}
 		<div>
 			<h4>Покупателям</h4>
 			<a href="{home}#steps">Доставка и монтаж</a>
-			<a href="{home}#materials">Цены</a>
+			<a href="{home}{lite ? '#catalog' : '#materials'}">Цены</a>
 			<a href="{home}#lead">Бесплатный пробник</a>
 			<a href="{home}#production">Производство</a>
 		</div>
