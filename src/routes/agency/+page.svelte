@@ -17,6 +17,7 @@
 	const nav = [
 		['Позиции', '#positions'],
 		['Услуги', '#services'],
+		['Цены', '#prices'],
 		['Кейсы', '#cases'],
 		['Бесплатный тест', '#test']
 	];
@@ -139,7 +140,7 @@
 				{/each}
 			</div>
 
-			<h3 class="h3">Все услуги с ценами</h3>
+			<h3 class="h3" id="prices">Все услуги с ценами</h3>
 			<div class="tabs" role="tablist">
 				{#each groups as g, i}
 					<button type="button" role="tab" aria-selected={tab === i} class:on={tab === i} onclick={() => (tab = i)}>{g.name}<span>{g.items.length}</span></button>
@@ -229,6 +230,7 @@
 
 <style>
 	section { padding-top: 64px; }
+	section, #prices { scroll-margin-top: 8px; }
 	h2 { font-size: clamp(24px, 3vw, 32px); }
 	.sub { color: var(--muted); margin-top: 6px; }
 	.btn { border-radius: 8px; }
@@ -361,7 +363,8 @@
 	@media (max-width: 640px) {
 		section { padding-top: 44px; }
 		.mbar { display: grid; }
-		nav { display: none; }
+		nav { gap: 20px; overflow-x: auto; scrollbar-width: none; white-space: nowrap; font-size: 15px; padding-bottom: 12px; }
+		section, #prices { scroll-margin-top: 52px; }
 		.phone { font-size: 16px; }
 		.banner { padding: 22px 18px; margin-top: 16px; gap: 24px; }
 		.btxt p { font-size: 16px; }
