@@ -10,7 +10,7 @@
 		<div class="section-head">
 			<div>
 				<h2>{title}</h2>
-				<p>Начните со стиля — подберём сюжет, цвет и материал</p>
+				<p>Начните со стиля – подберём сюжет, цвет и материал</p>
 			</div>
 			<a class="link" href="#lead">Весь каталог {catalogSize} →</a>
 		</div>

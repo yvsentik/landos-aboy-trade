@@ -3,7 +3,7 @@
 	import Icon from './Icon.svelte';
 </script>
 
-<!-- Карточки материалов — по образцу «серий» окон на okonti.ru -->
+<!-- Карточки материалов – по образцу «серий» окон на okonti.ru -->
 <section id="materials">
 	<div class="wrap">
 		<div class="section-head">

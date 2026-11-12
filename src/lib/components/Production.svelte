@@ -3,7 +3,7 @@
 
 	let {
 		title = 'Наше производство в Москве',
-		sub = 'Вы заказываете напрямую у фабрики — без посредников и наценок'
+		sub = 'Вы заказываете напрямую у фабрики – без посредников и наценок'
 	}: { title?: string; sub?: string } = $props();
 </script>
 
@@ -73,6 +73,10 @@
 		.grid {
 			grid-template-columns: repeat(2, 1fr);
 			grid-auto-rows: 160px;
+		}
+		/* «Печать» на телефоне вдвое ниже: на всю ширину, одна строка */
+		.big {
+			grid-row: span 1;
 		}
 		figcaption span {
 			display: none;

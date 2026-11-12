@@ -28,13 +28,13 @@
 </script>
 
 <svelte:head>
-	<title>{brand.name} — варианты главной</title>
+	<title>{brand.name} – варианты главной</title>
 	<meta name="robots" content="noindex" />
 </svelte:head>
 
 <main class="wrap">
 	<h1>Главная {brand.name}: 3 варианта</h1>
-	<p>Выберите вариант. Все три — на одном наборе блоков, отличаются первым экраном и логикой пути.</p>
+	<p>Выберите вариант. Все три – на одном наборе блоков, отличаются первым экраном и логикой пути.</p>
 	<div class="grid">
 		{#each variants as v}
 			<a href={v.href} class="card">
