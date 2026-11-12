@@ -48,9 +48,9 @@
 		</a>
 
 		<div class="actions">
-			<a href={calcHref}><Icon name="calc" size={30} />Рассчитать</a>
-			<a href={brand.phoneHref}><Icon name="phone" size={30} />Позвонить</a>
-			<a href={brand.max}><MaxLogo size={28} light />Написать</a>
+			<a href={calcHref}><Icon name="calc" size={21} />Рассчитать</a>
+			<a href={brand.phoneHref}><Icon name="phone" size={21} />Позвонить</a>
+			<a href={brand.max}><MaxLogo size={20} light />Написать</a>
 		</div>
 
 		<button class="burger" aria-label="Меню" aria-expanded={open} onclick={() => (open = !open)}>
@@ -210,11 +210,11 @@
 	.actions a {
 		display: flex;
 		align-items: center;
-		gap: 12px;
+		gap: 8px;
 		color: #fff;
 		font-weight: 700;
-		font-size: 21px;
-		padding: 18px 24px;
+		font-size: 15px;
+		padding: 13px 17px;
 		border-radius: 8px;
 	}
 
