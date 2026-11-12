@@ -161,9 +161,18 @@
 	}
 
 	@media (max-width: 720px) {
-		/* на телефоне: без фото, без длинного текста, кнопки ближе к заголовку */
+		/* на телефоне: фото рулонов видно между заголовком и кнопками, длинный текст скрыт */
 		.hero {
-			background: linear-gradient(160deg, #0b3aa8, #002670);
+			background:
+				linear-gradient(
+					180deg,
+					rgb(0 30 90 / 0.9) 0%,
+					rgb(0 30 90 / 0.55) 30%,
+					rgb(0 30 90 / 0.15) 50%,
+					rgb(0 30 90 / 0.6) 72%,
+					rgb(0 30 90 / 0.92) 100%
+				),
+				var(--bg) center / cover;
 		}
 		.inner {
 			padding-top: 28px;
@@ -187,7 +196,7 @@
 		}
 		.ctas {
 			width: 100%;
-			margin-top: 8px;
+			margin-top: 190px;
 		}
 		.facts {
 			gap: 16px;
