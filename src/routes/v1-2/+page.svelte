@@ -12,6 +12,8 @@
 	import Faq from '#lib/components/Faq.svelte';
 	import LeadForm from '#lib/components/LeadForm.svelte';
 	import Footer from '#lib/components/Footer.svelte';
+	import FloatChat from '#lib/components/FloatChat.svelte';
+	import type { Utp } from '#lib/data.ts';
 
 	// v1-2: без каталога. Клиент присылает изображение или идею в мессенджер — получает расчёт и пробник.
 	const steps = [
@@ -19,7 +21,14 @@
 		{ title: 'Получите расчёт и пробник', text: 'Посчитаем цену и бесплатно привезём образец с цветопробой' },
 		{ title: 'Утвердите макет', text: 'Подгоним изображение под размер стены, окна и розетки' },
 		{ title: 'Печать от 3 дней', text: 'Печатаем на производстве в Москве' },
-		{ title: 'Доставка и монтаж', text: 'Привезём по Москве и МО, при желании поклеим' }
+		{ title: 'Доставка и монтаж', text: 'Доставим по Москве и России, при желании поклеим' }
+	];
+
+	const utp: Utp[] = [
+		{ icon: 'leaf', title: 'Не пахнут — можно в детскую', text: '' },
+		{ icon: 'palette', title: 'Цвет точь-в-точь', text: '' },
+		{ icon: 'ruler', title: 'Замер по Москве', text: '' },
+		{ icon: 'truck', title: 'Доставка по Москве и России', text: '' }
 	];
 </script>
 
@@ -29,15 +38,22 @@
 		name="description"
 		content="Фотообои и фрески от производителя. Печать по размеру стены от 3 дней, без запаха, бесплатный пробник и гарантия цвета. Доставка по Москве."
 	/>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+		rel="stylesheet"
+	/>
 </svelte:head>
 
+<div class="mont">
 <Header lite />
 
 <!-- Вариант 1-2: v1 без каталога, всё ведёт к отправке своего изображения -->
 <div class="hero" style:--bg="url({prod('warehouse-hd')})">
 	<div class="wrap inner">
 		<span class="badge">Производство в Москве</span>
-		<h1>Фотообои и фрески <br />от производителя</h1>
+		<h1><span class="d">Фотообои</span><span class="m">Обои</span> и фрески <br />от производителя</h1>
 		<p class="lead">
 			Напечатаем любое изображение или вашу идею по размеру стены от 3 дней. Без запаха — можно
 			в детскую. Привезём по Москве бесплатный пробник до оплаты.
@@ -54,12 +70,12 @@
 	</div>
 </div>
 
-<UtpGrid compact />
-<ProductTiles />
-<ColorGuarantee />
-<Steps {steps} />
+<UtpGrid compact items={utp} />
 <Production title="Производство в Москве" sub="" />
+<ColorGuarantee lite />
+<Steps {steps} />
 <OwnImage lite />
+<ProductTiles />
 <Faq mode="tips" />
 <Faq />
 <LeadForm
@@ -67,8 +83,28 @@
 	text="Или оставьте телефон: дизайнер свяжется, подберёт материал и привезёт бесплатный пробник с цветопробой."
 />
 <Footer lite />
+<FloatChat />
+</div>
 
 <style>
+	/* Шрифт только для этой страницы */
+	.mont {
+		display: contents;
+		font-family: 'Montserrat', system-ui, sans-serif;
+	}
+
+	.mont :global(*) {
+		font-family: inherit;
+	}
+
+	:global(body:has(.mont)) {
+		font-family: 'Montserrat', system-ui, sans-serif;
+	}
+
+	.m {
+		display: none;
+	}
+
 	.hero {
 		position: relative;
 		color: #fff;
@@ -125,15 +161,23 @@
 	}
 
 	@media (max-width: 720px) {
+		/* на телефоне: без фото, без длинного текста, кнопки ближе к заголовку */
 		.hero {
-			background:
-				linear-gradient(180deg, rgb(0 30 90 / 0.75), rgb(0 30 90 / 0.95)),
-				var(--bg) center / cover;
+			background: linear-gradient(160deg, #0b3aa8, #002670);
 		}
 		.inner {
-			padding-top: 40px;
-			padding-bottom: 36px;
-			gap: 16px;
+			padding-top: 28px;
+			padding-bottom: 30px;
+			gap: 8px;
+		}
+		.d {
+			display: none;
+		}
+		.m {
+			display: inline;
+		}
+		.lead {
+			display: none;
 		}
 		h1 {
 			font-size: 30px;
@@ -141,17 +185,20 @@
 		h1 br {
 			display: none;
 		}
-		.lead {
-			font-size: 16px;
-		}
 		.ctas {
 			width: 100%;
+			margin-top: 8px;
 		}
 		.facts {
-			gap: 20px;
+			gap: 16px;
+			margin-top: 12px;
+		}
+		.facts li {
+			font-size: 12px;
 		}
 		.facts b {
-			font-size: 22px;
+			font-size: 19px;
+			white-space: nowrap;
 		}
 	}
 </style>

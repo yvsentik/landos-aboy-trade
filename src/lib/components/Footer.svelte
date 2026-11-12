@@ -49,7 +49,7 @@
 	</div>
 	<div class="wrap bottom">
 		<span>© 2026 {brand.name}. {brand.city}</span>
-		<span>* Бесплатная доставка по Москве — при заказе от 30 000 ₽</span>
+		{#if !lite}<span>* Бесплатная доставка по Москве — при заказе от 30 000 ₽</span>{/if}
 		<span>Политика конфиденциальности</span>
 	</div>
 </footer>

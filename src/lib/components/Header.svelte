@@ -40,7 +40,7 @@
 	<a href={brand.max}><MaxLogo size={24} light />Написать</a>
 </div>
 
-<header>
+<header class:lite>
 	<div class="top wrap">
 		<span><Icon name="factory" size={16} />{lite ? 'Производство в Москве' : 'Собственное производство в Москве'}</span>
 		<span><Icon name="clock" size={16} />{brand.hours}</span>
@@ -321,6 +321,9 @@
 		}
 		.ologo {
 			height: 30px;
+		}
+		header.lite {
+			display: none;
 		}
 		nav {
 			display: none;
