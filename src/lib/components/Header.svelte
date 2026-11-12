@@ -1,13 +1,27 @@
 <script lang="ts">
-	import { brand, catalogSize } from '#lib/data.ts';
+	import { brand } from '#lib/data.ts';
 	import Icon from './Icon.svelte';
 	import MaxLogo from './MaxLogo.svelte';
+	import { asset } from '$app/paths';
 
-	let { calcHref = '#lead', home = '' }: { calcHref?: string; home?: string } = $props();
+	// lite — версия без каталога (v1-2): официальный логотип, только «Позвонить» и «Написать»
+	let { calcHref = '#lead', home = '', lite = false }: { calcHref?: string; home?: string; lite?: boolean } =
+		$props();
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const logo = asset('/img/icons/oboitrade-logo.png' as any);
 	const at = (h: string) => (h.startsWith('#') ? home + h : h);
 	let open = $state(false);
 
-	const nav = [
+	const liteNav = [
+		{ label: 'Фотообои', href: '#catalog' },
+		{ label: 'Фрески', href: '#catalog' },
+		{ label: 'Обои на заказ', href: '#own' },
+		{ label: 'Цены', href: '#catalog' },
+		{ label: 'Доставка и монтаж', href: '#steps' },
+		{ label: 'Бесплатный пробник', href: '#lead', dot: true }
+	];
+
+	const fullNav = [
 		{ label: 'Фотообои', href: '/catalog/' },
 		{ label: 'Фрески', href: '/catalog/' },
 		{ label: 'Каталог', href: '/catalog/' },
@@ -16,31 +30,36 @@
 		{ label: 'Доставка и монтаж', href: '#steps' },
 		{ label: 'Бесплатный пробник', href: '#lead', dot: true }
 	];
+	const nav = $derived(lite ? liteNav : fullNav);
 </script>
 
 <!-- Мобильная панель действий, как у okonti.ru: всегда сверху -->
-<div class="mbar">
-	<a href={calcHref}><Icon name="calc" size={26} />Рассчитать</a>
+<div class="mbar" class:two={lite}>
+	{#if !lite}<a href={calcHref}><Icon name="calc" size={26} />Рассчитать</a>{/if}
 	<a href={brand.phoneHref}><Icon name="phone" size={26} />Позвонить</a>
 	<a href={brand.max}><MaxLogo size={24} light />Написать</a>
 </div>
 
 <header>
 	<div class="top wrap">
-		<span><Icon name="factory" size={16} />Собственное производство в Москве</span>
+		<span><Icon name="factory" size={16} />{lite ? 'Производство в Москве' : 'Собственное производство в Москве'}</span>
 		<span><Icon name="clock" size={16} />{brand.hours}</span>
 	</div>
 
 	<div class="main wrap">
-		<a class="logo" href="./">
-			<span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>
-			<span class="word">
-				<b>{brand.name}</b>
-				<small>{brand.tagline}</small>
-			</span>
-		</a>
+		{#if lite}
+			<a class="logo" href="./"><img class="ologo" src={logo} alt="Обоитрейд" width="214" height="40" /></a>
+		{:else}
+			<a class="logo" href="./">
+				<span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>
+				<span class="word">
+					<b>{brand.name}</b>
+					<small>{brand.tagline}</small>
+				</span>
+			</a>
 
-		<a href={at('#lead')} class="gift"><Icon name="gift" size={16} />Пробник бесплатно</a>
+			<a href={at('#lead')} class="gift"><Icon name="gift" size={16} />Пробник бесплатно</a>
+		{/if}
 
 		<a class="phone" href={brand.phoneHref}>
 			{brand.phone}
@@ -48,7 +67,7 @@
 		</a>
 
 		<div class="actions">
-			<a href={calcHref}><Icon name="calc" size={21} />Рассчитать</a>
+			{#if !lite}<a href={calcHref}><Icon name="calc" size={21} />Рассчитать</a>{/if}
 			<a href={brand.phoneHref}><Icon name="phone" size={21} />Позвонить</a>
 			<a href={brand.max}><MaxLogo size={20} light />Написать</a>
 		</div>
@@ -87,6 +106,16 @@
 		font-weight: 600;
 		font-size: 18px;
 		padding: 18px 4px;
+	}
+
+	.mbar.two {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.ologo {
+		height: 40px;
+		width: auto;
+		display: block;
 	}
 
 	.mbar a + a {
@@ -289,6 +318,9 @@
 		}
 		.burger {
 			display: block;
+		}
+		.ologo {
+			height: 30px;
 		}
 		nav {
 			display: none;

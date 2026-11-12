@@ -1,13 +1,18 @@
 <script lang="ts">
 	import { production, prod } from '#lib/data.ts';
+
+	let {
+		title = 'Наше производство в Москве',
+		sub = 'Вы заказываете напрямую у фабрики — без посредников и наценок'
+	}: { title?: string; sub?: string } = $props();
 </script>
 
 <section id="production">
 	<div class="wrap">
 		<div class="section-head">
 			<div>
-				<h2>Наше производство в Москве</h2>
-				<p>Вы заказываете напрямую у фабрики — без посредников и наценок</p>
+				<h2>{title}</h2>
+				{#if sub}<p>{sub}</p>{/if}
 			</div>
 		</div>
 		<div class="grid">

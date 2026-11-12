@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { steps } from '#lib/data.ts';
+	import { steps as base } from '#lib/data.ts';
+
+	let { steps = base }: { steps?: { title: string; text: string }[] } = $props();
 </script>
 
 <section id="steps">
