@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { MuralKind } from '#lib/data.ts';
 
-	// Демо-«фотообои», нарисованные в SVG. В реальном каталоге — превью из базы.
+	// Демо-«фотообои», нарисованные в SVG. В реальном каталоге – превью из базы.
 	let { kind, palette, seed = 1 }: { kind: MuralKind; palette: string[]; seed?: number } = $props();
 
 	const [c0, c1, c2, c3] = $derived(palette);

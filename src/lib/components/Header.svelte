@@ -4,7 +4,7 @@
 	import MaxLogo from './MaxLogo.svelte';
 	import { asset } from '$app/paths';
 
-	// lite — версия без каталога (v1-2): официальный логотип, только «Позвонить» и «Написать»
+	// lite – версия без каталога (v1-2): официальный логотип, только «Позвонить» и «Написать»
 	let { calcHref = '#lead', home = '', lite = false }: { calcHref?: string; home?: string; lite?: boolean } =
 		$props();
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

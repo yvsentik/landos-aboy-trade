@@ -9,7 +9,7 @@
 	const HEX: Record<string, string> = Object.fromEntries(lsColors.map((c) => [c.name, c.hex]));
 
 	// Полный каталог фресок, спарсенный с lastanza.ru/catalog (static/catalog.json).
-	// s — адрес страницы, a — артикул, t — коллекция, i — фото, p — цена от, ₽/м², g — теги
+	// s – адрес страницы, a – артикул, t – коллекция, i – фото, p – цена от, ₽/м², g – теги
 	type Item = { s: string; a: string; t: string; i: string; p: number; g: Record<string, string[]>; c: string[] };
 
 	const GROUPS = ['Коллекция', 'Категория', 'По назначению', 'Цвет', 'По ориентации'];
@@ -93,7 +93,7 @@
 </script>
 
 <svelte:head>
-	<title>Каталог фресок и фотообоев — {fmt(items.length || 4251)} дизайнов</title>
+	<title>Каталог фресок и фотообоев – {fmt(items.length || 4251)} дизайнов</title>
 	<meta name="description" content="Каталог фресок: коллекции Tesoro, ALBA, Mattina и Тренды. Подбор по теме, помещению, цвету и ориентации." />
 </svelte:head>
 

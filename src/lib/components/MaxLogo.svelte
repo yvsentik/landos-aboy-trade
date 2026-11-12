@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { asset } from '$app/paths';
 
-	// Логотип мессенджера Макс. light — белый (для синих кнопок и тёмного фона).
+	// Логотип мессенджера Макс. light – белый (для синих кнопок и тёмного фона).
 	let { size = 24, light = false }: { size?: number; light?: boolean } = $props();
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const src = asset('/img/icons/max.png' as any);

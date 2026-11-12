@@ -1,5 +1,5 @@
 // Каталог фресок La Stanza (lastanza.ru/catalog), спарсено 2026-11-11.
-// Количество — по фильтру сайта. Ссылки ведут в наш каталог /catalog/ (данные в static/catalog.json).
+// Количество – по фильтру сайта. Ссылки ведут в наш каталог /catalog/ (данные в static/catalog.json).
 import { asset } from '$app/paths';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -9,7 +9,7 @@ export const catalogHome = '/catalog/';
 
 export type CatTile = { name: string; count: number; href: string; img: string };
 
-/** 8 главных тем — карточки с фото */
+/** 8 главных тем – карточки с фото */
 export const topics: CatTile[] = [
 	{
 		"name": "Цветы",
@@ -61,7 +61,7 @@ export const topics: CatTile[] = [
 	}
 ];
 
-/** Остальные темы — чипсами под карточками */
+/** Остальные темы – чипсами под карточками */
 export const moreTopics = [
 	{
 		"name": "Абстракции",

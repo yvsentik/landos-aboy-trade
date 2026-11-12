@@ -2,13 +2,13 @@
 	import { products } from '#lib/data.ts';
 </script>
 
-<!-- Плитки разделов с синей плашкой — приём с главной okonti.ru -->
+<!-- Плитки разделов с синей плашкой – приём с главной okonti.ru -->
 <section id="catalog">
 	<div class="wrap">
 		<div class="section-head">
 			<div>
 				<h2>Что мы печатаем</h2>
-				<p>Контролируем весь процесс — от макета до упаковки</p>
+				<p>Контролируем весь процесс – от макета до упаковки</p>
 			</div>
 		</div>
 		<div class="grid">
