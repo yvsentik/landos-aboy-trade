@@ -37,6 +37,7 @@
 
 	let tab = $state(0);
 	let allCases = $state(false);
+	let allPos = $state(false);
 	const shown = $derived(allCases ? cases : cases.slice(0, 6));
 
 	let sent = $state(false);
@@ -109,7 +110,7 @@
 		<div class="wrap">
 			<h2>Позиции проектов – проверьте сами</h2>
 			<p class="sub">Откройте Яндекс и введите запрос ниже</p>
-			<div class="ptable">
+			<div class="ptable" class:open={allPos}>
 				{#each positions as p}
 					<div class="prow">
 						<img src={pic(p.logo)} alt={p.name} />
@@ -119,6 +120,9 @@
 					</div>
 				{/each}
 			</div>
+			{#if !allPos}
+				<button type="button" class="btn btn-outline wide pmore" onclick={() => (allPos = true)}>Показать все {positions.length} проектов</button>
+			{/if}
 		</div>
 	</section>
 
@@ -265,17 +269,18 @@
 
 	.regalia { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 28px 0 0; flex-wrap: wrap; }
 	.nums { display: flex; gap: 40px; }
-	.nums div { display: grid; }
+	.nums div { display: grid; align-content: start; }
 	.nums b { font-size: 34px; font-weight: 800; color: var(--navy); line-height: 1.1; }
 	.nums span { color: var(--muted); font-size: 14px; }
 	.logos { flex: 1 1 100%; display: flex; align-items: center; justify-content: space-between; gap: 24px 39px; flex-wrap: wrap; }
-	.logos span { flex: 1 1 100%; color: var(--muted); font-size: 24px; }
+	.logos span { flex: 1 1 100%; color: var(--navy); font-size: 24px; font-weight: 700; }
 	.logos img { height: 42px; width: auto; flex: none; }
 
 	.ptable { margin-top: 24px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 	.prow { display: grid; grid-template-columns: 110px 1.1fr 2fr 170px; gap: 20px; align-items: center; padding: 16px 20px; }
 	.prow + .prow { border-top: 1px solid var(--line); }
 	.prow img { max-height: 32px; max-width: 100px; width: auto; }
+	.pmore { display: none; }
 	.pname b { display: block; }
 	.pname span { color: var(--muted); font-size: 14px; }
 	.pq { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -368,10 +373,12 @@
 		.phone { font-size: 16px; }
 		.banner { padding: 22px 18px; margin-top: 16px; gap: 24px; }
 		.btxt p { font-size: 16px; }
-		.nums { gap: 22px; }
+		.nums { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; text-align: center; }
 		.nums b { font-size: 24px; }
 		.prow { grid-template-columns: 1fr auto; gap: 10px; padding: 14px; }
 		.prow img { display: none; }
+		.ptable:not(.open) .prow:nth-child(n + 4) { display: none; }
+		.pmore { display: flex; }
 		.ptop b { font-size: 24px; }
 		.cases, .dirs, .steps { grid-template-columns: 1fr; }
 		.srow { flex-direction: column; gap: 6px; padding: 14px; }
