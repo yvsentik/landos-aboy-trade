@@ -17,8 +17,7 @@
 		['Позиции', '#positions'],
 		['Кейсы', '#cases'],
 		['Бесплатный тест', '#test'],
-		['Цены', '#prices'],
-		['Контакты', '#contacts']
+		['Цены', '#prices']
 	];
 
 	const logos = ['rosneft.svg', 'tatneft.svg', 'ekoniva.svg', 'korrus.svg', 'aravia.svg', 'psy-chat.svg', 'sotovik.svg'];
@@ -44,9 +43,9 @@
 	const steps = ['Присылаете сайт', 'Собираем запросы', 'Фиксируем позиции', 'Выводим в ТОП', 'Вы решаете'];
 
 	const prices = [
-		{ series: 'Поиск', name: 'SEO-продвижение', tone: '#fdeaf3', lines: ['Яндекс и Google', 'Первая динамика за 1–2 месяца'], price: 'от 50 000 ₽/мес' },
-		{ series: 'Реклама', name: 'Яндекс Директ', tone: '#e8eefa', lines: ['Без абонентской платы', 'Окупаемость до ×10'], price: '% от прибыли' },
-		{ series: 'Под ключ', name: 'Весь маркетинг', tone: '#eef7e4', lines: ['Сайт, SEO, реклама, CRM', 'Один отчёт по всем каналам'], price: 'от 50 000 ₽/мес' }
+		{ series: 'Поиск', name: 'SEO-продвижение', lines: ['Яндекс и Google', 'Первая динамика за 1–2 месяца'], price: 'от 50 000 ₽/мес' },
+		{ series: 'Реклама', name: 'Яндекс Директ', lines: ['Без абонентской платы', 'Окупаемость до ×10'], price: '% от прибыли' },
+		{ series: 'Под ключ', name: 'Весь маркетинг', lines: ['Сайт, SEO, реклама, CRM', 'Один отчёт по всем каналам'], price: 'от 50 000 ₽/мес' }
 	];
 
 	let sent = $state(false);
@@ -62,7 +61,6 @@
 </svelte:head>
 
 <div class="mbar">
-	<a href="#test"><Icon name="calc" size={18} />Тест сайта</a>
 	<a href={tel}><Icon name="phone" size={18} />Позвонить</a>
 	<a href={tg}><Icon name="chat" size={18} />Написать</a>
 </div>
@@ -70,10 +68,8 @@
 <header>
 	<div class="wrap main">
 		<a class="logo" href="#top"><span class="mark"></span><span><b>ФАЛЬКОВ</b><small>SEO-агентство</small></span></a>
-		<a class="sticker" href="#test">Тест бесплатно!</a>
 		<a class="phone" href={tel}>{phone}</a>
 		<div class="acts">
-			<a href="#test"><Icon name="calc" size={20} />Тест сайта</a>
 			<a href={tel}><Icon name="phone" size={20} />Позвонить</a>
 			<a href={tg}><Icon name="chat" size={20} />Написать</a>
 		</div>
@@ -121,7 +117,7 @@
 	<section id="positions">
 		<div class="wrap">
 			<h2>Позиции проектов — проверьте сами</h2>
-			<p class="sub">Откройте Яндекс и введите запрос</p>
+			<p class="sub">Откройте Яндекс и введите запрос ниже</p>
 			<div class="ptable">
 				{#each positions as p}
 					<div class="prow">
@@ -186,7 +182,7 @@
 			<h2>Услуги и цены</h2>
 			<div class="series">
 				{#each prices as p}
-					<div class="ser" style:background={p.tone}>
+					<div class="ser">
 						<small>{p.series}</small>
 						<h3>{p.name}</h3>
 						{#each p.lines as l}<p>{l}</p>{/each}
@@ -197,22 +193,6 @@
 		</div>
 	</section>
 
-	<!-- 7. Офис и контакты -->
-	<section id="contacts">
-		<div class="wrap">
-			<h2>Офис в Санкт-Петербурге</h2>
-			<div class="office">
-				<img src={pic('2354-2.jpg')} alt="Офис агентства" />
-				<img src={pic('2349-1.jpg')} alt="Основатель агентства с клиентами" />
-				<div class="contacts">
-					<p>пр. Энергетиков, 10<br /><small>Встречаемся лично и показываем кейсы с экрана</small></p>
-					<a class="bigphone" href={tel}>{phone}</a>
-					<a class="btn btn-primary" href={tg}>Написать в Telegram</a>
-					<a class="btn btn-outline" href="#test">Отправить сайт на тест</a>
-				</div>
-			</div>
-		</div>
-	</section>
 </main>
 
 <footer>
@@ -230,7 +210,7 @@
 	.sub { color: var(--muted); margin-top: 6px; }
 	.btn { border-radius: 8px; }
 
-	.mbar { display: none; position: sticky; top: 0; z-index: 30; background: var(--blue); grid-template-columns: repeat(3, 1fr); }
+	.mbar { display: none; position: sticky; top: 0; z-index: 30; background: var(--blue); grid-template-columns: repeat(2, 1fr); }
 	.mbar a { display: flex; align-items: center; justify-content: center; gap: 6px; color: #fff; font-weight: 600; font-size: 14px; padding: 12px 4px; }
 	.mbar a + a { border-left: 1px solid rgb(255 255 255 / 0.25); }
 
@@ -240,8 +220,7 @@
 	.mark { width: 42px; height: 42px; border: 5px solid var(--navy); background: var(--green); box-shadow: inset 0 0 0 4px #fff; }
 	.logo b { display: block; color: var(--navy); font-size: 22px; font-weight: 800; line-height: 1; }
 	.logo small { color: var(--navy); font-weight: 700; text-transform: uppercase; font-size: 12px; }
-	.sticker { background: var(--pink); color: #fff; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; transform: rotate(-4deg); }
-	.phone { color: var(--blue); font-size: 22px; font-weight: 700; white-space: nowrap; }
+		.phone { color: var(--blue); font-size: 22px; font-weight: 700; white-space: nowrap; }
 	.acts { margin-left: auto; display: flex; background: var(--blue); border-radius: 8px; padding: 4px; }
 	.acts a { display: flex; gap: 8px; align-items: center; color: #fff; font-weight: 600; padding: 12px 18px; border-radius: 6px; }
 	.acts a:hover { background: var(--blue-d); }
@@ -264,9 +243,9 @@
 	.nums div { display: grid; }
 	.nums b { font-size: 34px; font-weight: 800; color: var(--navy); line-height: 1.1; }
 	.nums span { color: var(--muted); font-size: 14px; }
-	.logos { display: flex; align-items: center; gap: 26px; overflow-x: auto; scrollbar-width: none; }
-	.logos span { color: var(--muted); }
-	.logos img { height: 28px; width: auto; flex: none; }
+	.logos { flex: 1 1 100%; display: flex; align-items: center; justify-content: space-between; gap: 24px 39px; flex-wrap: wrap; }
+	.logos span { flex: 1 1 100%; color: var(--muted); font-size: 24px; }
+	.logos img { height: 42px; width: auto; flex: none; }
 
 	.ptable { margin-top: 24px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 	.prow { display: grid; grid-template-columns: 110px 1.1fr 2fr 170px; gap: 20px; align-items: center; padding: 16px 20px; }
@@ -299,18 +278,11 @@
 	.ok { font-weight: 700; font-size: 18px; color: var(--navy); }
 
 	.series { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
-	.ser { border-radius: 12px; padding: 22px; display: grid; gap: 6px; align-content: start; }
+	.ser { background: #e8eefa; border-radius: 12px; padding: 22px; display: grid; gap: 6px; align-content: start; }
 	.ser small { font-weight: 700; }
 	.ser h3 { font-size: 22px; margin-bottom: 4px; }
 	.ser p { color: var(--muted); }
 	.ser .btn { margin-top: 12px; }
-
-	.office { display: grid; grid-template-columns: 300px 1fr 300px; gap: 24px; margin-top: 24px; align-items: start; }
-	.office img { width: 100%; height: auto; border-radius: 12px; }
-	.contacts { display: grid; gap: 14px; }
-	.contacts p { font-size: 20px; font-weight: 600; }
-	.contacts small { font-weight: 400; color: var(--muted); font-size: 14px; }
-	.bigphone { font-size: 26px; font-weight: 800; color: var(--blue); }
 
 	footer { margin-top: 64px; background: var(--navy); color: #c9d6f2; padding: 28px 0; font-size: 14px; }
 	footer .wrap { display: flex; gap: 24px; flex-wrap: wrap; align-items: center; }
@@ -327,14 +299,12 @@
 		.cases { grid-template-columns: 1fr 1fr; }
 		.steps { grid-template-columns: 1fr 1fr; }
 		.offer { grid-template-columns: 1fr; }
-		.office { grid-template-columns: 1fr 1fr; }
-		.contacts { grid-column: 1 / -1; }
 	}
 
 	@media (max-width: 640px) {
 		section { padding-top: 44px; }
 		.mbar { display: grid; }
-		nav, .sticker { display: none; }
+		nav { display: none; }
 		.phone { font-size: 16px; }
 		.banner { padding: 22px 18px; margin-top: 16px; gap: 24px; }
 		.btxt p { font-size: 16px; }
@@ -346,8 +316,6 @@
 		.cases, .series, .steps { grid-template-columns: 1fr; }
 		form { grid-template-columns: 1fr; }
 		.offer { padding: 20px; }
-		.office { grid-template-columns: 1fr; }
-		.office img:first-child { max-width: 320px; }
 		footer a:first-of-type { margin-left: 0; }
 	}
 </style>
