@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { asset } from '$app/paths';
 	import Icon from '#lib/components/Icon.svelte';
+	import { directions, groups, cases } from '#lib/agency.ts';
 
 	// Лендинг SEO-агентства «Фальков». Стиль okonti.ru: белый фон, плоские синие кнопки, фото.
-	// Логика: оффер + видео → регалии → позиции → кейсы → бесплатный тест → цены → офис и контакты.
+	// Логика: оффер + видео → регалии → позиции → услуги → кейсы → бесплатный тест.
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const a = (f: string) => asset(f as any);
 	const pic = (f: string) => a(`/img/agency/${f}`);
@@ -15,9 +16,9 @@
 
 	const nav = [
 		['Позиции', '#positions'],
+		['Услуги', '#services'],
 		['Кейсы', '#cases'],
-		['Бесплатный тест', '#test'],
-		['Цены', '#prices']
+		['Бесплатный тест', '#test']
 	];
 
 	const logos = ['rosneft.svg', 'tatneft.svg', 'ekoniva.svg', 'korrus.svg', 'aravia.svg', 'psy-chat.svg', 'sotovik.svg'];
@@ -31,22 +32,11 @@
 		{ logo: 'psy-chat.svg', name: 'Psy-Chat', niche: 'Онлайн-психологи', top: 78, q: ['бесплатный онлайн психолог', 'психолог чат'] }
 	];
 
-	const cases = [
-		{ img: '2318-1.jpg', big: '2 700', unit: 'посетителей в месяц с нуля', name: 'Юридические услуги' },
-		{ img: '2259-1.jpg', big: 'ТОП-3', unit: 'по Москве за 5 месяцев', name: 'Арбитражный адвокат' },
-		{ img: '2323-1.jpg', big: '+100', unit: 'посетителей каждый день', name: 'Магазин техники Apple' },
-		{ img: '2272-1.jpg', big: 'ТОП-5', unit: 'по Москве', name: 'Ремонт трансформаторов' },
-		{ img: '2273-1.jpg', big: '−40%', unit: 'мусорных лидов', name: 'Кухни на заказ' },
-		{ img: '2322-1.jpg', big: 'ТОП', unit: 'в Google', name: 'Клиника наркологии' }
-	];
-
 	const steps = ['Присылаете сайт', 'Собираем запросы', 'Фиксируем позиции', 'Выводим в ТОП', 'Вы решаете'];
 
-	const prices = [
-		{ series: 'Поиск', name: 'SEO-продвижение', lines: ['Яндекс и Google', 'Первая динамика за 1–2 месяца'], price: 'от 50 000 ₽/мес' },
-		{ series: 'Реклама', name: 'Яндекс Директ', lines: ['Без абонентской платы', 'Окупаемость до ×10'], price: '% от прибыли' },
-		{ series: 'Под ключ', name: 'Весь маркетинг', lines: ['Сайт, SEO, реклама, CRM', 'Один отчёт по всем каналам'], price: 'от 50 000 ₽/мес' }
-	];
+	let tab = $state(0);
+	let allCases = $state(false);
+	const shown = $derived(allCases ? cases : cases.slice(0, 6));
 
 	let sent = $state(false);
 	const submit = (e: SubmitEvent) => {
@@ -131,27 +121,76 @@
 		</div>
 	</section>
 
-	<!-- 4. Кейсы -->
-	<section id="cases">
+	<!-- 4. Услуги -->
+	<section id="services">
 		<div class="wrap">
-			<h2>Кейсы</h2>
-			<div class="cases">
-				{#each cases as c}
-					<article>
-						<img src={pic(c.img)} alt={c.name} loading="lazy" />
-						<div>
-							<b class="big">{c.big}</b>
-							<span class="unit">{c.unit}</span>
-							<h3>{c.name}</h3>
-						</div>
-					</article>
+			<h2>Услуги и цены</h2>
+			<p class="sub">Шесть направлений. Можно взять одно, можно отдать маркетинг под ключ.</p>
+			<div class="dirs">
+				{#each directions as d}
+					<div class="dir">
+						<span class="dn">{d.n}</span>
+						<h3>{d.name}</h3>
+						<small>{d.sub}</small>
+						<p>{d.text}</p>
+						<ul>{#each d.points as pt}<li>{pt}</li>{/each}</ul>
+						{#if d.stat}<div class="dstat"><b>{d.stat[0]}</b><span>{d.stat[1]}</span></div>{/if}
+					</div>
 				{/each}
 			</div>
-			<a class="btn btn-outline wide" href={channel}>Ещё 40+ кейсов в канале @falkov_agency</a>
+
+			<h3 class="h3">Все услуги с ценами</h3>
+			<div class="tabs" role="tablist">
+				{#each groups as g, i}
+					<button type="button" role="tab" aria-selected={tab === i} class:on={tab === i} onclick={() => (tab = i)}>{g.name}<span>{g.items.length}</span></button>
+				{/each}
+			</div>
+			<p class="gtext">{groups[tab].text}</p>
+			<div class="svc">
+				{#each groups[tab].items as [name, text, price, per]}
+					<div class="srow">
+						<div><b>{name}</b><span>{text}</span></div>
+						<div class="sprice"><b>{price}</b><span>{per}</span></div>
+					</div>
+				{/each}
+			</div>
+
+			<div class="choose">
+				<h3>Как выбрать услугу</h3>
+				<p>Заявки нужны в этом месяце – начинайте с Яндекс Директа, он даёт обращения с первой недели. Есть запас в несколько месяцев и дорогой клик в нише – вкладывайтесь в продвижение сайта в поиске. Трафик идёт, а заявок мало – смотрите на сайт и учёт обращений. База клиентов лежит без дела – подключайте рассылки.</p>
+				<p>Не уверены, какой формат подходит? Отправьте сайт на тест – разберём ситуацию и скажем прямо, что нужно проекту, даже если это не наша услуга.</p>
+				<a class="btn btn-primary" href="#test">Отправить сайт на тест</a>
+			</div>
 		</div>
 	</section>
 
-	<!-- 5. Бесплатный тест -->
+	<!-- 5. Кейсы -->
+	<section id="cases">
+		<div class="wrap">
+			<h2>Кейсы: 45+ проектов и результаты в цифрах</h2>
+			<p class="sub">Исходная точка, состав работ, сроки и результат. Названия клиентов обезличены там, где действует NDA.</p>
+			<div class="cases">
+				{#each shown as c}
+					<article>
+						<div class="ctop"><span class="ctag">{c.tag}</span><span>{c.geo}</span></div>
+						<b class="cname">{c.name}</b>
+						<div class="chead"><b class="big">{c.big}</b><span>{c.title}</span></div>
+						<p>{c.text}</p>
+						<div class="cstats">
+							{#each c.stats as [v, l]}<div><b>{v}</b><span>{l}</span></div>{/each}
+						</div>
+						{#if c.img}<img src={pic(c.img)} alt="График посещаемости: {c.name}" loading="lazy" />{/if}
+					</article>
+				{/each}
+			</div>
+			{#if !allCases}
+				<button type="button" class="btn btn-outline wide" onclick={() => (allCases = true)}>Показать все {cases.length} кейсов</button>
+			{/if}
+			<a class="btn btn-outline wide" href={channel}>Ещё кейсы в канале @falkov_agency</a>
+		</div>
+	</section>
+
+	<!-- 6. Бесплатный тест -->
 	<section id="test">
 		<div class="wrap">
 			<h2>Бесплатный тест сайта</h2>
@@ -176,22 +215,6 @@
 		</div>
 	</section>
 
-	<!-- 6. Цены -->
-	<section id="prices">
-		<div class="wrap">
-			<h2>Услуги и цены</h2>
-			<div class="series">
-				{#each prices as p}
-					<div class="ser">
-						<small>{p.series}</small>
-						<h3>{p.name}</h3>
-						{#each p.lines as l}<p>{l}</p>{/each}
-						<a class="btn btn-primary" href="#test">{p.price}</a>
-					</div>
-				{/each}
-			</div>
-		</div>
-	</section>
 
 </main>
 
@@ -259,14 +282,52 @@
 	.ptop b { display: block; font-size: 28px; font-weight: 800; color: var(--blue); line-height: 1; }
 	.ptop span { color: var(--muted); font-size: 13px; }
 
+	.dirs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+	.dir { background: var(--soft); border-radius: 12px; padding: 22px; display: flex; flex-direction: column; gap: 6px; }
+	.dn { color: var(--blue); font-weight: 800; font-size: 14px; }
+	.dir h3 { font-size: 22px; }
+	.dir small { color: var(--navy); font-weight: 600; }
+	.dir p { color: var(--muted); margin-top: 4px; }
+	.dir ul { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 4px; }
+	.dstat { margin-top: auto; padding-top: 14px; display: flex; align-items: baseline; gap: 10px; }
+	.dstat b { font-size: 26px; font-weight: 800; color: var(--blue); white-space: nowrap; }
+	.dstat span { color: var(--muted); font-size: 14px; }
+
+	.h3 { font-size: 24px; margin-top: 44px; }
+	.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+	.tabs button { font: inherit; font-weight: 600; cursor: pointer; border: 1px solid var(--line); background: #fff; color: inherit; border-radius: 8px; padding: 10px 14px; display: flex; gap: 8px; align-items: center; }
+	.tabs button span { color: var(--muted); font-size: 13px; }
+	.tabs button.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+	.tabs button.on span { color: rgb(255 255 255 / 0.75); }
+	.gtext { color: var(--muted); margin-top: 14px; }
+	.svc { margin-top: 14px; border: 1px solid var(--line); border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
+	.srow { display: flex; gap: 16px; justify-content: space-between; padding: 16px 20px; border-top: 1px solid var(--line); }
+	.srow:nth-child(-n + 2) { border-top: 0; }
+	.srow:nth-child(odd) { border-right: 1px solid var(--line); }
+	.srow b { display: block; }
+	.srow span { color: var(--muted); font-size: 14px; }
+	.sprice { text-align: right; flex: none; }
+	.sprice b { color: var(--blue); white-space: nowrap; }
+	.choose { margin-top: 24px; background: var(--soft); border-radius: 16px; padding: 28px; display: grid; gap: 10px; justify-items: start; }
+	.choose h3 { font-size: 22px; }
+	.choose p { color: var(--muted); max-width: 900px; }
+	.choose .btn { margin-top: 6px; }
+
 	.cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
-	article { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
-	article img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; object-position: top; border-bottom: 1px solid var(--line); }
-	article div { padding: 16px 18px 18px; }
-	.big { font-size: 34px; font-weight: 800; color: var(--blue); line-height: 1; margin-right: 8px; }
-	.unit { color: var(--muted); }
-	article h3 { margin-top: 8px; font-size: 17px; }
+	article { border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+	.ctop { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--muted); }
+	.ctag { color: var(--navy); font-weight: 600; }
+	.cname { font-size: 15px; }
+	.chead { display: grid; gap: 4px; }
+	.big { font-size: 34px; font-weight: 800; color: var(--blue); line-height: 1; }
+	.chead span { font-weight: 600; font-size: 17px; }
+	article p { color: var(--muted); font-size: 15px; }
+	.cstats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); }
+	.cstats b { display: block; color: var(--navy); }
+	.cstats span { color: var(--muted); font-size: 13px; }
+	article img { width: 100%; border: 1px solid var(--line); border-radius: 8px; }
 	.wide { width: 100%; margin-top: 16px; }
+	button.wide { font: inherit; font-weight: 600; cursor: pointer; }
 
 	.steps { list-style: none; padding: 0; margin: 24px 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
 	.steps li { display: flex; align-items: center; gap: 12px; font-weight: 600; }
@@ -276,13 +337,6 @@
 	.offer p { color: var(--muted); margin-top: 6px; }
 	form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; }
 	.ok { font-weight: 700; font-size: 18px; color: var(--navy); }
-
-	.series { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
-	.ser { background: #e8eefa; border-radius: 12px; padding: 22px; display: grid; gap: 6px; align-content: start; }
-	.ser small { font-weight: 700; }
-	.ser h3 { font-size: 22px; margin-bottom: 4px; }
-	.ser p { color: var(--muted); }
-	.ser .btn { margin-top: 12px; }
 
 	footer { margin-top: 64px; background: var(--navy); color: #c9d6f2; padding: 28px 0; font-size: 14px; }
 	footer .wrap { display: flex; gap: 24px; flex-wrap: wrap; align-items: center; }
@@ -296,7 +350,10 @@
 		.banner { grid-template-columns: 1fr; padding: 28px; }
 		.prow { grid-template-columns: 90px 1fr 130px; }
 		.pq { grid-column: 1 / -1; order: 3; }
-		.cases { grid-template-columns: 1fr 1fr; }
+		.cases, .dirs { grid-template-columns: 1fr 1fr; }
+		.svc { grid-template-columns: 1fr; }
+		.srow:nth-child(odd) { border-right: 0; }
+		.srow:nth-child(2) { border-top: 1px solid var(--line); }
 		.steps { grid-template-columns: 1fr 1fr; }
 		.offer { grid-template-columns: 1fr; }
 	}
@@ -313,7 +370,11 @@
 		.prow { grid-template-columns: 1fr auto; gap: 10px; padding: 14px; }
 		.prow img { display: none; }
 		.ptop b { font-size: 24px; }
-		.cases, .series, .steps { grid-template-columns: 1fr; }
+		.cases, .dirs, .steps { grid-template-columns: 1fr; }
+		.srow { flex-direction: column; gap: 6px; padding: 14px; }
+		.sprice { text-align: left; }
+		.sprice b { display: inline; margin-right: 6px; }
+		.choose { padding: 20px; }
 		form { grid-template-columns: 1fr; }
 		.offer { padding: 20px; }
 		footer a:first-of-type { margin-left: 0; }
