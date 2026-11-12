@@ -13,6 +13,7 @@
 	import LeadForm from '#lib/components/LeadForm.svelte';
 	import Footer from '#lib/components/Footer.svelte';
 	import FloatChat from '#lib/components/FloatChat.svelte';
+	import InfoBlocks from '#lib/components/InfoBlocks.svelte';
 	import type { Utp } from '#lib/data.ts';
 
 	// v1-2: без каталога. Клиент присылает изображение или идею в мессенджер – получает расчёт и пробник.
@@ -20,15 +21,15 @@
 		{ title: 'Пришлите изображение', text: 'Фото, картину, референс или идею – в Макс или Telegram' },
 		{ title: 'Получите расчёт и пробник', text: 'Посчитаем цену и бесплатно привезём образец с цветопробой' },
 		{ title: 'Утвердите макет', text: 'Подгоним изображение под размер стены, окна и розетки' },
-		{ title: 'Печать от 3 дней', text: 'Печатаем на производстве в Москве' },
-		{ title: 'Доставка и монтаж', text: 'Доставим по Москве и России, при желании поклеим' }
+		{ title: 'Печать от 3 дней', text: 'Печатаем на собственном производстве' },
+		{ title: 'Доставка', text: 'Привезём в тубусе по всей России, поклейку организуем по запросу' }
 	];
 
 	const utp: Utp[] = [
 		{ icon: 'leaf', title: 'Не пахнут – можно в детскую', text: '' },
 		{ icon: 'palette', title: 'Цвет точь-в-точь', text: '' },
-		{ icon: 'ruler', title: 'Замер по Москве', text: '' },
-		{ icon: 'truck', title: 'Доставка по Москве и России', text: '' }
+		{ icon: 'ruler', title: 'Выезд замерщика', text: '' },
+		{ icon: 'truck', title: 'Доставка по всей России', text: '' }
 	];
 </script>
 
@@ -56,7 +57,7 @@
 		<h1><span class="d">Фотообои</span><span class="m">Обои</span> и фрески <br />от производителя</h1>
 		<p class="lead">
 			Напечатаем любое изображение или вашу идею по размеру стены от 3 дней. Без запаха – можно
-			в детскую. Привезём по Москве бесплатный пробник до оплаты.
+			в детскую. Бесплатный пробник – до оплаты.
 		</p>
 		<div class="ctas">
 			<a class="btn btn-primary" href={brand.max}><MaxLogo size={20} light />Отправить изображение</a>
@@ -71,11 +72,12 @@
 </div>
 
 <UtpGrid compact items={utp} />
-<Production title="Производство в Москве" sub="" />
+<Production title="Производство полного цикла" sub="" />
 <OwnImage lite />
 <Steps {steps} />
 <ColorGuarantee lite />
 <ProductTiles />
+<InfoBlocks />
 <Faq mode="tips" />
 <Faq />
 <LeadForm

@@ -16,9 +16,9 @@
 		{ label: 'Фотообои', href: '#catalog' },
 		{ label: 'Фрески', href: '#catalog' },
 		{ label: 'Обои на заказ', href: '#own' },
-		{ label: 'Цены', href: '#catalog' },
-		{ label: 'Доставка и монтаж', href: '#steps' },
-		{ label: 'Бесплатный пробник', href: '#lead', dot: true }
+		{ label: 'Цены', href: '#prices' },
+		{ label: 'Доставка и монтаж', href: '#delivery' },
+		{ label: 'Бесплатный пробник', href: '#probnik', dot: true }
 	];
 
 	const fullNav = [
@@ -42,7 +42,7 @@
 
 <header class:lite>
 	<div class="top wrap">
-		<span><Icon name="factory" size={16} />{lite ? 'Производство в Москве' : 'Собственное производство в Москве'}</span>
+		<span><Icon name="factory" size={16} />{lite ? 'Печать от 3 дней' : 'Собственное производство в Москве'}</span>
 		<span><Icon name="clock" size={16} />{brand.hours}</span>
 	</div>
 

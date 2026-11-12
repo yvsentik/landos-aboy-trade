@@ -41,9 +41,9 @@
 		{/if}
 		<div>
 			<h4>Покупателям</h4>
-			<a href="{home}#steps">Доставка и монтаж</a>
-			<a href="{home}{lite ? '#catalog' : '#materials'}">Цены</a>
-			<a href="{home}#lead">Бесплатный пробник</a>
+			<a href="{home}{lite ? '#delivery' : '#steps'}">Доставка и монтаж</a>
+			<a href="{home}{lite ? '#prices' : '#materials'}">Цены</a>
+			<a href="{home}{lite ? '#probnik' : '#lead'}">Бесплатный пробник</a>
 			<a href="{home}#production">Производство</a>
 		</div>
 	</div>
