@@ -52,8 +52,8 @@
 </svelte:head>
 
 <div class="mbar">
-	<a href={tel}><Icon name="phone" size={18} />Позвонить</a>
-	<a href={tg}><Icon name="chat" size={18} />Написать</a>
+	<a href={tel}><Icon name="phone" size={27} />Позвонить</a>
+	<a href={tg}><Icon name="chat" size={27} />Написать</a>
 </div>
 
 <header>
@@ -61,8 +61,8 @@
 		<a class="logo" href="#top"><span class="mark"></span><span><b>ФАЛЬКОВ</b><small>SEO-агентство</small></span></a>
 		<a class="phone" href={tel}>{phone}</a>
 		<div class="acts">
-			<a href={tel}><Icon name="phone" size={20} />Позвонить</a>
-			<a href={tg}><Icon name="chat" size={20} />Написать</a>
+			<a href={tel}><Icon name="phone" size={30} />Позвонить</a>
+			<a href={tg}><Icon name="chat" size={30} />Написать</a>
 		</div>
 	</div>
 	<nav class="wrap">
@@ -236,7 +236,7 @@
 	.btn { border-radius: 8px; }
 
 	.mbar { display: none; position: sticky; top: 0; z-index: 30; background: var(--blue); grid-template-columns: repeat(2, 1fr); }
-	.mbar a { display: flex; align-items: center; justify-content: center; gap: 6px; color: #fff; font-weight: 600; font-size: 14px; padding: 12px 4px; }
+	.mbar a { display: flex; align-items: center; justify-content: center; gap: 9px; color: #fff; font-weight: 600; font-size: 21px; padding: 18px 6px; }
 	.mbar a + a { border-left: 1px solid rgb(255 255 255 / 0.25); }
 
 	header { border-bottom: 1px solid var(--line); }
@@ -246,8 +246,8 @@
 	.logo b { display: block; color: var(--navy); font-size: 22px; font-weight: 800; line-height: 1; }
 	.logo small { color: var(--navy); font-weight: 700; text-transform: uppercase; font-size: 12px; }
 		.phone { color: var(--blue); font-size: 22px; font-weight: 700; white-space: nowrap; }
-	.acts { margin-left: auto; display: flex; background: var(--blue); border-radius: 8px; padding: 4px; }
-	.acts a { display: flex; gap: 8px; align-items: center; color: #fff; font-weight: 600; padding: 12px 18px; border-radius: 6px; }
+	.acts { margin-left: auto; display: flex; background: var(--blue); border-radius: 12px; padding: 6px; }
+	.acts a { display: flex; gap: 12px; align-items: center; color: #fff; font-weight: 600; font-size: 24px; padding: 18px 27px; border-radius: 9px; }
 	.acts a:hover { background: var(--blue-d); }
 	nav { display: flex; gap: 32px; padding-bottom: 14px; font-weight: 500; }
 	nav a:hover { color: var(--blue); }
@@ -364,7 +364,7 @@
 		section { padding-top: 44px; }
 		.mbar { display: grid; }
 		nav { gap: 20px; overflow-x: auto; scrollbar-width: none; white-space: nowrap; font-size: 15px; padding-bottom: 12px; }
-		section, #prices { scroll-margin-top: 52px; }
+		section, #prices { scroll-margin-top: 76px; }
 		.phone { font-size: 16px; }
 		.banner { padding: 22px 18px; margin-top: 16px; gap: 24px; }
 		.btxt p { font-size: 16px; }
