@@ -27,7 +27,7 @@
 <Header />
 
 <!-- Вариант 1 «Производство»: структура главной okonti.ru -->
-<div class="hero" style:--bg="url({prod('warehouse')})">
+<div class="hero" style:--bg="url({prod('warehouse-hd')})">
 	<div class="wrap inner">
 		<span class="badge">Собственное производство в Москве</span>
 		<h1>Фотообои и фрески <br />от производителя</h1>

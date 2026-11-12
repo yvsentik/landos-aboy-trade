@@ -34,7 +34,7 @@
 <Header lite />
 
 <!-- Вариант 1-2: v1 без каталога, всё ведёт к отправке своего изображения -->
-<div class="hero" style:--bg="url({prod('warehouse')})">
+<div class="hero" style:--bg="url({prod('warehouse-hd')})">
 	<div class="wrap inner">
 		<span class="badge">Производство в Москве</span>
 		<h1>Фотообои и фрески <br />от производителя</h1>
