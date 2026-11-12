@@ -72,9 +72,9 @@
 
 <UtpGrid compact items={utp} />
 <Production title="Производство в Москве" sub="" />
-<ColorGuarantee lite />
-<Steps {steps} />
 <OwnImage lite />
+<Steps {steps} />
+<ColorGuarantee lite />
 <ProductTiles />
 <Faq mode="tips" />
 <Faq />
