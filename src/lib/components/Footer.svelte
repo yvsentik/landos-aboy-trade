@@ -10,6 +10,8 @@
 			<b class="logo">{brand.name}</b>
 			<p>Производим фотообои и фрески в Москве. Печатаем по вашему размеру от 3 дней.</p>
 			<a class="phone" href={brand.phoneHref}>{brand.phone}</a>
+			<a href={brand.max}>Написать в Макс</a>
+			<a href={brand.telegram}>Telegram: @oboitrade_moscow</a>
 			<p>{brand.hours}</p>
 		</div>
 		<div>

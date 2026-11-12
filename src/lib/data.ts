@@ -16,10 +16,10 @@ export const production = [
 export const brand = {
 	name: 'ОбоиТрейд',
 	tagline: 'Производство фотообоев и фресок',
-	phone: '+7 (495) 000-00-00', // ЗАГЛУШКА
-	phoneHref: 'tel:+74950000000', // ЗАГЛУШКА
-	max: 'https://max.ru/', // ЗАГЛУШКА: ссылка на профиль в Макс
-	telegram: 'https://t.me/', // ЗАГЛУШКА
+	phone: '+7 (993) 343-40-80',
+	phoneHref: 'tel:+79933434080',
+	max: 'https://max.ru/u/f9LHodD0cOK9Qdlnvw5LaBVzXSF3J5DGBNlBlhrYyRku60-EZOx8XGFtb6s',
+	telegram: 'https://telegram.me/oboitrade_moscow',
 	hours: 'Ежедневно с 9 до 21',
 	city: 'Москва и МО'
 };

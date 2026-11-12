@@ -241,6 +241,7 @@
 				<div class="alt">
 					<a href={brand.phoneHref}><Icon name="phone" size={18} />{brand.phone}</a>
 					<a href={brand.max}><MaxLogo size={18} />Написать в Макс</a>
+					<a href={brand.telegram}><Icon name="send" size={18} />Telegram</a>
 					<a href={lead}><Icon name="gift" size={18} />Бесплатный пробник</a>
 				</div>
 			</div>
