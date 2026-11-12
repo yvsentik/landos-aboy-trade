@@ -6,15 +6,8 @@
 	import Icon from '#lib/components/Icon.svelte';
 
 	// Полный каталог фресок, спарсенный с lastanza.ru/catalog (static/catalog.json).
-	type Item = {
-		url: string;
-		art: string;
-		title: string;
-		img: string;
-		price: string;
-		low: number;
-		tags: Record<string, string[]>;
-	};
+	// s — адрес страницы, a — артикул, t — коллекция, i — фото, p — цена от, ₽/м², g — теги
+	type Item = { s: string; a: string; t: string; i: string; p: number; g: Record<string, string[]> };
 
 	const GROUPS = ['Коллекция', 'Категория', 'По назначению', 'Цвет', 'По ориентации'];
 	const LABEL: Record<string, string> = {
@@ -57,7 +50,7 @@
 		Object.fromEntries(
 			GROUPS.map((g) => {
 				const m = new Map<string, number>();
-				for (const it of items) for (const v of it.tags[g] ?? []) m.set(v, (m.get(v) ?? 0) + 1);
+				for (const it of items) for (const v of it.g[g] ?? []) m.set(v, (m.get(v) ?? 0) + 1);
 				return [g, [...m.entries()].sort((a, b) => b[1] - a[1])];
 			})
 		) as Record<string, [string, number][]>
@@ -67,11 +60,11 @@
 		items.filter((it) => {
 			for (const g of GROUPS) {
 				const v = picked[g];
-				if (v && !(it.tags[g] ?? []).some((t) => t === v || t.startsWith(v + '|'))) return false;
+				if (v && !(it.g[g] ?? []).some((t) => t === v || t.startsWith(v + '|'))) return false;
 			}
 			if (q.trim()) {
 				const s = q.trim().toLowerCase();
-				if (!it.art.toLowerCase().includes(s) && !it.title.toLowerCase().includes(s)) return false;
+				if (!it.a.toLowerCase().includes(s) && !it.t.toLowerCase().includes(s)) return false;
 			}
 			return true;
 		})
@@ -160,17 +153,17 @@
 			{/if}
 
 			<div class="grid">
-				{#each filtered.slice(0, shown) as it (it.url)}
+				{#each filtered.slice(0, shown) as it (it.s)}
 					<article>
-						<a class="pic" href={it.url} target="_blank" rel="noopener">
-							<img src={it.img} alt={`${it.title} арт. ${it.art}`} loading="lazy" />
+						<a class="pic" href={resolve('/catalog/[slug]', { slug: it.s })}>
+							<img src={it.i} alt={`${it.t} арт. ${it.a}`} loading="lazy" />
 						</a>
 						<div class="body">
-							<small>{it.title}</small>
-							<b>Арт. {it.art}</b>
-							<span class="price">{it.price}</span>
+							<small>{it.t}</small>
+							<a href={resolve('/catalog/[slug]', { slug: it.s })}><b>Арт. {it.a}</b></a>
+							<span class="price">от {fmt(it.p)} ₽/м²</span>
 							<div class="acts">
-								<a class="btn btn-primary" href={lead}>Заказать</a>
+								<a class="btn btn-primary" href={resolve('/catalog/[slug]', { slug: it.s })}>Выбрать</a>
 								<a class="btn btn-outline" href={lead} title="Бесплатный пробник"><Icon name="gift" size={18} /></a>
 							</div>
 						</div>
