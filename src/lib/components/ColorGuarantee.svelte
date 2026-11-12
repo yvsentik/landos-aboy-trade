@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { prod } from '#lib/data.ts';
 	import Icon from './Icon.svelte';
+
+	let { lite = false }: { lite?: boolean } = $props();
 </script>
 
 <!-- Главная боль ниши — цвет. Блок в духе «Пересчитаем смету» у okonti.ru -->
@@ -12,11 +14,11 @@
 				<span class="badge">Гарантия цвета</span>
 				<h2>Итоговый цвет фрески совпадёт с образцом — гарантируем</h2>
 				<ul>
-					<li><Icon name="check" size={20} />Бесплатный пробник материала и цветопроба вашего дизайна</li>
+					{#if !lite}<li><Icon name="check" size={20} />Бесплатный пробник материала и цветопроба вашего дизайна</li>{/if}
 					<li><Icon name="check" size={20} />Подгоним оттенок под ваши стены, мебель и текстиль</li>
-					<li><Icon name="check" size={20} />Печатаем, только когда вы утвердили цвет</li>
+					{#if !lite}<li><Icon name="check" size={20} />Печатаем, только когда вы утвердили цвет</li>{/if}
 				</ul>
-				<a class="btn btn-primary" href="#lead"><Icon name="gift" size={20} />Получить пробник бесплатно</a>
+				<a class="btn btn-primary" href="#lead"><Icon name="gift" size={20} />{lite ? 'Получить пробник цвета бесплатно' : 'Получить пробник бесплатно'}</a>
 			</div>
 		</div>
 	</div>

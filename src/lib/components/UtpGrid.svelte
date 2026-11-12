@@ -1,15 +1,16 @@
 <script lang="ts">
-	import { utp } from '#lib/data.ts';
+	import { utp as base, type Utp } from '#lib/data.ts';
 	import Icon from './Icon.svelte';
 
-	let { compact = false, title = '' }: { compact?: boolean; title?: string } = $props();
+	let { compact = false, title = '', items = base }: { compact?: boolean; title?: string; items?: Utp[] } =
+		$props();
 </script>
 
 <section>
 	<div class="wrap">
 		{#if title}<h2>{title}</h2>{/if}
 		<div class="grid" class:compact>
-			{#each utp as u}
+			{#each items as u}
 				<div class="item">
 					<span class="ic"><Icon name={u.icon} size={compact ? 36 : 28} /></span>
 					<div>
@@ -63,7 +64,7 @@
 	}
 
 	.compact {
-		grid-template-columns: repeat(6, 1fr);
+		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 		gap: 12px;
 	}
 
