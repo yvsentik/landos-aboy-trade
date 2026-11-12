@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { brand, prod } from '#lib/data.ts';
 	import Icon from './Icon.svelte';
+	import MaxLogo from './MaxLogo.svelte';
 
 	let {
 		title = 'Получите бесплатный пробник и расчёт за 15 минут',
@@ -24,7 +25,7 @@
 				<p>{text}</p>
 				<div class="alt">
 					<a href={brand.phoneHref}><Icon name="phone" size={18} />{brand.phone}</a>
-					<a href={brand.max}><Icon name="chat" size={18} />Макс</a>
+					<a href={brand.max}><MaxLogo size={18} light />Макс</a>
 					<a href={brand.telegram}><Icon name="send" size={18} />Telegram</a>
 				</div>
 			</div>

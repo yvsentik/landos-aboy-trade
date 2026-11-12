@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { brand, styles, rooms } from '#lib/data.ts';
+
+	let { home = '' }: { home?: string } = $props();
 </script>
 
 <footer>
@@ -12,26 +14,26 @@
 		</div>
 		<div>
 			<h4>Каталог</h4>
-			<a href="#catalog">Фотообои</a>
-			<a href="#catalog">Фрески</a>
-			<a href="#catalog">Детские обои</a>
-			<a href="#catalog">Бесшовные обои</a>
-			<a href="#lead">Своё изображение</a>
+			<a href="{home}#catalog">Фотообои</a>
+			<a href="{home}#catalog">Фрески</a>
+			<a href="{home}#catalog">Детские обои</a>
+			<a href="{home}#catalog">Бесшовные обои</a>
+			<a href="{home}#lead">Своё изображение</a>
 		</div>
 		<div>
 			<h4>Стили</h4>
-			{#each styles.slice(0, 6) as s}<a href="#styles">{s.name}</a>{/each}
+			{#each styles.slice(0, 6) as s}<a href="{home}#styles">{s.name}</a>{/each}
 		</div>
 		<div>
 			<h4>Комнаты</h4>
-			{#each rooms.slice(0, 6) as r}<a href="#styles">{r.name}</a>{/each}
+			{#each rooms.slice(0, 6) as r}<a href="{home}#styles">{r.name}</a>{/each}
 		</div>
 		<div>
 			<h4>Покупателям</h4>
-			<a href="#steps">Доставка и монтаж</a>
-			<a href="#materials">Цены</a>
-			<a href="#lead">Бесплатный пробник</a>
-			<a href="#production">Производство</a>
+			<a href="{home}#steps">Доставка и монтаж</a>
+			<a href="{home}#materials">Цены</a>
+			<a href="{home}#lead">Бесплатный пробник</a>
+			<a href="{home}#production">Производство</a>
 		</div>
 	</div>
 	<div class="wrap bottom">

@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { brand, catalogSize } from '#lib/data.ts';
 	import Icon from './Icon.svelte';
+	import MaxLogo from './MaxLogo.svelte';
 
-	let { calcHref = '#lead' }: { calcHref?: string } = $props();
+	let { calcHref = '#lead', home = '' }: { calcHref?: string; home?: string } = $props();
+	const at = (h: string) => (h.startsWith('#') ? home + h : h);
 	let open = $state(false);
 
 	const nav = [
-		{ label: 'Фотообои', href: '#catalog' },
-		{ label: 'Фрески', href: '#catalog' },
-		{ label: `Каталог ${catalogSize}`, href: '#catalog' },
+		{ label: 'Фотообои', href: '/catalog/' },
+		{ label: 'Фрески', href: '/catalog/' },
+		{ label: 'Каталог', href: '/catalog/' },
 		{ label: 'Стили', href: '#styles' },
 		{ label: 'Цены', href: '#materials' },
 		{ label: 'Доставка и монтаж', href: '#steps' },
@@ -20,7 +22,7 @@
 <div class="mbar">
 	<a href={calcHref}><Icon name="calc" size={26} />Рассчитать</a>
 	<a href={brand.phoneHref}><Icon name="phone" size={26} />Позвонить</a>
-	<a href={brand.max}><Icon name="chat" size={26} />Написать</a>
+	<a href={brand.max}><MaxLogo size={24} light />Написать</a>
 </div>
 
 <header>
@@ -38,7 +40,7 @@
 			</span>
 		</a>
 
-		<a href="#lead" class="gift"><Icon name="gift" size={16} />Пробник бесплатно</a>
+		<a href={at('#lead')} class="gift"><Icon name="gift" size={16} />Пробник бесплатно</a>
 
 		<a class="phone" href={brand.phoneHref}>
 			{brand.phone}
@@ -48,7 +50,7 @@
 		<div class="actions">
 			<a href={calcHref}><Icon name="calc" size={30} />Рассчитать</a>
 			<a href={brand.phoneHref}><Icon name="phone" size={30} />Позвонить</a>
-			<a href={brand.max}><Icon name="chat" size={30} />Написать</a>
+			<a href={brand.max}><MaxLogo size={28} light />Написать</a>
 		</div>
 
 		<button class="burger" aria-label="Меню" aria-expanded={open} onclick={() => (open = !open)}>
@@ -58,7 +60,7 @@
 
 	<nav class="wrap" class:open>
 		{#each nav as item}
-			<a href={item.href} onclick={() => (open = false)}>
+			<a href={at(item.href)} onclick={() => (open = false)}>
 				{item.label}
 				{#if item.dot}<i class="dot"></i>{/if}
 			</a>

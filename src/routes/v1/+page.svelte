@@ -36,7 +36,7 @@
 			бесплатный пробник до оплаты.
 		</p>
 		<div class="ctas">
-			<a class="btn btn-primary" href="#styles">Выбрать из {catalogSize} дизайнов</a>
+			<a class="btn btn-primary" href="/catalog/">Выбрать из {catalogSize} дизайнов</a>
 			<a class="btn btn-white" href="#lead"><Icon name="gift" size={20} />Бесплатный пробник</a>
 		</div>
 		<ul class="facts">
