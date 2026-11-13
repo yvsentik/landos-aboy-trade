@@ -115,14 +115,13 @@
 	<!-- 3. Позиции, которые можно проверить -->
 	<section id="positions">
 		<div class="wrap">
-			<h2>Позиции проектов – проверьте сами</h2>
-			<p class="sub">Откройте Яндекс и введите запрос ниже</p>
+			<h2>Убедитесь сами в эффективности наших проектов</h2>
 			<div class="ptable" class:open={allPos}>
 				{#each positions as p}
 					<div class="prow">
 						<img src={pic(p.logo)} alt={p.name} />
 						<div class="pname"><b>{p.name}</b><span>{p.niche}</span></div>
-						<div class="pq">{#each p.q as q}<span>{q}</span>{/each}</div>
+						<div class="pq"><small>Введите в поиске</small>{#each p.q as q}<span>{q}</span>{/each}</div>
 						<div class="ptop"><b>{p.top}</b><span>запросов в ТОП-5</span></div>
 					</div>
 				{/each}
@@ -207,7 +206,6 @@
 	section { padding-top: 64px; }
 	section, #prices { scroll-margin-top: 8px; }
 	h2 { font-size: clamp(24px, 3vw, 32px); }
-	.sub { color: var(--muted); margin-top: 6px; }
 	.btn { border-radius: 8px; }
 
 	.mbar { display: none; position: sticky; top: 0; z-index: 30; background: var(--blue); grid-template-columns: repeat(2, 1fr); }
@@ -253,7 +251,8 @@
 	.pmore { display: none; }
 	.pname b { display: block; }
 	.pname span { color: var(--muted); font-size: 14px; }
-	.pq { display: flex; gap: 8px; flex-wrap: wrap; }
+	.pq { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+	.pq small { flex: 1 1 100%; color: var(--muted); font-size: 13px; font-weight: 600; }
 	.pq span { background: var(--soft-2); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; font-size: 14px; }
 	.ptop { text-align: right; }
 	.ptop b { display: block; font-size: 28px; font-weight: 800; color: var(--blue); line-height: 1; }
