@@ -2,6 +2,7 @@
 	import { brand, prod } from '#lib/data.ts';
 	import Icon from './Icon.svelte';
 	import MaxLogo from './MaxLogo.svelte';
+	import { sendLead } from '#lib/lead.ts';
 
 	let {
 		title = 'Получите бесплатный пробник и расчёт за 15 минут',
@@ -9,11 +10,24 @@
 	}: { title?: string; text?: string } = $props();
 
 	let sent = $state(false);
+	let busy = $state(false);
+	let failed = $state(false);
 
-	function submit(e: SubmitEvent) {
+	async function submit(e: SubmitEvent) {
 		e.preventDefault();
-		// TODO: подключить отправку заявки (CRM / Telegram-бот / почта)
-		sent = true;
+		const f = new FormData(e.currentTarget as HTMLFormElement);
+		busy = true;
+		failed = false;
+		const ok = await sendLead({
+			form: 'lead',
+			name: String(f.get('name') ?? ''),
+			phone: String(f.get('phone') ?? ''),
+			size: String(f.get('size') ?? ''),
+			website: String(f.get('website') ?? '')
+		});
+		busy = false;
+		if (ok) sent = true;
+		else failed = true;
 	}
 </script>
 
@@ -48,9 +62,13 @@
 						autocomplete="tel"
 					/>
 					<input class="field" name="size" placeholder="Размер стены, например 3 × 2,7 м" />
-					<button class="btn btn-pink" type="submit">
-						<Icon name="gift" size={20} />Получить пробник бесплатно
+					<input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+					<button class="btn btn-pink" type="submit" disabled={busy}>
+						<Icon name="gift" size={20} />{busy ? 'Отправляем…' : 'Получить пробник бесплатно'}
 					</button>
+					{#if failed}
+						<p class="err">Не получилось отправить. Позвоните {brand.phone} или напишите в Макс.</p>
+					{/if}
 					<small>Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных</small>
 				</form>
 			{/if}
@@ -59,6 +77,19 @@
 </section>
 
 <style>
+	.hp {
+		position: absolute;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		opacity: 0;
+	}
+
+	.err {
+		color: #c8126a;
+		font-size: 14px;
+	}
+
 	.box {
 		position: relative;
 		border-radius: 20px;
