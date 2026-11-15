@@ -66,7 +66,7 @@
 <Steps {steps} />
 <ColorGuarantee lite />
 <ProductTiles />
-<InfoBlocks />
+<InfoBlocks show={['probnik', 'delivery']} />
 <Faq mode="tips" />
 <Faq />
 <LeadForm

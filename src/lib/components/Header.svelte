@@ -14,6 +14,12 @@
 	const at = (h: string) => (h.startsWith('#') ? home + h : h);
 	let open = $state(false);
 
+	// закрыть меню при переходе на другую страницу
+	$effect(() => {
+		void page.url.pathname;
+		open = false;
+	});
+
 	// Меню основного сайта: отдельные страницы
 	const liteNav = [
 		{ label: 'Фотообои', href: '/fotooboi/' },
@@ -43,9 +49,26 @@
 	<a href={brand.phoneHref}><Icon name="phone" size={26} />Позвонить</a>
 	<a href={brand.max}><MaxLogo size={24} light />Написать</a>
 	{#if lite}
-		<a class="ico" href="/cart/" aria-label="Корзина"><Icon name="cart" size={22} />{#if shop.count}<i>{shop.count}</i>{/if}</a>
+		<button class="ico" aria-label="Меню" aria-expanded={open} onclick={() => (open = !open)}>
+			{#if open}<span class="xx">✕</span>{:else}<Icon name="menu" size={24} />{/if}{#if shop.count && !open}<i>{shop.count}</i>{/if}
+		</button>
 	{/if}
 </div>
+
+{#if lite && open}
+	<div class="mmenu">
+		{#each nav as item}
+			<a href={item.href} class:active={page.url.pathname === item.href} onclick={() => (open = false)}>
+				{item.label}{#if item.dot}<i class="dot"></i>{/if}
+			</a>
+		{/each}
+		<a href="/proizvodstvo/" onclick={() => (open = false)}>Производство</a>
+		<a href="/kontakty/" onclick={() => (open = false)}>Контакты</a>
+		<a class="cartl" href="/cart/" onclick={() => (open = false)}>
+			<Icon name="cart" size={20} />Корзина{#if shop.count}<b>{shop.count}</b>{/if}
+		</a>
+	</div>
+{/if}
 
 <header class:lite>
 	<div class="top wrap">
@@ -127,7 +150,58 @@
 
 	.mbar .ico {
 		position: relative;
-		padding: 12px 14px;
+		padding: 12px 16px;
+		border: 0;
+		background: none;
+		color: #fff;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		box-shadow: inset 1px 0 0 rgb(255 255 255 / 0.2);
+	}
+
+	.mmenu {
+		display: none;
+	}
+
+	.xx {
+		font-size: 20px;
+		width: 24px;
+		text-align: center;
+	}
+
+	@media (max-width: 820px) {
+		.mmenu {
+			display: grid;
+			position: sticky;
+			top: 56px;
+			z-index: 29;
+			background: #fff;
+			box-shadow: 0 10px 30px rgb(0 20 60 / 0.2);
+			padding: 6px 16px 12px;
+		}
+		.mmenu a {
+			padding: 13px 0;
+			border-bottom: 1px solid var(--line);
+			font-weight: 600;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+		.mmenu a.active {
+			color: var(--blue);
+		}
+		.mmenu .cartl {
+			border-bottom: 0;
+			color: var(--navy);
+		}
+		.mmenu .cartl b {
+			background: var(--pink);
+			color: #fff;
+			border-radius: 9px;
+			padding: 0 7px;
+			font-size: 12px;
+		}
 	}
 
 	.mbar .ico i,
