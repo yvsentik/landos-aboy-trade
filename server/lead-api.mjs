@@ -34,35 +34,90 @@ const FORMS = {
 	cart: 'Заказ из корзины'
 };
 
+// Человеческое название страницы, с которой пришла заявка
+const PAGES = {
+	'/': 'Главная',
+	'/cart/': 'Корзина',
+	'/catalog/': 'Каталог',
+	'/fotooboi/': 'Фотообои',
+	'/freski/': 'Фрески',
+	'/oboi-na-zakaz/': 'Обои на заказ',
+	'/ceny/': 'Цены',
+	'/dostavka/': 'Доставка и монтаж',
+	'/probnik/': 'Бесплатный пробник',
+	'/proizvodstvo/': 'Производство',
+	'/kontakty/': 'Контакты'
+};
+
+function pageName(url, items) {
+	let path = '/';
+	try {
+		path = new URL(String(url)).pathname;
+	} catch {
+		/* нет адреса – считаем главной */
+	}
+	if (!path.endsWith('/')) path += '/';
+	if (PAGES[path]) return PAGES[path];
+	if (path.startsWith('/catalog/')) {
+		const art = items[0]?.art ? ` арт. ${clip(items[0].art, 40)}` : '';
+		return `Карточка фрески${art}`;
+	}
+	return path;
+}
+
 function buildLead(d) {
 	const phone = clip(d.phone, 40);
 	const digits = phone.replace(/\D/g, '');
 	if (digits.length < 10) throw new Error('phone');
 	const form = FORMS[d.form] ? d.form : 'lead';
-	const items = Array.isArray(d.items) ? d.items.slice(0, 30) : [];
+	const items = (Array.isArray(d.items) ? d.items.slice(0, 30) : []).map((i) => {
+		const qty = Math.max(1, Math.min(99, Math.round(Number(i.qty) || 1)));
+		const sum = Math.round(Number(i.sum) || 0);
+		return {
+			title: clip(i.title, 120),
+			art: clip(i.art, 40),
+			w: clip(i.w, 6),
+			h: clip(i.h, 6),
+			texture: clip(i.texture, 60),
+			perM: Math.round(Number(i.perM) || 0),
+			qty,
+			sum,
+			url: clip(i.url, 300)
+		};
+	});
+	const page = pageName(d.page, items);
+	const pcs = items.reduce((n, i) => n + i.qty, 0);
 
-	const lines = [];
+	const lines = [`Откуда: ${page} (${FORMS[form]})`];
 	if (d.size) lines.push(`Размер стены: ${clip(d.size, 80)}`);
 	if (d.city) lines.push(`Город: ${clip(d.city, 120)}`);
 	if (d.comment) lines.push(`Комментарий: ${clip(d.comment, 1500)}`);
 	if (items.length) {
-		lines.push('', 'Позиции:');
-		for (const i of items) {
+		lines.push('', `Позиций: ${items.length}, всего штук: ${pcs}`);
+		items.forEach((i, n) => {
 			lines.push(
-				`– ${clip(i.title, 120)} арт. ${clip(i.art, 40)}, ${clip(i.w, 6)}×${clip(i.h, 6)} см, ` +
-					`${clip(i.texture, 60) || 'фактура не выбрана'}, ${fmt(i.perM)} ₽/м² × ${clip(i.qty, 3) || 1} = ${fmt(i.sum)} ₽` +
-					(i.url ? `\n  ${clip(i.url, 300)}` : '')
+				`${n + 1}. ${i.title} арт. ${i.art} – ${i.w}×${i.h} см, ${i.texture || 'фактура не выбрана'}, ` +
+					`${fmt(i.perM)} ₽/м², ${i.qty} шт. = ${fmt(i.sum)} ₽` +
+					(i.url ? `\n   ${i.url}` : '')
 			);
-		}
+		});
 		if (d.total) lines.push(`Итого: ${fmt(d.total)} ₽`);
 	}
-	if (d.page) lines.push('', `Страница: ${clip(d.page, 300)}`);
+	if (d.page) lines.push('', `Адрес страницы: ${clip(d.page, 300)}`);
+
+	// Строки товаров для вкладки «Товары» сделки
+	const rows = items.map((i) => ({
+		PRODUCT_NAME: `${i.title} арт. ${i.art}, ${i.w}×${i.h} см${i.texture ? `, ${i.texture}` : ''}`,
+		PRICE: Math.round(i.sum / i.qty),
+		QUANTITY: i.qty
+	}));
 
 	const utm = d.utm && typeof d.utm === 'object' ? d.utm : {};
 	const source = form === 'lead' ? 'WEB' : 'STORE';
 	const name = clip(d.name, 100) || 'Без имени';
 	return {
 		phone,
+		rows,
 		contact: {
 			NAME: name,
 			PHONE: [{ VALUE: phone, VALUE_TYPE: 'WORK' }],
@@ -71,11 +126,11 @@ function buildLead(d) {
 			OPENED: 'Y'
 		},
 		deal: {
-			TITLE: `${FORMS[form]} – ${SITE}`,
+			TITLE: (form === 'cart' ? FORMS.cart : `${FORMS[form]}: ${page}`) + (pcs ? ` – ${pcs} шт.` : ''),
 			CATEGORY_ID: CATEGORY,
 			STAGE_ID: STAGE,
 			SOURCE_ID: source,
-			SOURCE_DESCRIPTION: `${SITE}: ${FORMS[form]}`,
+			SOURCE_DESCRIPTION: `${SITE}: ${page}`,
 			COMMENTS: [`Имя: ${name}`, `Телефон: ${phone}`, ...lines].join('\n'),
 			OPPORTUNITY: d.total ? Math.round(Number(d.total) || 0) : undefined,
 			CURRENCY_ID: 'RUB',
@@ -154,6 +209,14 @@ createServer(async (req, res) => {
 			fields: { ...lead.deal, CONTACT_ID: cid },
 			params: { REGISTER_SONET_EVENT: 'Y' }
 		});
+		if (lead.rows.length) {
+			try {
+				await bx('crm.deal.productrows.set', { id, rows: lead.rows });
+			} catch (e) {
+				// позиции всё равно есть в комментарии сделки
+				console.error('Товары в сделку не добавились', e?.message);
+			}
+		}
 		console.log('Сделка создана', id, 'контакт', cid, lead.deal.TITLE);
 		return send(res, 200, { ok: true, id });
 	} catch (e) {
