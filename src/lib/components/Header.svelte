@@ -43,7 +43,6 @@
 	<a href={brand.phoneHref}><Icon name="phone" size={26} />Позвонить</a>
 	<a href={brand.max}><MaxLogo size={24} light />Написать</a>
 	{#if lite}
-		<a class="ico" href="/favorites/" aria-label="Избранное"><Icon name="heart" size={22} />{#if shop.fav.length}<i>{shop.fav.length}</i>{/if}</a>
 		<a class="ico" href="/cart/" aria-label="Корзина"><Icon name="cart" size={22} />{#if shop.count}<i>{shop.count}</i>{/if}</a>
 	{/if}
 </div>
@@ -76,7 +75,6 @@
 
 		{#if lite}
 			<div class="shop">
-				<a href="/favorites/" aria-label="Избранное"><Icon name="heart" size={24} />{#if shop.fav.length}<i>{shop.fav.length}</i>{/if}<span>Избранное</span></a>
 				<a href="/cart/" aria-label="Корзина"><Icon name="cart" size={24} />{#if shop.count}<i>{shop.count}</i>{/if}<span>Корзина</span></a>
 			</div>
 		{/if}
@@ -124,7 +122,7 @@
 	}
 
 	.mbar.two {
-		grid-template-columns: 1fr 1fr auto auto;
+		grid-template-columns: 1fr 1fr auto;
 	}
 
 	.mbar .ico {

@@ -1,4 +1,4 @@
-// Корзина и избранное. Хранятся в браузере покупателя (localStorage), без регистрации.
+// Корзина. Хранится в браузере покупателя (localStorage), без регистрации.
 
 export type CartItem = {
 	id: string; // slug + размер + фактура
@@ -14,7 +14,6 @@ export type CartItem = {
 };
 
 const CART = 'cart';
-const FAV = 'fav';
 
 function load<T>(key: string, fallback: T): T {
 	try {
@@ -35,7 +34,6 @@ function save(key: string, value: unknown) {
 
 class Shop {
 	cart = $state<CartItem[]>([]);
-	fav = $state<string[]>([]);
 	#ready = false;
 
 	/** Подгрузить сохранённое (вызывать в браузере) */
@@ -43,11 +41,9 @@ class Shop {
 		if (this.#ready || typeof window === 'undefined') return;
 		this.#ready = true;
 		this.cart = load<CartItem[]>(CART, []);
-		this.fav = load<string[]>(FAV, []);
 		// синхронизация между вкладками
 		window.addEventListener('storage', (e) => {
 			if (e.key === CART) this.cart = load<CartItem[]>(CART, []);
-			if (e.key === FAV) this.fav = load<string[]>(FAV, []);
 		});
 	}
 
@@ -82,15 +78,6 @@ class Shop {
 	clear() {
 		this.cart = [];
 		save(CART, this.cart);
-	}
-
-	isFav(slug: string) {
-		return this.fav.includes(slug);
-	}
-
-	toggleFav(slug: string) {
-		this.fav = this.isFav(slug) ? this.fav.filter((s) => s !== slug) : [...this.fav, slug];
-		save(FAV, this.fav);
 	}
 }
 
