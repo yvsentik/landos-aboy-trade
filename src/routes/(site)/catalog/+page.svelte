@@ -29,8 +29,11 @@
 	let q = $state('');
 	let shown = $state(PAGE);
 	let open = $state<string | null>('Категория');
+	// на телефоне фильтры свёрнуты под кнопкой «Фильтры»
+	let showFilters = $state(false);
 
 	onMount(async () => {
+		if (matchMedia('(max-width: 820px)').matches) open = null;
 		try {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const r = await fetch(asset('/catalog.json' as any));
@@ -111,6 +114,13 @@
 				<input placeholder="Артикул или коллекция" bind:value={q} oninput={() => (shown = PAGE)} />
 			</label>
 
+			<button class="ftoggle" aria-expanded={showFilters} onclick={() => (showFilters = !showFilters)}>
+				<Icon name="menu" size={18} />Фильтры
+				{#if Object.keys(picked).length}<b>{Object.keys(picked).length}</b>{/if}
+				<span>{showFilters ? '−' : '+'}</span>
+			</button>
+
+			<div class="fbody" class:show={showFilters}>
 			{#each GROUPS as g}
 				{#if options[g]?.length}
 					<div class="group">
@@ -136,6 +146,7 @@
 			{#if Object.keys(picked).length || q}
 				<button class="btn btn-outline reset" onclick={reset}>Сбросить фильтры</button>
 			{/if}
+			</div>
 		</aside>
 
 		<section class="results">
@@ -337,6 +348,15 @@
 		color: #cfe0ff;
 	}
 
+	.fbody {
+		display: grid;
+		gap: 10px;
+	}
+
+	.ftoggle {
+		display: none;
+	}
+
 	.reset {
 		min-height: 44px;
 	}
@@ -464,6 +484,38 @@
 	}
 
 	@media (max-width: 820px) {
+		.ftoggle {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			width: 100%;
+			padding: 13px 14px;
+			border: 1px solid var(--line);
+			border-radius: 12px;
+			background: #fff;
+			font: inherit;
+			font-weight: 700;
+			cursor: pointer;
+		}
+		.ftoggle b {
+			background: var(--blue);
+			color: #fff;
+			border-radius: 999px;
+			padding: 0 8px;
+			font-size: 12px;
+		}
+		.ftoggle span {
+			margin-left: auto;
+			color: var(--blue);
+			font-size: 20px;
+			line-height: 1;
+		}
+		.fbody {
+			display: none;
+		}
+		.fbody.show {
+			display: grid;
+		}
 		.layout {
 			grid-template-columns: 1fr;
 		}
