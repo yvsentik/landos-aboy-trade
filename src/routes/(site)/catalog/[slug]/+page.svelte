@@ -5,7 +5,7 @@
 	import MaxLogo from '#lib/components/MaxLogo.svelte';
 	import { brand } from '#lib/data.ts';
 	import { shop } from '#lib/shop.svelte.ts';
-	import { sendLead } from '#lib/lead.ts';
+	import { sendLead, leadError } from '#lib/lead.ts';
 	import type { PageProps } from './$types';
 
 	// Карточка повторяет элементы карточки lastanza.ru: размер, фактура, редактирование,
@@ -81,14 +81,14 @@
 	}
 
 	let busy = $state(false);
-	let failed = $state(false);
+	let errText = $state('');
 
 	async function buyOneClick(e: SubmitEvent) {
 		e.preventDefault();
 		const f = new FormData(e.currentTarget as HTMLFormElement);
 		busy = true;
-		failed = false;
-		const ok = await sendLead({
+		errText = '';
+		const res = await sendLead({
 			form: 'oneclick',
 			name: String(f.get('name') ?? ''),
 			phone: String(f.get('phone') ?? ''),
@@ -109,8 +109,8 @@
 			]
 		});
 		busy = false;
-		if (ok) sent = true;
-		else failed = true;
+		if (res.ok) sent = true;
+		else errText = leadError(res, brand.phone);
 	}
 
 	async function share() {
@@ -337,10 +337,10 @@
 				<p>Арт. {p.art} · {w} × {h} см · {t?.name ?? ''} · {fmt(total)} ₽</p>
 				<form onsubmit={buyOneClick}>
 					<input class="field" name="name" placeholder="Имя" autocomplete="name" />
-					<input class="field" name="phone" type="tel" required placeholder="Телефон*" autocomplete="tel" />
+					<input class="field" name="phone" type="tel" required placeholder="Телефон*, +7 999 123-45-67" autocomplete="tel" />
 					<input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
 					<button class="btn btn-pink" type="submit" disabled={busy}>{busy ? 'Отправляем…' : 'Отправить'}</button>
-					{#if failed}<p class="err">Не получилось отправить. Позвоните {brand.phone}.</p>{/if}
+					{#if errText}<p class="err">{errText}</p>{/if}
 				</form>
 			{/if}
 		</div>

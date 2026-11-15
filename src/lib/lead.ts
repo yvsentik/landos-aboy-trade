@@ -45,8 +45,24 @@ export type Lead = {
 	website?: string; // ловушка для ботов
 };
 
-/** true – заявка принята CRM */
-export async function sendLead(lead: Lead): Promise<boolean> {
+export type LeadResult = { ok: true } | { ok: false; error: 'phone' | 'rate' | 'crm' | 'network' };
+
+/** Человеческий текст ошибки для формы */
+export function leadError(r: LeadResult, phone: string): string {
+	if (r.ok) return '';
+	if (r.error === 'phone') return 'Проверьте номер телефона: нужно 10–11 цифр, например +7 999 123-45-67.';
+	if (r.error === 'rate') return 'Слишком много заявок подряд. Попробуйте через 10 минут или позвоните ' + phone + '.';
+	return 'Не получилось отправить. Позвоните ' + phone + ' или напишите в Макс.';
+}
+
+/** Проверка номера до отправки: 10–11 цифр */
+export const phoneOk = (v: string) => {
+	const d = v.replace(/\D/g, '');
+	return d.length >= 10 && d.length <= 12;
+};
+
+export async function sendLead(lead: Lead): Promise<LeadResult> {
+	if (!phoneOk(lead.phone)) return { ok: false, error: 'phone' };
 	try {
 		const r = await fetch('/api/lead', {
 			method: 'POST',
@@ -54,8 +70,10 @@ export async function sendLead(lead: Lead): Promise<boolean> {
 			body: JSON.stringify({ ...lead, page: location.href, utm: utm() })
 		});
 		const j = await r.json().catch(() => ({}));
-		return r.ok && j.ok === true;
+		if (r.ok && j.ok === true) return { ok: true };
+		const e = j.error === 'phone' || j.error === 'rate' ? j.error : 'crm';
+		return { ok: false, error: e };
 	} catch {
-		return false;
+		return { ok: false, error: 'network' };
 	}
 }
