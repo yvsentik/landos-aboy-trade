@@ -28,12 +28,13 @@
 	let picked = $state<Record<string, string>>({});
 	let q = $state('');
 	let shown = $state(PAGE);
-	let open = $state<string | null>('Категория');
+	// по умолчанию все группы закрыты; «Тему» раскрываем только на десктопе
+	let open = $state<string | null>(null);
 	// на телефоне фильтры свёрнуты под кнопкой «Фильтры»
 	let showFilters = $state(false);
 
 	onMount(async () => {
-		if (matchMedia('(max-width: 820px)').matches) open = null;
+		if (!matchMedia('(max-width: 820px)').matches) open = 'Категория';
 		try {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const r = await fetch(asset('/catalog.json' as any));
