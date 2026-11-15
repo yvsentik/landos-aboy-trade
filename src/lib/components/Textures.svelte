@@ -11,7 +11,9 @@
 	// и оставляем два первых предложения
 	const text = (t: T) => {
 		const d = t.desc.replace(/^(Дизайнерские обои\s*)?"[^"]+"\s*[–-]\s*/, '').trim();
-		const short = (d.match(/[^.!?]+[.!?]/g) ?? [d]).slice(0, 2).join(' ').trim();
+		// конец предложения – только если дальше заглавная буква (не режем «т.к.», «т.е.»)
+		const parts = d.split(/(?<=[.!?])\s+(?=[А-ЯЁA-Z«"])/);
+		const short = parts.slice(0, 2).join(' ').trim();
 		return short.charAt(0).toUpperCase() + short.slice(1);
 	};
 </script>
