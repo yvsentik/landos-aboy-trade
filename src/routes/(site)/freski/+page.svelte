@@ -2,8 +2,12 @@
 	import PageHero from '#lib/components/PageHero.svelte';
 	import InfoBlocks from '#lib/components/InfoBlocks.svelte';
 	import OwnImage from '#lib/components/OwnImage.svelte';
+	import Textures from '#lib/components/Textures.svelte';
 	import LeadForm from '#lib/components/LeadForm.svelte';
 	import { brand } from '#lib/data.ts';
+	import type { PageProps } from './$types';
+
+	let { data }: PageProps = $props();
 
 	const facts = [
 		{ num: '3,18 м', title: 'Без швов', text: 'Предел ширины печати. Длина полотна почти не ограничена.' },
@@ -51,7 +55,8 @@
 	</div>
 </section>
 
-<InfoBlocks show={['prices', 'probnik']} />
+<Textures groups={data.groups} />
+<InfoBlocks show={['probnik']} />
 
 <section>
 	<div class="wrap prose">
