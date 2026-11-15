@@ -14,6 +14,19 @@
 	const at = (h: string) => (h.startsWith('#') ? home + h : h);
 	let open = $state(false);
 
+	// пока мобильное меню открыто – страница под ним не прокручивается
+	$effect(() => {
+		if (!(lite && open)) return;
+		// «замораживаем» страницу на текущем месте и возвращаем туда же при закрытии
+		const y = window.scrollY;
+		const b = document.body.style;
+		Object.assign(b, { position: 'fixed', top: `-${y}px`, left: '0', right: '0', width: '100%' });
+		return () => {
+			Object.assign(b, { position: '', top: '', left: '', right: '', width: '' });
+			window.scrollTo({ top: y, behavior: 'instant' });
+		};
+	});
+
 	// закрыть меню при переходе на другую страницу
 	$effect(() => {
 		void page.url.pathname;
@@ -56,6 +69,7 @@
 </div>
 
 {#if lite && open}
+	<button class="mshade" aria-label="Закрыть меню" onclick={() => (open = false)}></button>
 	<div class="mmenu">
 		{#each nav as item}
 			<a href={item.href} class:active={page.url.pathname === item.href} onclick={() => (open = false)}>
@@ -160,7 +174,8 @@
 		box-shadow: inset 1px 0 0 rgb(255 255 255 / 0.2);
 	}
 
-	.mmenu {
+	.mmenu,
+	.mshade {
 		display: none;
 	}
 
@@ -171,10 +186,24 @@
 	}
 
 	@media (max-width: 820px) {
+		.mshade {
+			display: block;
+			position: fixed;
+			inset: 0;
+			z-index: 28;
+			border: 0;
+			padding: 0;
+			background: rgb(0 15 40 / 0.45);
+		}
 		.mmenu {
 			display: grid;
-			position: sticky;
+			position: fixed;
 			top: 56px;
+			left: 0;
+			right: 0;
+			max-height: calc(100dvh - 56px);
+			overflow-y: auto;
+			overscroll-behavior: contain;
 			z-index: 29;
 			background: #fff;
 			box-shadow: 0 10px 30px rgb(0 20 60 / 0.2);
