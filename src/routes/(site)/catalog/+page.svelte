@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import LeadForm from '#lib/components/LeadForm.svelte';
 	import Icon from '#lib/components/Icon.svelte';
+	import { shop } from '#lib/shop.svelte.ts';
 	import { lsColors } from '#lib/lastanza.ts';
 
 	const HEX: Record<string, string> = Object.fromEntries(lsColors.map((c) => [c.name, c.hex]));
@@ -158,9 +159,14 @@
 			<div class="grid">
 				{#each filtered.slice(0, shown) as it (it.s)}
 					<article>
-						<a class="pic" href={resolve('/(site)/catalog/[slug]', { slug: it.s })}>
-							<img src={it.i} alt={`${it.t} арт. ${it.a}`} loading="lazy" />
-						</a>
+						<div class="picw">
+							<a class="pic" href={resolve('/(site)/catalog/[slug]', { slug: it.s })}>
+								<img src={it.i} alt={`${it.t} арт. ${it.a}`} loading="lazy" />
+							</a>
+							<button class="heart" class:on={shop.isFav(it.s)} onclick={() => shop.toggleFav(it.s)} aria-label="В избранное">
+								<Icon name="heart" size={18} />
+							</button>
+						</div>
 						{#if it.c.length || it.g['Цвет']?.length}
 							<div class="vars">
 								{#each it.c.slice(0, 5) as v}
@@ -358,6 +364,30 @@
 		box-shadow: 0 2px 14px rgb(0 30 80 / 0.08);
 		display: flex;
 		flex-direction: column;
+	}
+
+	.picw {
+		position: relative;
+	}
+
+	.heart {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		border: 0;
+		background: rgb(255 255 255 / 0.92);
+		color: var(--muted);
+		display: grid;
+		place-items: center;
+		cursor: pointer;
+	}
+
+	.heart.on {
+		color: #fff;
+		background: var(--pink);
 	}
 
 	.pic img {
