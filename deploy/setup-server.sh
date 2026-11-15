@@ -1,10 +1,11 @@
 #!/bin/bash
 # Разовая настройка сервера (Ubuntu/Debian) под лендинг landos-aboy-trade.
-# Запуск от root:  DOMAIN=example.ru bash setup-server.sh
-# Без DOMAIN сайт работает только по HTTP на IP.
+# Запуск от root:  DOMAIN=example.ru BITRIX_WEBHOOK=https://.../rest/ID/KEY/ bash setup-server.sh
+# Без DOMAIN сайт работает только по HTTP на IP. Без BITRIX_WEBHOOK остаётся прежний ключ (если был).
 set -euo pipefail
 
 DOMAIN=${DOMAIN:-}
+BITRIX_WEBHOOK=${BITRIX_WEBHOOK:-}
 REPO=https://github.com/yvsentik/landos-aboy-trade.git
 SRC=/opt/landos
 WEB=/var/www/landos
@@ -36,6 +37,7 @@ git reset -q --hard origin/main
 npm ci --no-audit --no-fund
 npm run build
 rsync -a --delete build/ /var/www/landos/
+systemctl restart landos-lead-api 2>/dev/null || true
 echo "$NEW" > .deployed
 echo "Выложен коммит $NEW"
 EOF
@@ -48,6 +50,13 @@ server {
     server_name __SERVER_NAME__;
     root /var/www/landos;
     index index.html;
+
+    # Заявки с сайта → сервис lead-api → Битрикс24
+    location = /api/lead {
+        proxy_pass http://127.0.0.1:8787;
+        proxy_set_header X-Real-IP $remote_addr;
+        client_max_body_size 64k;
+    }
 
     location /_app/immutable/ {
         expires 1y;
@@ -94,6 +103,35 @@ systemctl enable --now landos-deploy.timer
 
 # 6. Первая выкладка
 /usr/local/bin/landos-deploy --force
+
+# 6.1 Сервис заявок lead-api (код – server/lead-api.mjs из репозитория)
+mkdir -p /etc/landos
+if [ -n "$BITRIX_WEBHOOK" ]; then
+  ( umask 077; printf 'BITRIX_WEBHOOK=%s\n' "$BITRIX_WEBHOOK" > /etc/landos/lead-api.env )
+fi
+[ -f /etc/landos/lead-api.env ] || : > /etc/landos/lead-api.env
+chmod 600 /etc/landos/lead-api.env
+cat > /etc/systemd/system/landos-lead-api.service <<'UNIT'
+[Unit]
+Description=Приём заявок с сайта и отправка в Битрикс24
+After=network-online.target
+
+[Service]
+EnvironmentFile=/etc/landos/lead-api.env
+ExecStart=/usr/bin/node /opt/landos/server/lead-api.mjs
+Restart=always
+RestartSec=3
+DynamicUser=yes
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+systemctl daemon-reload
+systemctl enable landos-lead-api
+systemctl restart landos-lead-api
+sleep 1
+systemctl is-active landos-lead-api
 
 # 7. Файрвол, если включён ufw
 if command -v ufw >/dev/null && ufw status | grep -q active; then

@@ -17,6 +17,7 @@ jobs:
       HOST: 194.58.95.244
       DOMAIN: fotooboi.oboitrade.ru
       SSHPASS: ${{ secrets.SERVER_PASSWORD }}
+      BITRIX_WEBHOOK: ${{ secrets.BITRIX_WEBHOOK }}
     steps:
       - uses: actions/checkout@v4
       - name: Check secret
@@ -37,8 +38,14 @@ jobs:
       - name: Run setup-server.sh
         run: |
           sshpass -e ssh -o StrictHostKeyChecking=accept-new -o PreferredAuthentications=password,keyboard-interactive \
-            root@"$HOST" "DOMAIN=$DOMAIN bash -s" < deploy/setup-server.sh
+            root@"$HOST" "DOMAIN=$DOMAIN BITRIX_WEBHOOK='$BITRIX_WEBHOOK' bash -s" < deploy/setup-server.sh
       - name: Check site
         run: |
           curl -sS -o /dev/null -w "http  → HTTP %{http_code} %{redirect_url}\n" "http://$DOMAIN/"
           curl -sS -o /dev/null -w "https → HTTP %{http_code}\n" "https://$DOMAIN/"
+      - name: Check lead API
+        run: |
+          # Заведомо неверный телефон: сервис должен ответить 400, лид не создаётся
+          curl -sS -X POST "https://$DOMAIN/api/lead" -H 'Content-Type: application/json' -d '{"phone":"1"}'
+          echo
+          if [ -z "$BITRIX_WEBHOOK" ]; then echo "::warning::Секрет BITRIX_WEBHOOK не задан – заявки не уйдут в Битрикс"; fi
