@@ -40,8 +40,6 @@
 		mirror = bw = added = sent = false;
 	});
 
-	const fav = $derived(shop.isFav(p.slug));
-
 	// после смены размера или фактуры – снова можно добавить в корзину
 	$effect(() => {
 		void [w, h, tex];
@@ -113,10 +111,6 @@
 		busy = false;
 		if (ok) sent = true;
 		else failed = true;
-	}
-
-	function toggleFav() {
-		shop.toggleFav(p.slug);
 	}
 
 	async function share() {
@@ -199,7 +193,6 @@
 					onerror={(e) => ((e.currentTarget as HTMLImageElement).src = p.img)}
 					alt={p.h1}
 				/>
-				<button class="favbtn" class:on={fav} onclick={toggleFav} aria-label="В избранное"><Icon name="heart" size={22} /></button>
 			</div>
 			<div class="thumbs">
 				<button class:on={photo === 'int'} onclick={() => (photo = 'int')}><img src={p.img} alt="В интерьере" /></button>
@@ -272,7 +265,6 @@
 				<button class="btn btn-primary big" onclick={addToCart} disabled={!area}><Icon name="cart" size={22} />В корзину</button>
 			{/if}
 			<button class="btn btn-pink" onclick={() => (oneClick = true)}>Купить в 1 клик</button>
-			<button class="btn btn-outline" class:on={fav} onclick={toggleFav}><Icon name="heart" size={20} />{fav ? 'В избранном' : 'В избранное'}</button>
 			<ul class="perks">
 				<li><Icon name="gift" size={18} />Пробник и цветопроба – бесплатно</li>
 				<li><Icon name="clock" size={18} />Печать от 3 дней</li>
@@ -450,26 +442,6 @@
 
 	.main img.bw {
 		filter: grayscale(1);
-	}
-
-	.favbtn {
-		position: absolute;
-		top: 12px;
-		right: 12px;
-		width: 44px;
-		height: 44px;
-		border-radius: 50%;
-		border: 0;
-		background: rgb(255 255 255 / 0.92);
-		color: var(--muted);
-		display: grid;
-		place-items: center;
-		cursor: pointer;
-	}
-
-	.favbtn.on {
-		background: var(--pink);
-		color: #fff;
 	}
 
 	.thumbs {
@@ -653,11 +625,6 @@
 
 	.buybox .btn {
 		width: 100%;
-	}
-
-	.buybox .btn-outline.on {
-		color: var(--pink);
-		box-shadow: inset 0 0 0 1.5px var(--pink);
 	}
 
 	.perks {

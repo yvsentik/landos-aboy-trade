@@ -163,9 +163,6 @@
 							<a class="pic" href={resolve('/(site)/catalog/[slug]', { slug: it.s })}>
 								<img src={it.i} alt={`${it.t} арт. ${it.a}`} loading="lazy" />
 							</a>
-							<button class="heart" class:on={shop.isFav(it.s)} onclick={() => shop.toggleFav(it.s)} aria-label="В избранное">
-								<Icon name="heart" size={18} />
-							</button>
 						</div>
 						{#if it.c.length || it.g['Цвет']?.length}
 							<div class="vars">
@@ -368,26 +365,6 @@
 
 	.picw {
 		position: relative;
-	}
-
-	.heart {
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		width: 36px;
-		height: 36px;
-		border-radius: 50%;
-		border: 0;
-		background: rgb(255 255 255 / 0.92);
-		color: var(--muted);
-		display: grid;
-		place-items: center;
-		cursor: pointer;
-	}
-
-	.heart.on {
-		color: #fff;
-		background: var(--pink);
 	}
 
 	.pic img {

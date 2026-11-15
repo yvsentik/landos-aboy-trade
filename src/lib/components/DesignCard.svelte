@@ -9,7 +9,6 @@
 <article>
 	<div class="pic">
 		<Mural kind={d.kind} palette={d.palette} seed={d.id} />
-		<button class="fav" aria-label="В избранное"><Icon name="heart" size={18} /></button>
 		<span class="tag">{d.style}</span>
 	</div>
 	<div class="body">
@@ -36,21 +35,6 @@
 	.pic {
 		position: relative;
 		aspect-ratio: 3 / 4;
-	}
-
-	.fav {
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		width: 36px;
-		height: 36px;
-		border-radius: 50%;
-		border: 0;
-		background: rgb(255 255 255 / 0.9);
-		color: var(--pink);
-		display: grid;
-		place-items: center;
-		cursor: pointer;
 	}
 
 	.tag {
