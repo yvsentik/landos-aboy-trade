@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { asset, resolve } from '$app/paths';
 	import { onMount } from 'svelte';
-	import Header from '#lib/components/Header.svelte';
-	import Footer from '#lib/components/Footer.svelte';
+	import LeadForm from '#lib/components/LeadForm.svelte';
 	import Icon from '#lib/components/Icon.svelte';
 	import { lsColors } from '#lib/lastanza.ts';
 
@@ -89,7 +88,7 @@
 	}
 
 	const fmt = (n: number) => n.toLocaleString('ru-RU');
-	const lead = resolve('/v1') + '#lead';
+	const lead = '#lead';
 </script>
 
 <svelte:head>
@@ -97,7 +96,6 @@
 	<meta name="description" content="Каталог фресок: коллекции Tesoro, ALBA, Mattina и Тренды. Подбор по теме, помещению, цвету и ориентации." />
 </svelte:head>
 
-<Header calcHref={lead} home="/v1/" />
 
 <main class="wrap">
 	<div class="head">
@@ -160,7 +158,7 @@
 			<div class="grid">
 				{#each filtered.slice(0, shown) as it (it.s)}
 					<article>
-						<a class="pic" href={resolve('/catalog/[slug]', { slug: it.s })}>
+						<a class="pic" href={resolve('/(site)/catalog/[slug]', { slug: it.s })}>
 							<img src={it.i} alt={`${it.t} арт. ${it.a}`} loading="lazy" />
 						</a>
 						{#if it.c.length || it.g['Цвет']?.length}
@@ -168,7 +166,7 @@
 								{#each it.c.slice(0, 5) as v}
 									{@const x = bySlug.get(v)}
 									{#if x}
-										<a href={resolve('/catalog/[slug]', { slug: v })} title="Арт. {x.a}" style:background-image="url({x.i})"></a>
+										<a href={resolve('/(site)/catalog/[slug]', { slug: v })} title="Арт. {x.a}" style:background-image="url({x.i})"></a>
 									{/if}
 								{/each}
 								{#if it.c.length > 5}<span class="more-v">+{it.c.length - 5}</span>{/if}
@@ -179,10 +177,10 @@
 						{/if}
 						<div class="body">
 							<small>{it.t}</small>
-							<a href={resolve('/catalog/[slug]', { slug: it.s })}><b>Арт. {it.a}</b></a>
+							<a href={resolve('/(site)/catalog/[slug]', { slug: it.s })}><b>Арт. {it.a}</b></a>
 							<span class="price">от {fmt(it.p)} ₽/м²</span>
 							<div class="acts">
-								<a class="btn btn-primary" href={resolve('/catalog/[slug]', { slug: it.s })}>Выбрать</a>
+								<a class="btn btn-primary" href={resolve('/(site)/catalog/[slug]', { slug: it.s })}>Выбрать</a>
 								<a class="btn btn-outline" href={lead} title="Бесплатный пробник"><Icon name="gift" size={18} /></a>
 							</div>
 						</div>
@@ -199,7 +197,7 @@
 	</div>
 </main>
 
-<Footer home="/v1/" />
+<LeadForm title="Понравилась фреска? Рассчитаем за 15 минут" />
 
 <style>
 	main {

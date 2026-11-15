@@ -1,55 +1,46 @@
 <script lang="ts">
-	import { brand, styles, rooms } from '#lib/data.ts';
+	import { brand } from '#lib/data.ts';
 
-	let { home = '', lite = false }: { home?: string; lite?: boolean } = $props();
+	// Подвал основного сайта: ссылки на все страницы
 </script>
 
 <footer>
 	<div class="wrap cols">
 		<div>
 			<b class="logo">{brand.name}</b>
-			<p>Производим фотообои и фрески в Москве. Печатаем по вашему размеру от 3 дней.</p>
+			<p>Фотообои и фрески на заказ по вашему размеру. Печать от 3 дней, доставка по всей России.</p>
 			<a class="phone" href={brand.phoneHref}>{brand.phone}</a>
 			<a href={brand.max}>Написать в Макс</a>
 			<a href={brand.telegram}>Telegram: @oboitrade_moscow</a>
 			<p>{brand.hours}</p>
 		</div>
 		<div>
-			<h4>{lite ? 'Печатаем' : 'Каталог'}</h4>
-			<a href="{home}#catalog">Фотообои</a>
-			<a href="{home}#catalog">Фрески</a>
-			<a href="{home}#catalog">Детские обои</a>
-			<a href="{home}#catalog">Бесшовные обои</a>
-			<a href="{home}#lead">Своё изображение</a>
+			<h4>Печатаем</h4>
+			<a href="/fotooboi/">Фотообои</a>
+			<a href="/freski/">Фрески</a>
+			<a href="/oboi-na-zakaz/">Обои на заказ</a>
+			<a href="/catalog/">Каталог</a>
 		</div>
-		{#if lite}
-			<div>
-				<h4>Отправить изображение</h4>
-				<a href={brand.max}>Макс</a>
-				<a href={brand.telegram}>Telegram</a>
-				<a href={brand.phoneHref}>Позвонить</a>
-			</div>
-		{:else}
-			<div>
-				<h4>Стили</h4>
-				{#each styles.slice(0, 6) as s}<a href="{home}#styles">{s.name}</a>{/each}
-			</div>
-			<div>
-				<h4>Комнаты</h4>
-				{#each rooms.slice(0, 6) as r}<a href="{home}#styles">{r.name}</a>{/each}
-			</div>
-		{/if}
 		<div>
 			<h4>Покупателям</h4>
-			<a href="{home}{lite ? '#delivery' : '#steps'}">Доставка и монтаж</a>
-			<a href="{home}{lite ? '#prices' : '#materials'}">Цены</a>
-			<a href="{home}{lite ? '#probnik' : '#lead'}">Бесплатный пробник</a>
-			<a href="{home}#production">Производство</a>
+			<a href="/ceny/">Цены</a>
+			<a href="/dostavka/">Доставка и монтаж</a>
+			<a href="/probnik/">Бесплатный пробник</a>
+		</div>
+		<div>
+			<h4>Компания</h4>
+			<a href="/proizvodstvo/">Производство</a>
+			<a href="/kontakty/">Контакты</a>
+		</div>
+		<div>
+			<h4>Отправить изображение</h4>
+			<a href={brand.max}>Макс</a>
+			<a href={brand.telegram}>Telegram</a>
+			<a href={brand.phoneHref}>Позвонить</a>
 		</div>
 	</div>
 	<div class="wrap bottom">
-		<span>© 2026 {brand.name}. {brand.city}</span>
-		{#if !lite}<span>* Бесплатная доставка по Москве – при заказе от 30 000 ₽</span>{/if}
+		<span>© 2026 {brand.name}</span>
 		<span>Политика конфиденциальности</span>
 	</div>
 </footer>

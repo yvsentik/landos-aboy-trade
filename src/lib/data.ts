@@ -172,26 +172,26 @@ export type Design = {
 
 // Демо-товары для витрины. В каталоге будут реальные дизайны.
 export const designs: Design[] = [
-	{ id: 101, name: 'Туманные горы', kind: 'mountains', palette: ['#EDE6DB', '#C9B8A3', '#9C8B78', '#6F6255'], style: 'Джапанди', color: 'Бежевый', room: 'Спальня', price: 'от 990 ₽/м²' },
-	{ id: 102, name: 'Тропический сад', kind: 'botanical', palette: ['#E7EDE2', '#A9C19A', '#6E8F5E', '#3E5B3A'], style: 'Экостиль', color: 'Зелёный', room: 'Гостиная', price: 'от 1 290 ₽/м²' },
-	{ id: 103, name: 'Терракотовые арки', kind: 'arches', palette: ['#F3E4D7', '#E2B48F', '#C97B5A', '#8E4E3A'], style: 'Бохо', color: 'Бежевый', room: 'Гостиная', price: 'от 2 490 ₽/м²' },
-	{ id: 104, name: 'Морская волна', kind: 'waves', palette: ['#E6EEF5', '#9DB8D3', '#3B5B8C', '#1E2F4D'], style: 'Современный', color: 'Синий', room: 'Ванная', price: 'от 1 290 ₽/м²' },
-	{ id: 105, name: 'Графит', kind: 'geometry', palette: ['#EDEDED', '#9AA0A6', '#4B4F55', '#2B2B2B'], style: 'Лофт', color: 'Серый', room: 'Офис', price: 'от 990 ₽/м²' },
-	{ id: 106, name: 'Облака на рассвете', kind: 'sky', palette: ['#FBEFF0', '#F2CBD0', '#E7B3B8', '#C98B95'], style: 'Сканди', color: 'Розовый', room: 'Детская', price: 'от 990 ₽/м²' },
-	{ id: 107, name: 'Сосновый лес', kind: 'mountains', palette: ['#E9EFE6', '#A7BBA0', '#5E7D5A', '#2F4530'], style: 'Экостиль', color: 'Зелёный', room: 'Спальня', price: 'от 1 590 ₽/м²' },
-	{ id: 108, name: 'Золотой час', kind: 'sky', palette: ['#FFF6E5', '#F5DCA5', '#E9C46A', '#C9953B'], style: 'Минимализм', color: 'Жёлтый', room: 'Кухня', price: 'от 990 ₽/м²' },
-	{ id: 109, name: 'Пальмовые листья', kind: 'botanical', palette: ['#F4F2EE', '#D8D3C8', '#9C9686', '#5E5A50'], style: 'Минимализм', color: 'Белый', room: 'Прихожая', price: 'от 1 290 ₽/м²' },
-	{ id: 110, name: 'Ар-деко', kind: 'arches', palette: ['#1F2A2E', '#3A4A4F', '#B89B5E', '#E5D3A8'], style: 'Классика', color: 'Чёрный', room: 'Гостиная', price: 'от 2 490 ₽/м²' },
-	{ id: 111, name: 'Ночной океан', kind: 'waves', palette: ['#D6DDE8', '#6F86A8', '#2E4469', '#121D33'], style: 'Лофт', color: 'Синий', room: 'Спальня', price: 'от 1 590 ₽/м²' },
-	{ id: 112, name: 'Песочные дюны', kind: 'geometry', palette: ['#F5EDE2', '#E3CDB0', '#C9A97F', '#8F7355'], style: 'Джапанди', color: 'Бежевый', room: 'Кухня', price: 'от 990 ₽/м²' }
+	{ id: 101, name: 'Туманные горы', kind: 'mountains', palette: ['#EDE6DB', '#C9B8A3', '#9C8B78', '#6F6255'], style: 'Джапанди', color: 'Бежевый', room: 'Спальня', price: 'от 2 300 ₽/м²' },
+	{ id: 102, name: 'Тропический сад', kind: 'botanical', palette: ['#E7EDE2', '#A9C19A', '#6E8F5E', '#3E5B3A'], style: 'Экостиль', color: 'Зелёный', room: 'Гостиная', price: 'от 2 300 ₽/м²' },
+	{ id: 103, name: 'Терракотовые арки', kind: 'arches', palette: ['#F3E4D7', '#E2B48F', '#C97B5A', '#8E4E3A'], style: 'Бохо', color: 'Бежевый', room: 'Гостиная', price: 'от 2 800 ₽/м²' },
+	{ id: 104, name: 'Морская волна', kind: 'waves', palette: ['#E6EEF5', '#9DB8D3', '#3B5B8C', '#1E2F4D'], style: 'Современный', color: 'Синий', room: 'Ванная', price: 'от 2 300 ₽/м²' },
+	{ id: 105, name: 'Графит', kind: 'geometry', palette: ['#EDEDED', '#9AA0A6', '#4B4F55', '#2B2B2B'], style: 'Лофт', color: 'Серый', room: 'Офис', price: 'от 2 300 ₽/м²' },
+	{ id: 106, name: 'Облака на рассвете', kind: 'sky', palette: ['#FBEFF0', '#F2CBD0', '#E7B3B8', '#C98B95'], style: 'Сканди', color: 'Розовый', room: 'Детская', price: 'от 2 300 ₽/м²' },
+	{ id: 107, name: 'Сосновый лес', kind: 'mountains', palette: ['#E9EFE6', '#A7BBA0', '#5E7D5A', '#2F4530'], style: 'Экостиль', color: 'Зелёный', room: 'Спальня', price: 'от 2 300 ₽/м²' },
+	{ id: 108, name: 'Золотой час', kind: 'sky', palette: ['#FFF6E5', '#F5DCA5', '#E9C46A', '#C9953B'], style: 'Минимализм', color: 'Жёлтый', room: 'Кухня', price: 'от 2 300 ₽/м²' },
+	{ id: 109, name: 'Пальмовые листья', kind: 'botanical', palette: ['#F4F2EE', '#D8D3C8', '#9C9686', '#5E5A50'], style: 'Минимализм', color: 'Белый', room: 'Прихожая', price: 'от 2 300 ₽/м²' },
+	{ id: 110, name: 'Ар-деко', kind: 'arches', palette: ['#1F2A2E', '#3A4A4F', '#B89B5E', '#E5D3A8'], style: 'Классика', color: 'Чёрный', room: 'Гостиная', price: 'от 2 800 ₽/м²' },
+	{ id: 111, name: 'Ночной океан', kind: 'waves', palette: ['#D6DDE8', '#6F86A8', '#2E4469', '#121D33'], style: 'Лофт', color: 'Синий', room: 'Спальня', price: 'от 2 300 ₽/м²' },
+	{ id: 112, name: 'Песочные дюны', kind: 'geometry', palette: ['#F5EDE2', '#E3CDB0', '#C9A97F', '#8F7355'], style: 'Джапанди', color: 'Бежевый', room: 'Кухня', price: 'от 2 300 ₽/м²' }
 ];
 
 export const steps = [
-	{ title: 'Выберите дизайн', text: `Из ${catalogSize} в каталоге или пришлите своё изображение` },
-	{ title: 'Получите пробник', text: 'Бесплатно привезём образец и цветопробу – до оплаты' },
-	{ title: 'Утвердите макет', text: 'Подгоним картинку под размер стены, окна и розетки' },
-	{ title: 'Печать от 3 дней', text: 'Печатаем на собственном производстве в Москве' },
-	{ title: 'Доставка и монтаж', text: 'Привезём по Москве и МО, при желании поклеим' }
+	{ title: 'Пришлите изображение', text: 'Фото, картину, референс или идею – в Макс или Telegram' },
+	{ title: 'Получите расчёт и пробник', text: 'Посчитаем цену и бесплатно привезём образец с цветопробой' },
+	{ title: 'Утвердите макет', text: 'Подгоним изображение под размер стены, окна и розетки' },
+	{ title: 'Печать от 3 дней', text: 'Печатаем на собственном производстве' },
+	{ title: 'Доставка', text: 'Привезём в тубусе по всей России, поклейку организуем по запросу' }
 ];
 
 export const tips = [

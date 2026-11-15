@@ -4,6 +4,9 @@
 	import MaxLogo from './MaxLogo.svelte';
 
 	// Цены, пробник и доставка для v1-2. Условия – по данным oboitrade.ru (доставка и оплата, статья о фресках).
+	type Part = 'prices' | 'probnik' | 'delivery';
+	let { show = ['prices', 'probnik', 'delivery'] }: { show?: Part[] } = $props();
+
 	const textures = [
 		{ name: 'Матовая гладкая', level: 'Доступная', text: 'Лёгкий шелковистый отлив. Для графики, минимализма и городских пейзажей' },
 		{ name: 'Песочная', level: 'Средняя', text: 'Кварцевый песок даёт глубину и скрывает мелкие неровности стены' },
@@ -19,6 +22,7 @@
 	];
 </script>
 
+{#if show.includes('prices')}
 <section id="prices">
 	<div class="wrap">
 		<div class="section-head">
@@ -44,7 +48,9 @@
 		<a class="btn btn-primary" href={brand.max}><MaxLogo size={20} light />Прислать фото и узнать цену</a>
 	</div>
 </section>
+{/if}
 
+{#if show.includes('probnik')}
 <section id="probnik">
 	<div class="wrap">
 		<div class="probe">
@@ -64,7 +70,9 @@
 		</div>
 	</div>
 </section>
+{/if}
 
+{#if show.includes('delivery')}
 <section id="delivery">
 	<div class="wrap">
 		<h2>Доставка и монтаж</h2>
@@ -82,6 +90,8 @@
 		<p class="small">Доставка – до подъезда, подъём на этаж оплачивается отдельно. Фреска изготавливается под заказ и обмену и возврату не подлежит.</p>
 	</div>
 </section>
+{/if}
+
 
 <style>
 	.from {

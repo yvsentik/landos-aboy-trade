@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import Header from '#lib/components/Header.svelte';
-	import Footer from '#lib/components/Footer.svelte';
+	import LeadForm from '#lib/components/LeadForm.svelte';
 	import Icon from '#lib/components/Icon.svelte';
 	import MaxLogo from '#lib/components/MaxLogo.svelte';
 	import { brand } from '#lib/data.ts';
@@ -102,8 +101,8 @@
 	const total = $derived(Math.round(area * perM));
 	const fmt = (n: number) => n.toLocaleString('ru-RU');
 	const clean = (v: string) => v.split('|').pop()!.trim();
-	const cat = (g: string, v: string) => `${resolve('/catalog')}?${encodeURIComponent(g)}=${encodeURIComponent(v)}`;
-	const lead = resolve('/v1') + '#lead';
+	const cat = (g: string, v: string) => `${resolve('/(site)/catalog')}?${encodeURIComponent(g)}=${encodeURIComponent(v)}`;
+	const lead = '#lead';
 	const big = (src: string) => src.replace('/390_300_1/', '/800_800_1/');
 
 	const tabs = [
@@ -128,7 +127,7 @@
 			</div>
 			<div class="strip">
 				{#each items as c}
-					<a href={resolve('/catalog/[slug]', { slug: c.slug })}>
+					<a href={resolve('/(site)/catalog/[slug]', { slug: c.slug })}>
 						<img src={c.img} alt="Арт. {c.art}" loading="lazy" />
 						<b>Арт. {c.art}</b>
 						<span>от {fmt(c.price)} ₽/м²</span>
@@ -139,11 +138,10 @@
 	{/if}
 {/snippet}
 
-<Header calcHref={lead} home="/v1/" />
 
 <main class="wrap">
 	<nav class="crumbs">
-		<a href={resolve('/v1')}>Главная</a> / <a href={resolve('/catalog')}>Каталог</a>
+		<a href="/">Главная</a> / <a href={resolve('/(site)/catalog')}>Каталог</a>
 		{#if p.tags['Коллекция']}/ <a href={cat('Коллекция', p.tags['Коллекция'][0])}>{clean(p.tags['Коллекция'][0])}</a>{/if}
 		/ <span>Арт. {p.art}</span>
 	</nav>
@@ -187,7 +185,7 @@
 				<div class="vars">
 					<span class="cur"><img src={p.img} alt="Арт. {p.art}" /></span>
 					{#each data.colors as c}
-						<a href={resolve('/catalog/[slug]', { slug: c.slug })} title="Арт. {c.art}"><img src={c.img} alt="Арт. {c.art}" /></a>
+						<a href={resolve('/(site)/catalog/[slug]', { slug: c.slug })} title="Арт. {c.art}"><img src={c.img} alt="Арт. {c.art}" /></a>
 					{/each}
 				</div>
 			{/if}
@@ -307,7 +305,7 @@
 	</div>
 {/if}
 
-<Footer home="/v1/" />
+<LeadForm title="Понравилась фреска? Рассчитаем за 15 минут" />
 
 <style>
 	main {

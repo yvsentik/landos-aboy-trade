@@ -3,6 +3,7 @@
 	import Icon from './Icon.svelte';
 	import MaxLogo from './MaxLogo.svelte';
 	import { asset } from '$app/paths';
+	import { page } from '$app/state';
 
 	// lite – версия без каталога (v1-2): официальный логотип, только «Позвонить» и «Написать»
 	let { calcHref = '#lead', home = '', lite = false }: { calcHref?: string; home?: string; lite?: boolean } =
@@ -12,13 +13,15 @@
 	const at = (h: string) => (h.startsWith('#') ? home + h : h);
 	let open = $state(false);
 
+	// Меню основного сайта: отдельные страницы
 	const liteNav = [
-		{ label: 'Фотообои', href: '#catalog' },
-		{ label: 'Фрески', href: '#catalog' },
-		{ label: 'Обои на заказ', href: '#own' },
-		{ label: 'Цены', href: '#prices' },
-		{ label: 'Доставка и монтаж', href: '#delivery' },
-		{ label: 'Бесплатный пробник', href: '#probnik', dot: true }
+		{ label: 'Фотообои', href: '/fotooboi/' },
+		{ label: 'Фрески', href: '/freski/' },
+		{ label: 'Обои на заказ', href: '/oboi-na-zakaz/' },
+		{ label: 'Каталог', href: '/catalog/' },
+		{ label: 'Цены', href: '/ceny/' },
+		{ label: 'Доставка и монтаж', href: '/dostavka/' },
+		{ label: 'Бесплатный пробник', href: '/probnik/', dot: true }
 	];
 
 	const fullNav = [
@@ -48,7 +51,7 @@
 
 	<div class="main wrap">
 		{#if lite}
-			<a class="logo" href="./"><img class="ologo" src={logo} alt="Обоитрейд" width="214" height="40" /></a>
+			<a class="logo" href="/"><img class="ologo" src={logo} alt="Обоитрейд" width="214" height="40" /></a>
 		{:else}
 			<a class="logo" href="./">
 				<span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -79,7 +82,7 @@
 
 	<nav class="wrap" class:open>
 		{#each nav as item}
-			<a href={at(item.href)} onclick={() => (open = false)}>
+			<a href={at(item.href)} class:active={page.url.pathname === item.href} onclick={() => (open = false)}>
 				{item.label}
 				{#if item.dot}<i class="dot"></i>{/if}
 			</a>
@@ -270,6 +273,11 @@
 
 	nav a {
 		position: relative;
+	}
+
+	nav a.active {
+		color: var(--blue);
+		font-weight: 700;
 	}
 
 	nav a:hover {
