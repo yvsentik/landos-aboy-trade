@@ -13,14 +13,6 @@
 	let { data }: PageProps = $props();
 	const p = $derived(data.p);
 
-	const LABEL: Record<string, string> = {
-		Коллекция: 'Коллекция',
-		Категория: 'Тема',
-		'По назначению': 'Помещение',
-		Цвет: 'Цвет',
-		'По ориентации': 'Ориентация'
-	};
-
 	let photo = $state<'int' | 'full'>('int');
 	let size = $state('');
 	let tex = $state('');
@@ -189,6 +181,14 @@
 		/ <span>Арт. {p.art}</span>
 	</nav>
 
+	<div class="title">
+		<h1>{p.h1}</h1>
+		<div class="tools">
+			<span class="art">Арт. {p.art}</span>
+			<button onclick={share} aria-label="Поделиться"><Icon name="send" size={16} />{shared ? 'Ссылка скопирована' : 'Поделиться'}</button>
+		</div>
+	</div>
+
 	<div class="top">
 		<div class="gallery">
 			<div class="main">
@@ -199,10 +199,7 @@
 					onerror={(e) => ((e.currentTarget as HTMLImageElement).src = p.img)}
 					alt={p.h1}
 				/>
-				<div class="tools">
-					<button onclick={share} aria-label="Поделиться"><Icon name="send" size={18} />{shared ? 'Ссылка скопирована' : 'Поделиться'}</button>
-					<button class:on={fav} onclick={toggleFav} aria-label="В избранное"><Icon name="heart" size={18} />{fav ? 'В избранном' : 'В избранное'}</button>
-				</div>
+				<button class="favbtn" class:on={fav} onclick={toggleFav} aria-label="В избранное"><Icon name="heart" size={22} /></button>
 			</div>
 			<div class="thumbs">
 				<button class:on={photo === 'int'} onclick={() => (photo = 'int')}><img src={p.img} alt="В интерьере" /></button>
@@ -216,15 +213,8 @@
 		</div>
 
 		<div class="info">
-			<h1>{p.h1}</h1>
-			<div class="tags">
-				{#each Object.entries(p.tags) as [g, vs]}
-					{#each vs as v}<a class="chip" href={cat(g, v)} title={LABEL[g]}>{clean(v)}</a>{/each}
-				{/each}
-			</div>
-
 			{#if data.colors.length}
-				<p class="lbl">Другие цвета</p>
+				<p class="lbl first">Другие цвета</p>
 				<div class="vars">
 					<span class="cur"><img src={p.img} alt="Арт. {p.art}" /></span>
 					{#each data.colors as c}
@@ -233,7 +223,7 @@
 				</div>
 			{/if}
 
-			<label class="lbl" for="size">Укажите размер (Ш × В), см</label>
+			<label class="lbl" class:first={!data.colors.length} for="size">Размер (Ш × В), см</label>
 			<select id="size" class="field" bind:value={size}>
 				<option value="" disabled>Свой размер</option>
 				{#each p.sizes as s}<option value={s}>{s.replace('x', ' × ')}</option>{/each}
@@ -246,10 +236,8 @@
 			</div>
 			<label class="check"><input type="checkbox" bind:checked={lock} />Зафиксировать пропорции</label>
 
-			<a class="pick" href={lead}><Icon name="palette" size={18} />Заказать цветоподборку</a>
-
 			{#if data.textures.length}
-				<p class="lbl">Выберите фактуру</p>
+				<p class="lbl">Фактура</p>
 				<div class="tex">
 					{#each data.textures as x}
 						<button class:on={tex === x.id} onclick={() => (tex = x.id)}>
@@ -268,51 +256,56 @@
 				<button class="chip" class:on={bw} onclick={() => (bw = !bw)}>Чёрно-белое</button>
 				<a class="chip" href={lead}>Изменить кадр с дизайнером</a>
 			</div>
-
-			<div class="sum">
-				<div class="row3">
-					<div><span>Цена</span><b>{fmt(perM)} ₽</b><small>за 1 м²</small></div>
-					<div><span>Площадь</span><b>{area.toFixed(2).replace('.', ',')}</b><small>м²</small></div>
-					<div><span>Стоимость</span><b class="total">{fmt(total)} ₽</b></div>
-				</div>
-				<div class="buy">
-					{#if added}
-						<a class="btn btn-primary" href="/cart/"><Icon name="cart" size={20} />В корзине – оформить</a>
-					{:else}
-						<button class="btn btn-primary" onclick={addToCart} disabled={!area}><Icon name="cart" size={20} />Добавить в корзину</button>
-					{/if}
-					<button class="btn btn-pink" onclick={() => (oneClick = true)}>Купить в 1 клик</button>
-				</div>
-				<div class="alt">
-					<a href={brand.phoneHref}><Icon name="phone" size={18} />{brand.phone}</a>
-					<a href={brand.max}><MaxLogo size={18} />Написать в Макс</a>
-					<a href={brand.telegram}><Icon name="send" size={18} />Telegram</a>
-					<a href={lead}><Icon name="gift" size={18} />Бесплатный пробник</a>
-				</div>
-			</div>
-
-			<div class="tabs">
-				{#each tabs as [id, name]}
-					<button class:on={tab === id} onclick={() => (tab = id)}>{name}</button>
-				{/each}
-			</div>
-			<div class="tabbody">
-				{#if tab === 'delivery'}
-					<p><b>Доставка курьером.</b> По Москве бесплатно при заказе от 30 000 ₽. По Московской области – по договорённости.</p>
-					<p><b>Транспортной компанией.</b> До терминала в пределах МКАД – бесплатно, дальше по тарифу перевозчика.</p>
-					<p><b>Оплата:</b> безналичный расчёт по счёту, картой или наличными курьеру.</p>
-				{:else if tab === 'guarantee'}
-					<p>Гарантия – 5 лет на интерьерные и 2 года на фасадные материалы. Срок службы по ТУ – 12 лет при монтаже вне зоны постоянного прямого солнца.</p>
-					<p>Если готовое полотно отличается по цвету от утверждённой цветопробы – перепечатаем бесплатно.</p>
-				{:else if tab === 'mount'}
-					<p>Фреска клеится так же, как обои: клей наносится на стену, полотна стыкуются встык. Пришлём инструкцию или нашего мастера.</p>
-					<a class="btn btn-outline" href={lead}>Заказать монтаж</a>
-				{:else}
-					<p>Продукция сертифицирована: сертификат соответствия ГОСТ Р действует до 15.11.2027.</p>
-					<p>Копию сертификата пришлём по запросу.</p>
-				{/if}
-			</div>
+			<a class="pick" href={lead}><Icon name="palette" size={18} />Заказать цветоподборку</a>
 		</div>
+
+		<!-- Блок покупки как на Ozon: всегда на виду -->
+		<aside class="buybox">
+			<div class="price">
+				<b>{fmt(total)} ₽</b>
+				<span>{area.toFixed(2).replace('.', ',')} м² × {fmt(perM)} ₽</span>
+			</div>
+			{#if t}<p class="sel">{Math.round(w)} × {Math.round(h)} см · {t.name}</p>{/if}
+			{#if added}
+				<a class="btn btn-primary big" href="/cart/"><Icon name="cart" size={22} />В корзине – оформить</a>
+			{:else}
+				<button class="btn btn-primary big" onclick={addToCart} disabled={!area}><Icon name="cart" size={22} />В корзину</button>
+			{/if}
+			<button class="btn btn-pink" onclick={() => (oneClick = true)}>Купить в 1 клик</button>
+			<button class="btn btn-outline" class:on={fav} onclick={toggleFav}><Icon name="heart" size={20} />{fav ? 'В избранном' : 'В избранное'}</button>
+			<ul class="perks">
+				<li><Icon name="gift" size={18} />Пробник и цветопроба – бесплатно</li>
+				<li><Icon name="clock" size={18} />Печать от 3 дней</li>
+				<li><Icon name="truck" size={18} />Доставка по всей России</li>
+			</ul>
+			<div class="alt">
+				<a href={brand.phoneHref}><Icon name="phone" size={16} />{brand.phone}</a>
+				<a href={brand.max}><MaxLogo size={16} />Макс</a>
+				<a href={brand.telegram}><Icon name="send" size={16} />Telegram</a>
+			</div>
+		</aside>
+	</div>
+
+	<div class="tabs">
+		{#each tabs as [id, name]}
+			<button class:on={tab === id} onclick={() => (tab = id)}>{name}</button>
+		{/each}
+	</div>
+	<div class="tabbody">
+		{#if tab === 'delivery'}
+			<p><b>Курьером по Москве и области</b> – 1–3 дня. Бесплатно при заказе от 25 000 ₽, до 25 000 ₽ – 1 200 ₽ внутри МКАД.</p>
+			<p><b>По России и СНГ</b> – СДЭК до пункта выдачи или до двери, стоимость считается при заказе.</p>
+			<p><b>Оплата:</b> картой, наличными при получении или по счёту.</p>
+		{:else if tab === 'guarantee'}
+			<p>Гарантия – 5 лет на интерьерные и 2 года на фасадные материалы. Срок службы по ТУ – 12 лет при монтаже вне зоны постоянного прямого солнца.</p>
+			<p>Готовая фреска будет такой же, как утверждённая цветопроба.</p>
+		{:else if tab === 'mount'}
+			<p>Фреска клеится так же, как обои: приезжает свёрнутой по высоте, с инструкцией. Поклейку можем организовать по запросу.</p>
+			<a class="btn btn-outline" href={lead}>Уточнить у менеджера</a>
+		{:else}
+			<p>Продукция сертифицирована: сертификат соответствия ГОСТ Р действует до 15.11.2027.</p>
+			<p>Копию сертификата пришлём по запросу.</p>
+		{/if}
 	</div>
 
 	{@render strip(
@@ -326,6 +319,19 @@
 		data.sameTheme.name ? cat('Категория', data.sameTheme.name) : undefined
 	)}
 </main>
+
+<!-- Телефон: цена и кнопка всегда внизу экрана -->
+<div class="buybar">
+	<div>
+		<b>{fmt(total)} ₽</b>
+		<span>{fmt(perM)} ₽/м²</span>
+	</div>
+	{#if added}
+		<a class="btn btn-primary" href="/cart/">В корзине</a>
+	{:else}
+		<button class="btn btn-primary" onclick={addToCart} disabled={!area}><Icon name="cart" size={20} />В корзину</button>
+	{/if}
+</div>
 
 {#if oneClick}
 	<div class="modal" role="dialog" aria-modal="true" aria-label="Купить в 1 клик">
@@ -379,18 +385,50 @@
 		color: var(--blue);
 	}
 
+	.title {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 16px;
+		flex-wrap: wrap;
+		margin-bottom: 18px;
+	}
+
+	h1 {
+		font-size: clamp(22px, 2.6vw, 30px);
+		color: var(--navy);
+	}
+
+	.tools {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		color: var(--muted);
+		font-size: 14px;
+	}
+
+	.tools button {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		border: 0;
+		background: none;
+		font: inherit;
+		color: var(--blue);
+		cursor: pointer;
+	}
+
+	/* Ozon: фото | параметры | блок покупки */
 	.top {
 		display: grid;
-		grid-template-columns: 1.15fr 1fr;
-		gap: 36px;
+		grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) 320px;
+		gap: 28px;
 		align-items: start;
 	}
 
 	.gallery {
 		display: grid;
 		gap: 12px;
-		position: sticky;
-		top: 150px;
 	}
 
 	.main {
@@ -401,7 +439,9 @@
 		width: 100%;
 		border-radius: var(--radius);
 		background: var(--soft-2);
-		transition: transform 0.3s, filter 0.3s;
+		transition:
+			transform 0.3s,
+			filter 0.3s;
 	}
 
 	.main img.mirror {
@@ -412,30 +452,24 @@
 		filter: grayscale(1);
 	}
 
-	.tools {
+	.favbtn {
 		position: absolute;
 		top: 12px;
 		right: 12px;
-		display: flex;
-		gap: 8px;
-	}
-
-	.tools button {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
 		border: 0;
-		border-radius: 999px;
-		padding: 8px 12px;
 		background: rgb(255 255 255 / 0.92);
-		font: inherit;
-		font-size: 13px;
-		font-weight: 600;
+		color: var(--muted);
+		display: grid;
+		place-items: center;
 		cursor: pointer;
 	}
 
-	.tools button.on {
-		color: var(--pink);
+	.favbtn.on {
+		background: var(--pink);
+		color: #fff;
 	}
 
 	.thumbs {
@@ -444,8 +478,8 @@
 	}
 
 	.thumbs button {
-		width: 96px;
-		height: 72px;
+		width: 84px;
+		height: 64px;
 		padding: 0;
 		border: 2px solid transparent;
 		border-radius: 10px;
@@ -470,21 +504,8 @@
 		background: #000;
 	}
 
-	h1 {
-		font-size: clamp(24px, 3vw, 32px);
-		color: var(--navy);
-	}
-
-	.tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 6px;
-		margin: 14px 0 8px;
-	}
-
-	.tags .chip {
-		font-size: 13px;
-		padding: 6px 12px;
+	.lbl.first {
+		margin-top: 0;
 	}
 
 	.lbl {
@@ -600,50 +621,75 @@
 		gap: 8px;
 	}
 
-	.sum {
-		margin-top: 22px;
-		background: var(--soft);
-		border-radius: var(--radius);
-		padding: 20px;
+	.buybox {
+		position: sticky;
+		top: 176px;
 		display: grid;
-		gap: 16px;
-	}
-
-	.row3 {
-		display: grid;
-		grid-template-columns: 1fr 1fr 1.3fr;
 		gap: 10px;
+		padding: 22px;
+		border-radius: 18px;
+		background: #fff;
+		box-shadow: 0 6px 30px rgb(0 30 80 / 0.14);
 	}
 
-	.row3 div {
-		display: grid;
-	}
-
-	.row3 span,
-	.row3 small {
-		color: var(--muted);
-		font-size: 13px;
-	}
-
-	.row3 b {
-		font-size: 22px;
+	.price b {
+		display: block;
+		font-size: 34px;
+		font-weight: 800;
 		color: var(--navy);
+		line-height: 1.1;
 	}
 
-	.row3 .total {
-		font-size: 28px;
+	.price span,
+	.sel {
+		color: var(--muted);
+		font-size: 14px;
 	}
 
-	.buy {
+	.btn.big {
+		min-height: 58px;
+		font-size: 18px;
+	}
+
+	.buybox .btn {
+		width: 100%;
+	}
+
+	.buybox .btn-outline.on {
+		color: var(--pink);
+		box-shadow: inset 0 0 0 1.5px var(--pink);
+	}
+
+	.perks {
+		list-style: none;
+		padding: 12px 0 0;
+		margin: 4px 0 0;
+		border-top: 1px solid var(--line);
 		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 10px;
+		gap: 8px;
+		font-size: 14px;
+	}
+
+	.perks li {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+	}
+
+	.perks :global(svg) {
+		color: var(--green);
+		flex: none;
+	}
+
+	.buybar {
+		display: none;
 	}
 
 	.alt {
 		display: flex;
-		gap: 18px;
+		gap: 8px 14px;
 		flex-wrap: wrap;
+		font-size: 14px;
 	}
 
 	.alt a {
@@ -657,7 +703,8 @@
 	.tabs {
 		display: flex;
 		gap: 4px;
-		margin-top: 24px;
+		margin-top: 36px;
+		max-width: 860px;
 		border-bottom: 1px solid var(--line);
 		overflow-x: auto;
 		scrollbar-width: none;
@@ -767,29 +814,62 @@
 		cursor: pointer;
 	}
 
-	@media (max-width: 900px) {
+	@media (max-width: 1100px) {
 		.top {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 		}
-		.gallery {
+		.buybox {
+			grid-column: 1 / -1;
 			position: static;
 		}
 	}
 
-	@media (max-width: 560px) {
-		.buy {
+	@media (max-width: 760px) {
+		.top {
 			grid-template-columns: 1fr;
+			gap: 20px;
 		}
-		.row3 b {
-			font-size: 18px;
+		.buybox {
+			display: none;
 		}
-		.row3 .total {
+		/* фиксированная панель цены снизу */
+		.buybar {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			position: fixed;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: 35;
+			padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+			background: #fff;
+			box-shadow: 0 -4px 20px rgb(0 30 80 / 0.15);
+		}
+		.buybar div {
+			display: grid;
+		}
+		.buybar b {
 			font-size: 22px;
+			font-weight: 800;
+			color: var(--navy);
+			line-height: 1.1;
 		}
-		.tools button {
-			font-size: 0;
-			gap: 0;
-			padding: 8px;
+		.buybar span {
+			font-size: 12px;
+			color: var(--muted);
+		}
+		.buybar .btn {
+			width: auto;
+			min-height: 50px;
+			padding: 0 22px;
+		}
+		:global(body:has(.buybar) .fc) {
+			bottom: 86px;
+		}
+		:global(body:has(.buybar) footer) {
+			padding-bottom: 90px;
 		}
 	}
 </style>
