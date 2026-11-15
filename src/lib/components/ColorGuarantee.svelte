@@ -12,7 +12,7 @@
 			<img src={prod('colors')} alt="Подбор цвета на производстве" loading="lazy" />
 			<div class="txt">
 				<span class="badge">Гарантия цвета</span>
-				<h2>Итоговый цвет фрески совпадёт с образцом – гарантируем</h2>
+				<h2>Итоговый цвет фрески совпадёт с образцом – <span class="pink">гарантируем</span></h2>
 				<ul>
 					{#if !lite}<li><Icon name="check" size={20} />Бесплатный пробник материала и цветопроба вашего дизайна</li>{/if}
 					<li><Icon name="check" size={20} />Подгоним оттенок под ваши стены, мебель и текстиль</li>
@@ -25,6 +25,10 @@
 </section>
 
 <style>
+	.pink {
+		color: var(--pink);
+	}
+
 	.box {
 		display: grid;
 		grid-template-columns: 1fr 1.1fr;
