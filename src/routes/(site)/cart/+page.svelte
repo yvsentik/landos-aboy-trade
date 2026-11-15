@@ -4,14 +4,44 @@
 	import MaxLogo from '#lib/components/MaxLogo.svelte';
 	import { shop, lineTotal } from '#lib/shop.svelte.ts';
 	import { brand } from '#lib/data.ts';
+	import { sendLead } from '#lib/lead.ts';
 
 	let sent = $state(false);
+	let busy = $state(false);
+	let failed = $state(false);
 	let order = $state('');
 	const fmt = (n: number) => n.toLocaleString('ru-RU');
 
-	function submit(e: SubmitEvent) {
+	async function submit(e: SubmitEvent) {
 		e.preventDefault();
-		// TODO: отправить заказ в CRM / Telegram. Сейчас – только подтверждение на странице.
+		const f = new FormData(e.currentTarget as HTMLFormElement);
+		busy = true;
+		failed = false;
+		const ok = await sendLead({
+			form: 'cart',
+			name: String(f.get('name') ?? ''),
+			phone: String(f.get('phone') ?? ''),
+			city: String(f.get('city') ?? ''),
+			comment: String(f.get('comment') ?? ''),
+			website: String(f.get('website') ?? ''),
+			total: shop.total,
+			items: shop.cart.map((i) => ({
+				title: i.title,
+				art: i.art,
+				w: i.w,
+				h: i.h,
+				texture: i.texture,
+				perM: i.perM,
+				qty: i.qty,
+				sum: lineTotal(i),
+				url: `${location.origin}/catalog/${i.slug}/`
+			}))
+		});
+		busy = false;
+		if (!ok) {
+			failed = true;
+			return;
+		}
 		order = shop.cart.map((i) => `арт. ${i.art} ${i.w}×${i.h} ${i.texture} ×${i.qty}`).join('; ');
 		shop.clear();
 		sent = true;
@@ -75,11 +105,13 @@
 					<small>Без доставки. Макет и пробник – бесплатно. Точную цену подтвердит менеджер.</small>
 				</div>
 				<form onsubmit={submit}>
-					<input class="field" placeholder="Имя" autocomplete="name" />
-					<input class="field" type="tel" required placeholder="Телефон*" autocomplete="tel" />
-					<input class="field" placeholder="Город доставки" />
-					<textarea class="field" rows="3" placeholder="Комментарий"></textarea>
-					<button class="btn btn-pink" type="submit">Оформить заказ</button>
+					<input class="field" name="name" placeholder="Имя" autocomplete="name" />
+					<input class="field" name="phone" type="tel" required placeholder="Телефон*" autocomplete="tel" />
+					<input class="field" name="city" placeholder="Город доставки" />
+					<textarea class="field" name="comment" rows="3" placeholder="Комментарий"></textarea>
+					<input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+					<button class="btn btn-pink" type="submit" disabled={busy}>{busy ? 'Отправляем…' : 'Оформить заказ'}</button>
+					{#if failed}<p class="err">Не получилось отправить. Позвоните {brand.phone} или напишите в Макс.</p>{/if}
 					<small>Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных</small>
 				</form>
 			</aside>
@@ -88,6 +120,19 @@
 </main>
 
 <style>
+	.hp {
+		position: absolute;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		opacity: 0;
+	}
+
+	.err {
+		color: #c8126a;
+		font-size: 14px;
+	}
+
 	main {
 		padding-top: 24px;
 	}

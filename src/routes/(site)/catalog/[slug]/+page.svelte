@@ -5,6 +5,7 @@
 	import MaxLogo from '#lib/components/MaxLogo.svelte';
 	import { brand } from '#lib/data.ts';
 	import { shop } from '#lib/shop.svelte.ts';
+	import { sendLead } from '#lib/lead.ts';
 	import type { PageProps } from './$types';
 
 	// Карточка повторяет элементы карточки lastanza.ru: размер, фактура, редактирование,
@@ -87,6 +88,39 @@
 		h = v;
 		if (lock && v) w = Math.round(v * ratio);
 		size = '';
+	}
+
+	let busy = $state(false);
+	let failed = $state(false);
+
+	async function buyOneClick(e: SubmitEvent) {
+		e.preventDefault();
+		const f = new FormData(e.currentTarget as HTMLFormElement);
+		busy = true;
+		failed = false;
+		const ok = await sendLead({
+			form: 'oneclick',
+			name: String(f.get('name') ?? ''),
+			phone: String(f.get('phone') ?? ''),
+			website: String(f.get('website') ?? ''),
+			total,
+			items: [
+				{
+					title: p.title,
+					art: p.art,
+					w: Math.round(w),
+					h: Math.round(h),
+					texture: t?.name ?? '',
+					perM,
+					qty: 1,
+					sum: total,
+					url: location.href
+				}
+			]
+		});
+		busy = false;
+		if (ok) sent = true;
+		else failed = true;
 	}
 
 	function toggleFav() {
@@ -303,15 +337,12 @@
 			{:else}
 				<h3>Купить в 1 клик</h3>
 				<p>Арт. {p.art} · {w} × {h} см · {t?.name ?? ''} · {fmt(total)} ₽</p>
-				<form
-					onsubmit={(e) => {
-						e.preventDefault();
-						sent = true; // TODO: отправка заявки в CRM / Telegram
-					}}
-				>
-					<input class="field" placeholder="Имя" />
-					<input class="field" type="tel" required placeholder="Телефон*" />
-					<button class="btn btn-pink" type="submit">Отправить</button>
+				<form onsubmit={buyOneClick}>
+					<input class="field" name="name" placeholder="Имя" autocomplete="name" />
+					<input class="field" name="phone" type="tel" required placeholder="Телефон*" autocomplete="tel" />
+					<input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+					<button class="btn btn-pink" type="submit" disabled={busy}>{busy ? 'Отправляем…' : 'Отправить'}</button>
+					{#if failed}<p class="err">Не получилось отправить. Позвоните {brand.phone}.</p>{/if}
 				</form>
 			{/if}
 		</div>
@@ -321,6 +352,19 @@
 <LeadForm title="Понравилась фреска? Рассчитаем за 15 минут" />
 
 <style>
+	.hp {
+		position: absolute;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		opacity: 0;
+	}
+
+	.err {
+		color: #c8126a;
+		font-size: 14px;
+	}
+
 	main {
 		padding-top: 20px;
 	}
