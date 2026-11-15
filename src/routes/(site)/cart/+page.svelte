@@ -4,11 +4,11 @@
 	import MaxLogo from '#lib/components/MaxLogo.svelte';
 	import { shop, lineTotal } from '#lib/shop.svelte.ts';
 	import { brand } from '#lib/data.ts';
-	import { sendLead } from '#lib/lead.ts';
+	import { sendLead, leadError } from '#lib/lead.ts';
 
 	let sent = $state(false);
 	let busy = $state(false);
-	let failed = $state(false);
+	let errText = $state('');
 	let order = $state('');
 	const fmt = (n: number) => n.toLocaleString('ru-RU');
 
@@ -16,8 +16,8 @@
 		e.preventDefault();
 		const f = new FormData(e.currentTarget as HTMLFormElement);
 		busy = true;
-		failed = false;
-		const ok = await sendLead({
+		errText = '';
+		const res = await sendLead({
 			form: 'cart',
 			name: String(f.get('name') ?? ''),
 			phone: String(f.get('phone') ?? ''),
@@ -38,8 +38,8 @@
 			}))
 		});
 		busy = false;
-		if (!ok) {
-			failed = true;
+		if (!res.ok) {
+			errText = leadError(res, brand.phone);
 			return;
 		}
 		order = shop.cart.map((i) => `арт. ${i.art} ${i.w}×${i.h} ${i.texture} ×${i.qty}`).join('; ');
@@ -106,12 +106,12 @@
 				</div>
 				<form onsubmit={submit}>
 					<input class="field" name="name" placeholder="Имя" autocomplete="name" />
-					<input class="field" name="phone" type="tel" required placeholder="Телефон*" autocomplete="tel" />
+					<input class="field" name="phone" type="tel" required placeholder="Телефон*, +7 999 123-45-67" autocomplete="tel" />
 					<input class="field" name="city" placeholder="Город доставки" />
 					<textarea class="field" name="comment" rows="3" placeholder="Комментарий"></textarea>
 					<input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
 					<button class="btn btn-pink" type="submit" disabled={busy}>{busy ? 'Отправляем…' : 'Оформить заказ'}</button>
-					{#if failed}<p class="err">Не получилось отправить. Позвоните {brand.phone} или напишите в Макс.</p>{/if}
+					{#if errText}<p class="err">{errText}</p>{/if}
 					<small>Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных</small>
 				</form>
 			</aside>

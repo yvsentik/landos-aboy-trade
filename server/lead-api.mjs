@@ -15,14 +15,14 @@ if (!WEBHOOK) {
 	console.error('BITRIX_WEBHOOK не задан – заявки не будут уходить в CRM');
 }
 
-// Простое ограничение частоты: не больше 5 заявок с одного IP за 10 минут
+// Простое ограничение частоты: не больше 20 заявок с одного IP за 10 минут (офис может сидеть за одним IP)
 const hits = new Map();
 function limited(ip) {
 	const now = Date.now();
 	const list = (hits.get(ip) || []).filter((t) => now - t < 10 * 60 * 1000);
 	list.push(now);
 	hits.set(ip, list);
-	return list.length > 5;
+	return list.length > 20;
 }
 
 const clip = (v, n = 500) => String(v ?? '').trim().slice(0, n);

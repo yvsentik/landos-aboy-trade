@@ -2,7 +2,7 @@
 	import { brand, prod } from '#lib/data.ts';
 	import Icon from './Icon.svelte';
 	import MaxLogo from './MaxLogo.svelte';
-	import { sendLead } from '#lib/lead.ts';
+	import { sendLead, leadError } from '#lib/lead.ts';
 
 	let {
 		title = 'Получите бесплатный пробник и расчёт за 15 минут',
@@ -11,14 +11,14 @@
 
 	let sent = $state(false);
 	let busy = $state(false);
-	let failed = $state(false);
+	let errText = $state('');
 
 	async function submit(e: SubmitEvent) {
 		e.preventDefault();
 		const f = new FormData(e.currentTarget as HTMLFormElement);
 		busy = true;
-		failed = false;
-		const ok = await sendLead({
+		errText = '';
+		const res = await sendLead({
 			form: 'lead',
 			name: String(f.get('name') ?? ''),
 			phone: String(f.get('phone') ?? ''),
@@ -26,8 +26,8 @@
 			website: String(f.get('website') ?? '')
 		});
 		busy = false;
-		if (ok) sent = true;
-		else failed = true;
+		if (res.ok) sent = true;
+		else errText = leadError(res, brand.phone);
 	}
 </script>
 
@@ -58,7 +58,7 @@
 						name="phone"
 						type="tel"
 						required
-						placeholder="Телефон*"
+						placeholder="Телефон*, +7 999 123-45-67"
 						autocomplete="tel"
 					/>
 					<input class="field" name="size" placeholder="Размер стены, например 3 × 2,7 м" />
@@ -66,9 +66,7 @@
 					<button class="btn btn-pink" type="submit" disabled={busy}>
 						<Icon name="gift" size={20} />{busy ? 'Отправляем…' : 'Получить пробник бесплатно'}
 					</button>
-					{#if failed}
-						<p class="err">Не получилось отправить. Позвоните {brand.phone} или напишите в Макс.</p>
-					{/if}
+					{#if errText}<p class="err">{errText}</p>{/if}
 					<small>Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных</small>
 				</form>
 			{/if}
