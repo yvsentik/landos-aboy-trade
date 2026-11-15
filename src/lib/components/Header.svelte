@@ -4,6 +4,7 @@
 	import MaxLogo from './MaxLogo.svelte';
 	import { asset } from '$app/paths';
 	import { page } from '$app/state';
+	import { shop } from '#lib/shop.svelte.ts';
 
 	// lite – версия без каталога (v1-2): официальный логотип, только «Позвонить» и «Написать»
 	let { calcHref = '#lead', home = '', lite = false }: { calcHref?: string; home?: string; lite?: boolean } =
@@ -41,6 +42,10 @@
 	{#if !lite}<a href={calcHref}><Icon name="calc" size={26} />Рассчитать</a>{/if}
 	<a href={brand.phoneHref}><Icon name="phone" size={26} />Позвонить</a>
 	<a href={brand.max}><MaxLogo size={24} light />Написать</a>
+	{#if lite}
+		<a class="ico" href="/favorites/" aria-label="Избранное"><Icon name="heart" size={22} />{#if shop.fav.length}<i>{shop.fav.length}</i>{/if}</a>
+		<a class="ico" href="/cart/" aria-label="Корзина"><Icon name="cart" size={22} />{#if shop.count}<i>{shop.count}</i>{/if}</a>
+	{/if}
 </div>
 
 <header class:lite>
@@ -68,6 +73,13 @@
 			{brand.phone}
 			<small>{brand.hours}</small>
 		</a>
+
+		{#if lite}
+			<div class="shop">
+				<a href="/favorites/" aria-label="Избранное"><Icon name="heart" size={24} />{#if shop.fav.length}<i>{shop.fav.length}</i>{/if}<span>Избранное</span></a>
+				<a href="/cart/" aria-label="Корзина"><Icon name="cart" size={24} />{#if shop.count}<i>{shop.count}</i>{/if}<span>Корзина</span></a>
+			</div>
+		{/if}
 
 		<div class="actions">
 			{#if !lite}<a href={calcHref}><Icon name="calc" size={21} />Рассчитать</a>{/if}
@@ -112,7 +124,51 @@
 	}
 
 	.mbar.two {
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: 1fr 1fr auto auto;
+	}
+
+	.mbar .ico {
+		position: relative;
+		padding: 12px 14px;
+	}
+
+	.mbar .ico i,
+	.shop i {
+		position: absolute;
+		top: 4px;
+		right: 4px;
+		min-width: 18px;
+		height: 18px;
+		padding: 0 5px;
+		border-radius: 9px;
+		background: var(--pink);
+		color: #fff;
+		font-size: 11px;
+		font-style: normal;
+		font-weight: 700;
+		display: grid;
+		place-items: center;
+		line-height: 1;
+	}
+
+	.shop {
+		display: flex;
+		gap: 4px;
+	}
+
+	.shop a {
+		position: relative;
+		display: grid;
+		justify-items: center;
+		gap: 2px;
+		padding: 4px 10px;
+		color: var(--navy);
+		font-size: 11px;
+		font-weight: 600;
+	}
+
+	.shop a:hover {
+		color: var(--blue);
 	}
 
 	.ologo {

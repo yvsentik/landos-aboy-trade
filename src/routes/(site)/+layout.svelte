@@ -2,10 +2,13 @@
 	import Header from '#lib/components/Header.svelte';
 	import Footer from '#lib/components/Footer.svelte';
 	import FloatChat from '#lib/components/FloatChat.svelte';
+	import { onMount } from 'svelte';
+	import { shop } from '#lib/shop.svelte.ts';
 	import type { LayoutProps } from './$types';
 
 	// Каркас основного сайта fotooboi.oboitrade.ru: шапка, подвал, плавающая кнопка связи
 	let { children }: LayoutProps = $props();
+	onMount(() => shop.init());
 </script>
 
 <Header lite />

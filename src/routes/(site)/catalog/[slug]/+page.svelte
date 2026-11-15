@@ -4,6 +4,7 @@
 	import Icon from '#lib/components/Icon.svelte';
 	import MaxLogo from '#lib/components/MaxLogo.svelte';
 	import { brand } from '#lib/data.ts';
+	import { shop } from '#lib/shop.svelte.ts';
 	import type { PageProps } from './$types';
 
 	// Карточка повторяет элементы карточки lastanza.ru: размер, фактура, редактирование,
@@ -28,7 +29,6 @@
 	let mirror = $state(false);
 	let bw = $state(false);
 	let tab = $state('delivery');
-	let fav = $state(false);
 	let shared = $state(false);
 	let oneClick = $state(false);
 	let sent = $state(false);
@@ -45,12 +45,29 @@
 		tex = data.textures[0]?.id ?? '';
 		photo = 'int';
 		mirror = bw = added = sent = false;
-		try {
-			fav = (JSON.parse(localStorage.getItem('fav') ?? '[]') as string[]).includes(p.slug);
-		} catch {
-			fav = false;
-		}
 	});
+
+	const fav = $derived(shop.isFav(p.slug));
+
+	// после смены размера или фактуры – снова можно добавить в корзину
+	$effect(() => {
+		void [w, h, tex];
+		added = false;
+	});
+
+	function addToCart() {
+		shop.add({
+			slug: p.slug,
+			art: p.art,
+			title: p.title,
+			img: p.img,
+			w: Math.round(w),
+			h: Math.round(h),
+			texture: t?.name ?? '',
+			perM
+		});
+		added = true;
+	}
 
 	$effect(() => {
 		const [a, b] = size.split('x').map(Number);
@@ -73,15 +90,7 @@
 	}
 
 	function toggleFav() {
-		fav = !fav;
-		try {
-			const list = new Set(JSON.parse(localStorage.getItem('fav') ?? '[]') as string[]);
-			if (fav) list.add(p.slug);
-			else list.delete(p.slug);
-			localStorage.setItem('fav', JSON.stringify([...list]));
-		} catch {
-			/* хранилище недоступно – избранное живёт до перезагрузки */
-		}
+		shop.toggleFav(p.slug);
 	}
 
 	async function share() {
@@ -233,7 +242,11 @@
 					<div><span>Стоимость</span><b class="total">{fmt(total)} ₽</b></div>
 				</div>
 				<div class="buy">
-					<a class="btn btn-primary" href={lead} onclick={() => (added = true)}>{added ? 'Добавлено в заказ' : 'Добавить в заказ'}</a>
+					{#if added}
+						<a class="btn btn-primary" href="/cart/"><Icon name="cart" size={20} />В корзине – оформить</a>
+					{:else}
+						<button class="btn btn-primary" onclick={addToCart} disabled={!area}><Icon name="cart" size={20} />Добавить в корзину</button>
+					{/if}
 					<button class="btn btn-pink" onclick={() => (oneClick = true)}>Купить в 1 клик</button>
 				</div>
 				<div class="alt">
