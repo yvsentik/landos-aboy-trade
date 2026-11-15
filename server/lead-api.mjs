@@ -1,4 +1,5 @@
-// Приём заявок с сайта и создание лидов в Битрикс24.
+// Приём заявок с сайта: контакт + сделка в Битрикс24 (воронка «Лендинг фрески + фотообои»).
+// CRM работает в простом режиме (без лидов), поэтому сразу создаём сделку в нужной воронке.
 // Без зависимостей: Node 18+ (встроенный fetch). Слушает только 127.0.0.1, наружу – через nginx /api/lead.
 // Адрес вебхука берётся из переменной окружения BITRIX_WEBHOOK (файл /etc/landos/lead-api.env), в репозитории его нет.
 import { createServer } from 'node:http';
@@ -6,6 +7,9 @@ import { createServer } from 'node:http';
 const PORT = Number(process.env.PORT || 8787);
 const WEBHOOK = (process.env.BITRIX_WEBHOOK || '').replace(/\/+$/, '');
 const SITE = 'fotooboi.oboitrade.ru';
+// Воронка и стадия сделки: 6 – «Лендинг фрески + фотообои», C6:NEW – «Новая»
+const CATEGORY = Number(process.env.BITRIX_DEAL_CATEGORY || 6);
+const STAGE = process.env.BITRIX_DEAL_STAGE || `C${CATEGORY}:NEW`;
 
 if (!WEBHOOK) {
 	console.error('BITRIX_WEBHOOK не задан – заявки не будут уходить в CRM');
@@ -55,24 +59,58 @@ function buildLead(d) {
 	if (d.page) lines.push('', `Страница: ${clip(d.page, 300)}`);
 
 	const utm = d.utm && typeof d.utm === 'object' ? d.utm : {};
+	const source = form === 'lead' ? 'WEB' : 'STORE';
+	const name = clip(d.name, 100) || 'Без имени';
 	return {
-		fields: {
-			TITLE: `${FORMS[form]} – ${SITE}`,
-			NAME: clip(d.name, 100) || 'Без имени',
+		phone,
+		contact: {
+			NAME: name,
 			PHONE: [{ VALUE: phone, VALUE_TYPE: 'WORK' }],
-			SOURCE_ID: form === 'lead' ? 'WEB' : 'STORE',
+			SOURCE_ID: source,
+			SOURCE_DESCRIPTION: SITE,
+			OPENED: 'Y'
+		},
+		deal: {
+			TITLE: `${FORMS[form]} – ${SITE}`,
+			CATEGORY_ID: CATEGORY,
+			STAGE_ID: STAGE,
+			SOURCE_ID: source,
 			SOURCE_DESCRIPTION: `${SITE}: ${FORMS[form]}`,
-			COMMENTS: lines.join('\n'),
+			COMMENTS: [`Имя: ${name}`, `Телефон: ${phone}`, ...lines].join('\n'),
 			OPPORTUNITY: d.total ? Math.round(Number(d.total) || 0) : undefined,
 			CURRENCY_ID: 'RUB',
+			OPENED: 'Y',
 			UTM_SOURCE: clip(utm.utm_source, 100) || undefined,
 			UTM_MEDIUM: clip(utm.utm_medium, 100) || undefined,
 			UTM_CAMPAIGN: clip(utm.utm_campaign, 100) || undefined,
 			UTM_CONTENT: clip(utm.utm_content, 100) || undefined,
 			UTM_TERM: clip(utm.utm_term, 100) || undefined
-		},
-		params: { REGISTER_SONET_EVENT: 'Y' }
+		}
 	};
+}
+
+async function bx(method, body) {
+	const r = await fetch(`${WEBHOOK}/${method}.json`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(body),
+		signal: AbortSignal.timeout(15000)
+	});
+	const j = await r.json();
+	if (!r.ok || j.error) throw new Error(`${method}: ${r.status} ${j.error || ''} ${j.error_description || ''}`);
+	return j.result;
+}
+
+// Найти контакт по телефону (самый свежий) или создать новый
+async function contactId(lead) {
+	try {
+		const dup = await bx('crm.duplicate.findbycomm', { type: 'PHONE', values: [lead.phone], entity_type: 'CONTACT' });
+		const ids = Array.isArray(dup?.CONTACT) ? dup.CONTACT : [];
+		if (ids.length) return Math.max(...ids);
+	} catch (e) {
+		console.error('Поиск контакта не удался', e?.message);
+	}
+	return bx('crm.contact.add', { fields: lead.contact, params: { REGISTER_SONET_EVENT: 'N' } });
 }
 
 function send(res, code, body) {
@@ -111,21 +149,15 @@ createServer(async (req, res) => {
 
 	if (!WEBHOOK) return send(res, 503, { ok: false, error: 'crm' });
 	try {
-		const r = await fetch(`${WEBHOOK}/crm.lead.add.json`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(lead),
-			signal: AbortSignal.timeout(15000)
+		const cid = await contactId(lead);
+		const id = await bx('crm.deal.add', {
+			fields: { ...lead.deal, CONTACT_ID: cid },
+			params: { REGISTER_SONET_EVENT: 'Y' }
 		});
-		const j = await r.json();
-		if (!r.ok || !j.result) {
-			console.error('Битрикс ответил ошибкой', r.status, j.error, j.error_description);
-			return send(res, 502, { ok: false, error: 'crm' });
-		}
-		console.log('Лид создан', j.result, lead.fields.TITLE);
-		return send(res, 200, { ok: true, id: j.result });
+		console.log('Сделка создана', id, 'контакт', cid, lead.deal.TITLE);
+		return send(res, 200, { ok: true, id });
 	} catch (e) {
-		console.error('Нет связи с Битрикс', e?.message);
+		console.error('Битрикс: ошибка', e?.message);
 		return send(res, 502, { ok: false, error: 'crm' });
 	}
 }).listen(PORT, '127.0.0.1', () => console.log(`lead-api слушает 127.0.0.1:${PORT}`));
