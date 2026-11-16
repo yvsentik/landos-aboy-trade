@@ -41,20 +41,23 @@
 	const services = [
 		{
 			name: 'SEO-аудит',
-			lines: ['Техническое состояние и структура сайта', 'Спрос в нише, который сайт пока не собирает', 'План работ с приоритетами'],
+			lines: ['Сбор семантического ядра', 'Запросы, по которым сайт ещё не продвинут', 'Расчёт потенциала по трафику и заявкам', 'Техническая диагностика и план работ'],
 			price: 'Бесплатно',
+			per: '',
 			more: true
 		},
 		{
 			name: 'SEO-продвижение в Яндексе',
-			lines: ['Структура и посадочные страницы под запросы', 'Коммерческие факторы, Вебмастер, Бизнес и Карты', 'Отчёт по позициям и заявкам'],
+			lines: ['Техническая оптимизация под Яндекс', 'Продвижение в ответах Алисы AI', 'Оптимизация карточки в Яндекс Картах'],
 			price: 'от 70 000 ₽',
+			per: 'в месяц',
 			more: false
 		},
 		{
 			name: 'SEO-продвижение в Google',
-			lines: ['Техническая чистота и скорость сайта', 'Ссылочный профиль и экспертность контента', 'Отчёт по позициям и заявкам'],
+			lines: ['Рост сайта в течение 2 месяцев', 'Правки строго по официальным критериям Google', 'Продвижение в Google Gemini и AI-ответах'],
 			price: 'от 90 000 ₽',
+			per: 'в месяц',
 			more: false
 		}
 	];
@@ -157,9 +160,8 @@
 				{#each services as sv}
 					<div class="ser">
 						<h3>{sv.name}</h3>
-						<small>Что входит</small>
 						<ul>{#each sv.lines as l}<li>{l}</li>{/each}</ul>
-						<b class="price">{sv.price}</b>
+						<b class="price">{sv.price}{#if sv.per}<span> {sv.per}</span>{/if}</b>
 						{#if sv.more}
 							<a class="btn btn-primary" href="#free">Подробнее о SEO-аудите</a>
 						{:else}
@@ -334,8 +336,8 @@
 	.series { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
 	.ser { background: #e8eefa; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 8px; }
 	.ser h3 { font-size: 22px; }
-	.ser small { color: var(--muted); font-weight: 700; margin-top: 4px; }
-	.ser ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+	.price span { margin-left: 6px; font-size: 16px; font-weight: 600; color: var(--muted); }
+	.ser ul { margin: 4px 0 0; padding-left: 18px; display: grid; gap: 6px; }
 	.price { margin-top: auto; padding-top: 14px; font-size: 28px; font-weight: 800; color: var(--navy); }
 	.ser .btn { margin-top: 6px; }
 	.ser .btn-outline { background: #fff; }
