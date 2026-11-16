@@ -67,6 +67,13 @@
 
 	let allPos = $state(false);
 
+	let video = $state<HTMLVideoElement>();
+	let started = $state(false);
+	const play = () => {
+		started = true;
+		video?.play();
+	};
+
 	let sent = $state(false);
 	const submit = (e: SubmitEvent) => {
 		e.preventDefault();
@@ -118,7 +125,14 @@
 			</div>
 			<figure>
 				<figcaption><span class="sticker">О бесплатном аудите сайта</span><svg class="arr" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8c22 0 38 12 40 40" /><path d="M34 40l14 9 6-16" /></svg></figcaption>
-				<video src={a('/video/podhod.mp4')} poster={a('/video/podhod.jpg')} controls playsinline preload="none"></video>
+				<div class="vid">
+					<video bind:this={video} src={a('/video/podhod.mp4')} poster={a('/video/podhod.jpg')} controls={started} playsinline preload="none"></video>
+					{#if !started}
+						<button type="button" class="playbtn" onclick={play} aria-label="Смотреть видео о бесплатном аудите">
+							<span><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M8 5.500v13a1 1 0 0 0 1.500.900l11-6.500a1 1 0 0 0 0-1.800l-11-6.500A1 1 0 0 0 8 5.500z" /></svg></span>
+						</button>
+					{/if}
+				</div>
 			</figure>
 		</div>
 	</div>
@@ -271,6 +285,11 @@
 	.ctas { display: flex; gap: 12px; flex-wrap: wrap; }
 	.line { color: #fff; border: 2px solid #fff; background: none; }
 	figure { margin: 0; }
+	.vid { position: relative; }
+	.playbtn { position: absolute; inset: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; border-radius: 10px; }
+	.playbtn span { width: 132px; height: 132px; border-radius: 50%; background: rgb(229 25 125 / 0.4); border: 4px solid rgb(255 255 255 / 0.85); display: grid; place-items: center; transition: background 0.15s, transform 0.15s; }
+	.playbtn:hover span { background: rgb(229 25 125 / 0.8); transform: scale(1.06); }
+	.playbtn svg { width: 64px; height: 64px; margin-left: 6px; }
 	video { width: 100%; aspect-ratio: 640 / 350; display: block; border-radius: 10px; background: #000; }
 	figcaption { position: relative; z-index: 2; display: flex; align-items: center; gap: 12px; margin-bottom: -14px; padding-left: 14px; font-weight: 700; font-size: 20px; }
 	.sticker { background: var(--pink); padding: 10px 18px; border-radius: 8px; transform: rotate(-4deg); box-shadow: 0 6px 18px rgb(0 0 0 / 0.3); }
@@ -369,6 +388,8 @@
 		figcaption { font-size: 16px; padding-left: 8px; }
 		.sticker { padding: 8px 14px; }
 		.arr { width: 32px; height: 32px; }
+		.playbtn span { width: 96px; height: 96px; }
+		.playbtn svg { width: 46px; height: 46px; }
 		.clients { display: grid; gap: 14px; padding-top: 22px; }
 		.track img { height: 34px; margin-right: 36px; }
 		.prow { grid-template-columns: 1fr auto; gap: 10px; padding: 14px; }
