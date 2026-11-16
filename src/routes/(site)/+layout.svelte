@@ -6,7 +6,7 @@
 	import { afterNavigate } from '$app/navigation';
 	import { shop } from '#lib/shop.svelte.ts';
 	import { captureUtm } from '#lib/lead.ts';
-	import { hit } from '#lib/metrika.ts';
+	import { hit, goal } from '#lib/metrika.ts';
 	import type { LayoutProps } from './$types';
 
 	// Каркас основного сайта fotooboi.oboitrade.ru: шапка, подвал, плавающая кнопка связи
@@ -24,6 +24,20 @@
 	onMount(() => {
 		shop.init();
 		captureUtm();
+
+		// Цели Метрики на клики по контактам: Макс, Telegram, телефон
+		const onClick = (e: MouseEvent) => {
+			const a = (e.target as HTMLElement | null)?.closest?.('a[href]') as HTMLAnchorElement | null;
+			if (!a) return;
+			const href = a.getAttribute('href') ?? '';
+			if (/^https?:\/\/(www\.)?max\.ru\//.test(href)) goal('click_max');
+			else if (/^https?:\/\/(t|telegram)\.me\//.test(href)) goal('click_telegram');
+			else if (href.startsWith('tel:')) goal('click_phone');
+			else return;
+			goal('click_contact');
+		};
+		document.addEventListener('click', onClick, true);
+		return () => document.removeEventListener('click', onClick, true);
 	});
 </script>
 
