@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { asset, resolve } from '$app/paths';
 	import { cases, channel, maxChannel } from '#lib/agency.ts';
+	import ChannelBand from '#lib/components/agency/ChannelBand.svelte';
 
 	// Кейсы агентства: проекты с цифрами, скриншоты и ссылки на посты в канале @falkov_agency.
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,17 +43,7 @@
 			{/each}
 		</div>
 
-		<div class="tgband">
-			<div class="tnums">
-				<div><b>1 000+</b><span>подписчиков</span></div>
-				<div><b>50+</b><span>кейсов</span></div>
-			</div>
-			<p>в нашем канале. Разбираем проекты клиентов с цифрами и скриншотами.</p>
-			<div class="subs">
-				<a class="btn btn-white" href={channel} target="_blank" rel="noopener">Подписаться в Telegram</a>
-				<a class="btn line" href={maxChannel} target="_blank" rel="noopener">Подписаться в Максе</a>
-			</div>
-		</div>
+		<div class="bandw"><ChannelBand /></div>
 	</div>
 </main>
 
@@ -82,25 +73,14 @@
 	.links { margin-top: auto; padding-top: 6px; display: flex; gap: 8px; flex-wrap: wrap; }
 	.links .btn { flex: 1; padding: 10px 12px; font-size: 14px; white-space: nowrap; }
 
-	.tgband { margin-top: 56px; background: var(--navy); color: #fff; border-radius: 16px; padding: 36px 44px; display: flex; align-items: center; gap: 36px; }
-	.tnums { display: flex; gap: 36px; flex: none; }
-	.tnums div { display: grid; }
-	.tnums b { font-size: 44px; font-weight: 800; line-height: 1; }
-	.tnums span { opacity: 0.85; margin-top: 4px; }
-	.tgband p { font-size: 18px; opacity: 0.9; }
-	.subs { flex: none; margin-left: auto; display: grid; gap: 8px; }
-	.line { color: #fff; border: 2px solid #fff; background: none; }
+	.bandw { margin-top: 56px; }
 
 	@media (max-width: 1000px) {
 		.cases { grid-template-columns: 1fr 1fr; }
-		.tgband { flex-wrap: wrap; padding: 28px; gap: 20px; }
-		.subs { margin-left: 0; }
 	}
 	@media (max-width: 640px) {
 		.phero { padding: 22px 18px; margin-top: 16px; }
 		.cases { grid-template-columns: 1fr; }
-		.tgband { margin-top: 40px; padding: 22px 18px; }
-		.tnums b { font-size: 36px; }
-		.subs { width: 100%; }
+		.bandw { margin-top: 40px; }
 	}
 </style>

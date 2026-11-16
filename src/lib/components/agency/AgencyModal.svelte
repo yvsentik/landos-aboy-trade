@@ -3,43 +3,43 @@
 	import Icon from '#lib/components/Icon.svelte';
 	import AgencyForm from './AgencyForm.svelte';
 	import { tg, max } from '#lib/agency.ts';
+	import { ui } from '#lib/agencyModal.svelte.ts';
 
 	// Окно выбора способа связи: Telegram, Макс или форма заявки.
-	let { open = $bindable(false) }: { open?: boolean } = $props();
-
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const maxIcon = asset('/img/icons/max.png' as any);
 	let dialog = $state<HTMLDialogElement>();
-	let form = $state(false);
 
 	$effect(() => {
 		if (!dialog) return;
-		if (open && !dialog.open) {
-			form = false;
-			dialog.showModal();
-		} else if (!open && dialog.open) dialog.close();
+		if (ui.open && !dialog.open) dialog.showModal();
+		else if (!ui.open && dialog.open) dialog.close();
 	});
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
-<dialog bind:this={dialog} onclose={() => (open = false)} onclick={(e) => e.target === dialog && (open = false)}>
+<dialog bind:this={dialog} onclose={() => (ui.open = false)} onclick={(e) => e.target === dialog && (ui.open = false)}>
 	<div class="box">
-		<button type="button" class="x" onclick={() => (open = false)} aria-label="Закрыть">×</button>
-		<h3>Как вам удобнее начать?</h3>
-		<p>Напишите нам в мессенджер или оставьте сайт в форме. Аудит бесплатный.</p>
-		{#if form}
+		<button type="button" class="x" onclick={() => (ui.open = false)} aria-label="Закрыть">×</button>
+		{#if ui.form}
+			<h3>Пришлите сайт для аудита</h3>
+			<p>Оставьте адрес сайта и телефон. Аудит бесплатный.</p>
 			<AgencyForm id="zayavka-modal" title="Пришлите сайт для аудита" />
 		{:else}
+			<h3>Как вам удобнее начать?</h3>
+			<p>Напишите нам в мессенджер или оставьте сайт в форме. Аудит бесплатный.</p>
 			<div class="ways">
 				<a href={tg} target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#29a9eb" /><path fill="#fff" d="M5.400 11.700l11.300-4.400c.5-.2 1 .1.800.9l-1.900 9c-.1.600-.5.800-1 .5l-2.900-2.100-1.400 1.300c-.2.2-.3.300-.6.300l.2-3 5.400-4.900c.2-.2 0-.3-.3-.1l-6.700 4.200-2.900-.9c-.6-.2-.6-.6 0-.8z" /></svg><b>Telegram</b><span>Написать менеджеру</span></a>
 				<a href={max} target="_blank" rel="noopener"><img src={maxIcon} alt="" /><b>Макс</b><span>Написать менеджеру</span></a>
-				<button type="button" onclick={() => (form = true)}><i><Icon name="send" size={26} /></i><b>Форма заявки</b><span>Оставить сайт и телефон</span></button>
+				<button type="button" onclick={() => (ui.form = true)}><i><Icon name="send" size={26} /></i><b>Форма заявки</b><span>Оставить сайт и телефон</span></button>
 			</div>
 		{/if}
 	</div>
 </dialog>
 
 <style>
+	dialog[open] { animation: pop 0.22s ease-out; }
+	@keyframes pop { from { opacity: 0; transform: translateY(14px) scale(0.97); } }
 	dialog { border: 0; padding: 0; border-radius: 18px; width: min(640px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); background: #fff; color: inherit; box-shadow: 0 24px 80px rgb(0 20 70 / 0.35); }
 	dialog::backdrop { background: rgb(0 20 60 / 0.55); }
 	.box { position: relative; padding: 32px; display: grid; gap: 12px; }
