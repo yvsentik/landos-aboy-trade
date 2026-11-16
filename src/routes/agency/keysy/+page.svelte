@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { asset, resolve } from '$app/paths';
-	import { cases, channel } from '#lib/agency.ts';
+	import { cases, channel, maxChannel } from '#lib/agency.ts';
 
 	// Кейсы агентства: проекты с цифрами, скриншоты и ссылки на посты в канале @falkov_agency.
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -35,7 +35,7 @@
 					{#if c.img}<img class="shot" src={pic(c.img)} alt="Скриншот: {c.name}" loading="lazy" />{/if}
 					<div class="links">
 						{#if c.post}<a class="btn btn-primary" href="{channel}/{c.post}" target="_blank" rel="noopener">Читать кейс в Telegram</a>{/if}
-						{#if c.maxPost}<a class="btn btn-outline" href={c.maxPost} target="_blank" rel="noopener">Читать кейс в Максе</a>{/if}
+						{#if c.post}<a class="btn btn-outline" href={c.maxPost ?? maxChannel} target="_blank" rel="noopener">Читать кейс в Максе</a>{/if}
 						{#if c.site}<a class="btn btn-outline" href="https://{c.site}" target="_blank" rel="noopener">Открыть сайт</a>{/if}
 					</div>
 				</article>
@@ -47,8 +47,11 @@
 				<div><b>1 000+</b><span>подписчиков</span></div>
 				<div><b>50+</b><span>кейсов</span></div>
 			</div>
-			<p>в нашем Telegram-канале. Разбираем проекты клиентов с цифрами и скриншотами.</p>
-			<a class="btn btn-white" href={channel} target="_blank" rel="noopener">Подписаться на канал</a>
+			<p>в нашем канале. Разбираем проекты клиентов с цифрами и скриншотами.</p>
+			<div class="subs">
+				<a class="btn btn-white" href={channel} target="_blank" rel="noopener">Подписаться в Telegram</a>
+				<a class="btn line" href={maxChannel} target="_blank" rel="noopener">Подписаться в Максе</a>
+			</div>
 		</div>
 	</div>
 </main>
@@ -83,18 +86,19 @@
 	.tnums b { font-size: 44px; font-weight: 800; line-height: 1; }
 	.tnums span { opacity: 0.85; margin-top: 4px; }
 	.tgband p { font-size: 18px; opacity: 0.9; }
-	.tgband .btn { flex: none; margin-left: auto; }
+	.subs { flex: none; margin-left: auto; display: grid; gap: 8px; }
+	.line { color: #fff; border: 2px solid #fff; background: none; }
 
 	@media (max-width: 1000px) {
 		.cases { grid-template-columns: 1fr 1fr; }
 		.tgband { flex-wrap: wrap; padding: 28px; gap: 20px; }
-		.tgband .btn { margin-left: 0; }
+		.subs { margin-left: 0; }
 	}
 	@media (max-width: 640px) {
 		.phero { padding: 22px 18px; margin-top: 16px; }
 		.cases { grid-template-columns: 1fr; }
 		.tgband { margin-top: 40px; padding: 22px 18px; }
 		.tnums b { font-size: 36px; }
-		.tgband .btn { width: 100%; }
+		.subs { width: 100%; }
 	}
 </style>

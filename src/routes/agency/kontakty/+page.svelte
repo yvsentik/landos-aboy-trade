@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { asset, resolve } from '$app/paths';
-	import { tg, max, channel, address } from '#lib/agency.ts';
+	import { tg, max, channel, maxChannel, address } from '#lib/agency.ts';
 
 	// Контакты агентства: мессенджеры, канал, адрес офиса и фото.
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -24,7 +24,8 @@
 			<div class="cards">
 				<a class="card" href={tg} target="_blank" rel="noopener"><b>Telegram</b><span>@falkov_marketing</span></a>
 				<a class="card" href={max} target="_blank" rel="noopener"><b>Макс</b><span>Написать в Макс</span></a>
-				<a class="card" href={channel} target="_blank" rel="noopener"><b>Канал с кейсами</b><span>@falkov_agency</span></a>
+				<a class="card" href={channel} target="_blank" rel="noopener"><b>Кейсы в Telegram</b><span>@falkov_agency</span></a>
+				<a class="card" href={maxChannel} target="_blank" rel="noopener"><b>Кейсы в Максе</b><span>SEO КЕЙСЫ Falkov</span></a>
 				<div class="card"><b>Офис</b><span>{address}</span></div>
 			</div>
 			<div class="photos">
