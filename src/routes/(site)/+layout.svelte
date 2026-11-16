@@ -6,12 +6,17 @@
 	import { afterNavigate } from '$app/navigation';
 	import { shop } from '#lib/shop.svelte.ts';
 	import { captureUtm } from '#lib/lead.ts';
+	import { hit } from '#lib/metrika.ts';
 	import type { LayoutProps } from './$types';
 
 	// Каркас основного сайта fotooboi.oboitrade.ru: шапка, подвал, плавающая кнопка связи
 	let { children }: LayoutProps = $props();
 	// Новая страница всегда открывается сверху (кроме переходов по якорю и «назад»)
-	afterNavigate(({ type, to }) => {
+	afterNavigate(({ type, from, to }) => {
+		// просмотр страницы в Метрику (первый заход считает сам счётчик)
+		if (type !== 'enter' && to && from?.url.pathname !== to.url.pathname) {
+			setTimeout(() => hit(to.url.href, from?.url.href));
+		}
 		if (type === 'popstate' || type === 'enter' || to?.url.hash) return;
 		window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
 	});
