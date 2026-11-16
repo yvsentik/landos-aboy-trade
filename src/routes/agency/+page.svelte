@@ -75,8 +75,8 @@
 </script>
 
 <svelte:head>
-	<title>SEO-продвижение сайтов в РФ – агентство «Фальков»</title>
-	<meta name="description" content="Выводим сайты в ТОП Яндекса и Google. Начинаем с бесплатного аудита: показываем точки роста до договора. 50+ кейсов в Telegram-канале." />
+	<title>SEO-продвижение сайтов – агентство «Фальков»</title>
+	<meta name="description" content="Выводим сайты в ТОП Яндекса и Google. Начинаем с бесплатного аудита: показываем результат до договора. 50+ кейсов в Telegram-канале." />
 </svelte:head>
 
 <div class="mbar">
@@ -103,15 +103,21 @@
 	<div class="wrap">
 		<div class="banner">
 			<div class="btxt">
-				<h1>SEO-продвижение сайтов в РФ</h1>
-				<p>Выводим в ТОП Яндекса и Google. Начинаем с бесплатного аудита и показываем точки роста до договора.</p>
+				<h1>SEO-продвижение сайтов</h1>
+				<p>
+					Выводим в ТОП
+					<span class="se"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#fc3f1d" /><path fill="#fff" d="M13.6 19.5h2.3V4.5h-3.4c-3.4 0-5.2 1.7-5.2 4.3 0 2 .9 3.2 2.6 4.4l-3 6.3h2.5l3.3-6.9-1.1-.8c-1.4-.9-2-1.7-2-3.2 0-1.400.9-2.300 2.800-2.300h1.2z" /></svg>Яндекса</span>
+					и
+					<span class="se"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#fff" /><path fill="#4285f4" d="M19.6 12.2c0-.6 0-1.100-.100-1.600H12v3h4.300c-.2 1-.7 1.800-1.600 2.400v2h2.600c1.500-1.400 2.300-3.400 2.300-5.800z" /><path fill="#34a853" d="M12 20c2.200 0 4-.7 5.300-1.900l-2.600-2c-.7.5-1.600.8-2.700.8-2.100 0-3.800-1.400-4.500-3.300H4.900v2.100C6.200 18.300 8.900 20 12 20z" /><path fill="#fbbc05" d="M7.500 13.600c-.2-.5-.3-1-.3-1.600s.1-1.100.3-1.600V8.300H4.900C4.300 9.400 4 10.700 4 12s.3 2.600.9 3.700z" /><path fill="#ea4335" d="M12 7.200c1.200 0 2.200.4 3.100 1.200l2.300-2.300C16 4.800 14.200 4 12 4 8.900 4 6.200 5.700 4.900 8.300l2.600 2.100C8.200 8.600 9.900 7.200 12 7.200z" /></svg>Google.</span>
+					Начинаем с бесплатного аудита и показываем результат до договора.
+				</p>
 				<div class="ctas">
 					<a class="btn btn-white" href="#free">Получить бесплатный аудит</a>
 					<a class="btn line" href="#cases">Смотреть кейсы</a>
 				</div>
 			</div>
 			<figure>
-				<figcaption>О бесплатном аудите сайта</figcaption>
+				<figcaption><span class="sticker">О бесплатном аудите сайта</span><svg class="arr" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8c22 0 38 12 40 40" /><path d="M34 40l14 9 6-16" /></svg></figcaption>
 				<video src={a('/video/podhod.mp4')} poster={a('/video/podhod.jpg')} controls playsinline preload="none"></video>
 			</figure>
 		</div>
@@ -259,12 +265,16 @@
 	.banner { margin-top: 28px; background: var(--navy); color: #fff; border-radius: 16px; padding: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
 	.btxt { display: grid; gap: 18px; justify-items: start; }
 	h1 { font-size: clamp(28px, 3.6vw, 46px); font-weight: 800; text-transform: uppercase; line-height: 1.1; }
-	.btxt p { font-size: 18px; opacity: 0.9; }
+	.btxt p { font-size: 18px; }
+	.se { white-space: nowrap; font-weight: 700; }
+	.se svg { width: 22px; height: 22px; vertical-align: -5px; margin-right: 6px; }
 	.ctas { display: flex; gap: 12px; flex-wrap: wrap; }
 	.line { color: #fff; border: 2px solid #fff; background: none; }
 	figure { margin: 0; }
 	video { width: 100%; aspect-ratio: 640 / 350; display: block; border-radius: 10px; background: #000; }
-	figcaption { font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+	figcaption { position: relative; z-index: 2; display: flex; align-items: center; gap: 12px; margin-bottom: -14px; padding-left: 14px; font-weight: 700; font-size: 20px; }
+	.sticker { background: var(--pink); padding: 10px 18px; border-radius: 8px; transform: rotate(-4deg); box-shadow: 0 6px 18px rgb(0 0 0 / 0.3); }
+	.arr { width: 40px; height: 40px; flex: none; transform: translateY(-6px); }
 
 	.clients { display: flex; align-items: center; gap: 28px; padding-top: 28px; }
 	.clients b { flex: none; color: var(--navy); font-size: 22px; }
@@ -356,6 +366,9 @@
 		section { scroll-margin-top: 62px; }
 		.banner { padding: 22px 18px; margin-top: 16px; gap: 24px; }
 		.btxt p { font-size: 16px; }
+		figcaption { font-size: 16px; padding-left: 8px; }
+		.sticker { padding: 8px 14px; }
+		.arr { width: 32px; height: 32px; }
 		.clients { display: grid; gap: 14px; padding-top: 22px; }
 		.track img { height: 34px; margin-right: 36px; }
 		.prow { grid-template-columns: 1fr auto; gap: 10px; padding: 14px; }
