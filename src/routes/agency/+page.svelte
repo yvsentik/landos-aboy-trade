@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { asset, resolve } from '$app/paths';
 	import AgencyForm from '#lib/components/agency/AgencyForm.svelte';
-	import AgencyModal from '#lib/components/agency/AgencyModal.svelte';
+	import { ask } from '#lib/agencyModal.svelte.ts';
+	import ChannelBand from '#lib/components/agency/ChannelBand.svelte';
 	import { channel, maxChannel } from '#lib/agency.ts';
 
 	// Главная сайта SEO-агентства «Фальков» (шапка и футер – в +layout.svelte). Стиль okonti.ru: белый фон, плоские синие кнопки, фото.
@@ -78,7 +79,6 @@
 	];
 
 	let allPos = $state(false);
-	let modal = $state(false);
 
 	const faq = [
 		['Сколько стоит продвижение?', 'Продвижение в Яндексе – от 55 000 ₽ в месяц, в Google – от 70 000 ₽ в месяц. SEO-аудит бесплатный. Точную сумму называем после аудита: она зависит от ниши и состояния сайта.'],
@@ -119,7 +119,7 @@
 					Начинаем с бесплатного аудита и показываем результат до договора.
 				</p>
 				<div class="ctas">
-					<a class="btn btn-white" href="#zayavka">Получить бесплатный аудит</a>
+					<button type="button" class="btn btn-white" onclick={() => ask()}>Получить бесплатный аудит</button>
 					<a class="btn line" href="#cases">Смотреть кейсы</a>
 				</div>
 			</div>
@@ -165,17 +165,7 @@
 	<!-- Telegram-канал -->
 	<section>
 		<div class="wrap">
-			<div class="tgband">
-				<div class="tnums">
-					<div><b>1 000+</b><span>подписчиков</span></div>
-					<div><b>50+</b><span>кейсов</span></div>
-				</div>
-				<p>в наших каналах в Telegram и Максе. Разбираем проекты клиентов с цифрами и скриншотами.</p>
-				<div class="subs">
-					<a class="btn btn-white" href={channel} target="_blank" rel="noopener">Подписаться в Telegram</a>
-					<a class="btn line" href={maxChannel} target="_blank" rel="noopener">Подписаться в Максе</a>
-				</div>
-			</div>
+			<ChannelBand />
 		</div>
 	</section>
 
@@ -189,7 +179,6 @@
 					<button type="button" role="tab" aria-selected={eng === 'g'} class:on={eng === 'g'} onclick={() => (eng = 'g')}>{@render go()}Google</button>
 				</div>
 			</div>
-			<p class="phint">Откройте {eng === 'y' ? 'Яндекс' : 'Google'}, выберите город и введите запрос.</p>
 			<div class="ptable" class:open={allPos}>
 				{#each positions as p}
 					{@const e = p[eng]}
@@ -220,7 +209,7 @@
 						{#if sv.more}
 							<a class="btn btn-primary" href={resolve('/agency/seo-audit')}>Подробнее о SEO-аудите</a>
 						{:else}
-							<button type="button" class="btn btn-outline" onclick={() => (modal = true)}>Начать с бесплатного аудита</button>
+							<button type="button" class="btn btn-outline" onclick={() => ask()}>Начать с бесплатного аудита</button>
 						{/if}
 					</div>
 				{/each}
@@ -230,7 +219,7 @@
 
 	<!-- Форма заявки -->
 	<section>
-		<div class="wrap"><AgencyForm title="Пришлите сайт для аудита" /></div>
+		<div class="wrap"><AgencyForm id="zayavka-mid" title="Пришлите сайт для аудита" /></div>
 	</section>
 
 	<!-- Кейсы: посты из канала -->
@@ -246,8 +235,8 @@
 							<span class="unit">{c.unit}</span>
 							<h3>{c.name}</h3>
 							<div class="read">
-								<a class="btn btn-primary" href="{channel}/{c.post}" target="_blank" rel="noopener">Читать в Telegram</a>
-								<a class="btn btn-outline" href={maxChannel} target="_blank" rel="noopener">Читать в Максе</a>
+								<a class="btn btn-primary" href="{channel}/{c.post}" target="_blank" rel="noopener"><span class="lg">Читать в </span>Telegram</a>
+								<a class="btn btn-outline" href={maxChannel} target="_blank" rel="noopener"><span class="lg">Читать в Максе</span><span class="sm">Макс</span></a>
 							</div>
 						</div>
 					</div>
@@ -270,8 +259,6 @@
 	</section>
 </main>
 
-<AgencyModal bind:open={modal} />
-
 <style>
 	section { padding-top: 64px; }
 	section { scroll-margin-top: 70px; }
@@ -286,6 +273,7 @@
 	.se { white-space: nowrap; font-weight: 700; }
 	.se svg { width: 22px; height: 22px; vertical-align: -5px; margin-right: 6px; }
 	.ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+	.ctas .btn { font: inherit; font-weight: 600; cursor: pointer; }
 	.line { color: #fff; border: 2px solid #fff; background: none; }
 	figure { margin: 0; }
 	.vid { position: relative; }
@@ -312,7 +300,6 @@
 	.switch button { font: inherit; font-weight: 600; cursor: pointer; border: 0; background: none; color: inherit; display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 7px; }
 	.switch button.on { background: #fff; box-shadow: 0 1px 4px rgb(0 0 0 / 0.14); }
 	.switch svg { width: 20px; height: 20px; }
-	.phint { color: var(--muted); margin-top: 8px; }
 	.ptable { margin-top: 16px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 	.prow { display: grid; grid-template-columns: 96px 210px 1fr auto; gap: 20px; align-items: center; padding: 9px 20px; }
 	.prow + .prow { border-top: 1px solid var(--line); }
@@ -337,6 +324,7 @@
 	.unit { color: var(--muted); }
 	.case h3 { margin-top: 8px; font-size: 17px; }
 	.read { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; padding: 0 !important; }
+	.sm { display: none; }
 	.read .btn { flex: 1; padding: 10px 10px; font-size: 14px; white-space: nowrap; }
 	.wide { width: 100%; margin-top: 16px; }
 
@@ -363,13 +351,6 @@
 	details[open] summary::after { content: '–'; }
 	details p { padding: 0 22px 20px; color: var(--muted); max-width: 900px; }
 
-	.tgband { background: var(--navy); color: #fff; border-radius: 16px; padding: 36px 44px; display: flex; align-items: center; gap: 36px; }
-	.tnums { display: flex; gap: 36px; flex: none; }
-	.tnums div { display: grid; }
-	.tnums b { font-size: 44px; font-weight: 800; line-height: 1; }
-	.tnums span { opacity: 0.85; margin-top: 4px; }
-	.tgband p { font-size: 18px; opacity: 0.9; }
-	.subs { flex: none; margin-left: auto; display: grid; gap: 8px; }
 	button.wide { font: inherit; font-weight: 600; cursor: pointer; }
 
 
@@ -382,8 +363,6 @@
 		.prow { grid-template-columns: 96px 1fr auto; row-gap: 6px; }
 		.pq { grid-column: 1 / -1; order: 3; }
 		.cases { grid-template-columns: 1fr 1fr; }
-		.tgband { flex-wrap: wrap; padding: 28px; gap: 20px; }
-		.subs { margin-left: 0; }
 	}
 
 	@media (max-width: 640px) {
@@ -395,15 +374,22 @@
 		figcaption { font-size: 13px; padding-left: 8px; }
 		.playbtn span { width: 68px; height: 68px; }
 		.playbtn svg { width: 30px; height: 30px; }
-		.clients { display: grid; gap: 14px; padding-top: 22px; }
+		.clients { display: none; }
 		.track img { height: 34px; margin-right: 36px; }
 		.prow { grid-template-columns: 1fr auto; gap: 6px 10px; padding: 10px 14px; }
 		.prow img { display: none; }
 		.ptable:not(.open) .prow:nth-child(n + 4) { display: none; }
 		.pmore { display: flex; }
-		.cases, .series, .free { grid-template-columns: 1fr; }
-		.tgband { padding: 22px 18px; }
-		.tnums b { font-size: 36px; }
-		.subs { width: 100%; }
+		.series, .free { grid-template-columns: 1fr; }
+		.cases { grid-template-columns: 1fr 1fr; gap: 10px; }
+		.case:nth-child(n + 5) { display: none; }
+		.case div { padding: 10px 10px 12px; }
+		.big { font-size: 22px; display: block; margin: 0; }
+		.unit { font-size: 13px; }
+		.case h3 { font-size: 14px; margin-top: 4px; }
+		.read { gap: 6px; margin-top: 8px; }
+		.read .btn { padding: 8px 4px; font-size: 12.5px; }
+		.lg { display: none; }
+		.sm { display: inline; }
 	}
 </style>

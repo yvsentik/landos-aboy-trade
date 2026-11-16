@@ -3,6 +3,9 @@
 	import { page } from '$app/state';
 	import Icon from '#lib/components/Icon.svelte';
 	import AgencyForm from '#lib/components/agency/AgencyForm.svelte';
+	import AgencyModal from '#lib/components/agency/AgencyModal.svelte';
+	import { ask } from '#lib/agencyModal.svelte.ts';
+	import { afterNavigate } from '$app/navigation';
 	import { tg, max, channel, maxChannel, address, directions } from '#lib/agency.ts';
 	import type { LayoutProps } from './$types';
 
@@ -18,8 +21,23 @@
 		['Кейсы', resolve('/agency/keysy')],
 		['Контакты', resolve('/agency/kontakty')]
 	];
-	const isHome = $derived(page.url.pathname.replace(/\/$/, '') === home.replace(/\/$/, ''));
 	const here = (href: string) => page.url.pathname.startsWith(href);
+
+	// Плавное появление блоков при прокрутке (без скриптов блоки просто видны).
+	afterNavigate(() => {
+		if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		const io = new IntersectionObserver(
+			(es) => es.forEach((e) => e.isIntersecting && (e.target.classList.add('in'), io.unobserve(e.target))),
+			{ rootMargin: '0px 0px -8% 0px' }
+		);
+		document.querySelectorAll<HTMLElement>('main section, main .banner, main .phero, section.lead').forEach((el) => {
+			if (el.classList.contains('rv')) return;
+			if (el.getBoundingClientRect().top < innerHeight) return; // уже на экране – не прячем
+			el.classList.add('rv');
+			io.observe(el);
+		});
+		return () => io.disconnect();
+	});
 </script>
 
 <header>
@@ -30,18 +48,18 @@
 			<span class="lbl">Написать:</span>
 			<a href={tg} target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#29a9eb" /><path fill="#fff" d="M5.400 11.700l11.300-4.400c.5-.2 1 .1.800.9l-1.900 9c-.1.600-.5.800-1 .5l-2.900-2.100-1.400 1.300c-.2.2-.3.300-.6.300l.2-3 5.400-4.900c.2-.2 0-.3-.3-.1l-6.700 4.200-2.900-.9c-.6-.2-.6-.6 0-.8z" /></svg>Telegram</a>
 			<a href={max} target="_blank" rel="noopener"><img src={a('/img/icons/max.png')} alt="" />Макс</a>
-			<a href="#zayavka"><Icon name="send" size={20} /><span class="lg">Форма заявки</span><span class="sm">Заявка</span></a>
+			<button type="button" onclick={() => ask(true)}><Icon name="send" size={20} /><span class="lg">Форма заявки</span><span class="sm">Заявка</span></button>
 		</div>
 	</div>
 </header>
 
 {@render children()}
 
-{#if !isHome}
-	<section class="lead">
-		<div class="wrap"><AgencyForm /></div>
-	</section>
-{/if}
+<section class="lead">
+	<div class="wrap"><AgencyForm /></div>
+</section>
+
+<AgencyModal />
 
 <footer>
 	<div class="wrap cols">
@@ -81,8 +99,11 @@
 
 	.acts { margin-left: auto; display: flex; align-items: center; gap: 8px; flex: none; background: var(--blue); border-radius: 12px; padding: 6px 6px 6px 16px; }
 	.lbl { font-weight: 800; color: #fff; margin-right: 4px; }
-	.acts a { display: flex; gap: 8px; align-items: center; font-weight: 800; color: var(--navy); padding: 9px 14px; border-radius: 8px; background: #fff; white-space: nowrap; }
-	.acts a:hover { background: var(--soft); }
+	:global(a), :global(button), :global(summary) { -webkit-tap-highlight-color: transparent; }
+	:global(.rv) { opacity: 0; transform: translateY(26px); transition: opacity 0.55s ease, transform 0.55s ease; }
+	:global(.rv.in) { opacity: 1; transform: none; }
+	.acts a, .acts button { font: inherit; border: 0; cursor: pointer; display: flex; gap: 8px; align-items: center; font-weight: 800; color: var(--navy); padding: 9px 14px; border-radius: 8px; background: #fff; white-space: nowrap; }
+	.acts a:hover, .acts button:hover { background: var(--soft); }
 	.acts svg, .acts img { width: 22px; height: 22px; flex: none; }
 	.sm { display: none; }
 
@@ -112,8 +133,8 @@
 		nav { order: 0; width: auto; margin-left: auto; gap: 10px; font-size: 13px; }
 		.acts { order: 3; margin: 0; width: 100%; gap: 6px; padding: 5px 5px 5px 10px; }
 		.lbl { font-size: 12px; margin-right: 0; }
-		.acts a { flex: 1; min-width: 0; justify-content: center; padding: 8px 2px; font-size: 12px; gap: 4px; }
-		.acts a:last-child :global(svg) { display: none; }
+		.acts a, .acts button { flex: 1; min-width: 0; justify-content: center; padding: 8px 2px; font-size: 12px; gap: 4px; }
+		.acts button :global(svg) { display: none; }
 		.acts a:first-of-type { flex: 1.35; }
 		.acts svg, .acts img { width: 16px; height: 16px; }
 		.lg { display: none; }

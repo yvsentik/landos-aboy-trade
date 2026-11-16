@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { asset, resolve } from '$app/paths';
-	import AgencyModal from '#lib/components/agency/AgencyModal.svelte';
+	import { ask } from '#lib/agencyModal.svelte.ts';
 
 	// Бесплатный SEO-аудит: скелет страницы по видео руководителя агентства.
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const a = (f: string) => asset(f as any);
-	let modal = $state(false);
 
 	const gets = [
 		['Семантическое ядро', 'Собираем запросы, по которым вас ищут клиенты.'],
@@ -41,7 +40,7 @@
 				<p class="crumbs"><a href={resolve('/agency')}>Главная</a> / SEO-аудит</p>
 				<h1>Бесплатный SEO-аудит сайта</h1>
 				<p>Показываем рост на вашем сайте до договора. Вы платите, когда увидели результат.</p>
-				<button type="button" class="btn btn-white" onclick={() => (modal = true)}>Получить бесплатный аудит</button>
+				<button type="button" class="btn btn-white" onclick={() => ask()}>Получить бесплатный аудит</button>
 			</div>
 			<video src={a('/video/podhod.mp4')} poster={a('/video/podhod.jpg')} controls playsinline preload="none"></video>
 		</div>
@@ -72,14 +71,12 @@
 			<p>Многие агентства хотят заработать на клиенте в первый же месяц. Мы зарабатываем на долгом сотрудничестве. Если покажем результат на бесплатном аудите, вы останетесь с нами надолго. Поэтому нам выгодно начать с работы, а деньги обсудить потом.</p>
 			<p>Офис в Санкт-Петербурге, пр. Энергетиков, 10. Можно приехать и посмотреть кейсы с экрана: напишите за день, договоримся о времени.</p>
 			<div class="ctas">
-				<button type="button" class="btn btn-primary" onclick={() => (modal = true)}>Получить бесплатный аудит</button>
+				<button type="button" class="btn btn-primary" onclick={() => ask()}>Получить бесплатный аудит</button>
 				<a class="btn btn-outline" href={resolve('/agency/keysy')}>Смотреть кейсы</a>
 			</div>
 		</section>
 	</div>
 </main>
-
-<AgencyModal bind:open={modal} />
 
 <style>
 	.phero { margin-top: 28px; background: var(--navy); color: #fff; border-radius: 16px; padding: 40px 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
