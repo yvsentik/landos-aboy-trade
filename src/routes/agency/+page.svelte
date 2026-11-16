@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { asset, resolve } from '$app/paths';
 	import AgencyForm from '#lib/components/agency/AgencyForm.svelte';
-	import { channel } from '#lib/agency.ts';
+	import { channel, maxChannel } from '#lib/agency.ts';
 
 	// Главная сайта SEO-агентства «Фальков» (шапка и футер – в +layout.svelte). Стиль okonti.ru: белый фон, плоские синие кнопки, фото.
 	// Логика: оффер + видео → клиенты (слайдер) → услуги → бесплатный старт → кейсы → Telegram-канал.
@@ -215,15 +215,18 @@
 			<h2>Кейсы</h2>
 			<div class="cases">
 				{#each cases as c}
-					<a class="case" href="{channel}/{c.post}" target="_blank" rel="noopener">
+					<div class="case">
 						<img src={pic(c.img)} alt={c.name} loading="lazy" />
 						<div>
 							<b class="big">{c.big}</b>
 							<span class="unit">{c.unit}</span>
 							<h3>{c.name}</h3>
-							<span class="more">Читать кейс в Telegram →</span>
+							<div class="read">
+								<a class="btn btn-primary" href="{channel}/{c.post}" target="_blank" rel="noopener">Читать в Telegram</a>
+								<a class="btn btn-outline" href={maxChannel} target="_blank" rel="noopener">Читать в Максе</a>
+							</div>
 						</div>
-					</a>
+					</div>
 				{/each}
 			</div>
 			<a class="btn btn-primary wide" href={resolve('/agency/keysy')}>Читать ещё кейсы</a>
@@ -238,8 +241,11 @@
 					<div><b>1 000+</b><span>подписчиков</span></div>
 					<div><b>50+</b><span>кейсов</span></div>
 				</div>
-				<p>в нашем Telegram-канале. Разбираем проекты клиентов с цифрами и скриншотами.</p>
-				<a class="btn btn-white" href={channel} target="_blank" rel="noopener">Подписаться на канал</a>
+				<p>в нашем канале. Разбираем проекты клиентов с цифрами и скриншотами.</p>
+				<div class="subs">
+					<a class="btn btn-white" href={channel} target="_blank" rel="noopener">Подписаться в Telegram</a>
+					<a class="btn line" href={maxChannel} target="_blank" rel="noopener">Подписаться в Максе</a>
+				</div>
 			</div>
 		</div>
 	</section>
@@ -306,13 +312,13 @@
 
 	.cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
 	.case { display: block; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
-	.case:hover { border-color: var(--blue); }
 	.case img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; object-position: top; border-bottom: 1px solid var(--line); }
 	.case div { padding: 16px 18px 18px; }
 	.big { font-size: 34px; font-weight: 800; color: var(--blue); line-height: 1; margin-right: 8px; }
 	.unit { color: var(--muted); }
 	.case h3 { margin-top: 8px; font-size: 17px; }
-	.more { display: block; margin-top: 8px; color: var(--blue); font-weight: 600; font-size: 14px; }
+	.read { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; padding: 0 !important; }
+	.read .btn { flex: 1; padding: 10px 10px; font-size: 14px; white-space: nowrap; }
 	.wide { width: 100%; margin-top: 16px; }
 
 	.series { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
@@ -336,7 +342,7 @@
 	.tnums b { font-size: 44px; font-weight: 800; line-height: 1; }
 	.tnums span { opacity: 0.85; margin-top: 4px; }
 	.tgband p { font-size: 18px; opacity: 0.9; }
-	.tgband .btn { flex: none; margin-left: auto; }
+	.subs { flex: none; margin-left: auto; display: grid; gap: 8px; }
 	button.wide { font: inherit; font-weight: 600; cursor: pointer; }
 
 	.fform { margin-top: 16px; }
@@ -351,7 +357,7 @@
 		.pq { grid-column: 1 / -1; order: 3; }
 		.cases { grid-template-columns: 1fr 1fr; }
 		.tgband { flex-wrap: wrap; padding: 28px; gap: 20px; }
-		.tgband .btn { margin-left: 0; }
+		.subs { margin-left: 0; }
 	}
 
 	@media (max-width: 640px) {
@@ -372,6 +378,6 @@
 		.cases, .series, .free { grid-template-columns: 1fr; }
 		.tgband { padding: 22px 18px; }
 		.tnums b { font-size: 36px; }
-		.tgband .btn { width: 100%; }
+		.subs { width: 100%; }
 	}
 </style>

@@ -3,7 +3,7 @@
 	import { page } from '$app/state';
 	import Icon from '#lib/components/Icon.svelte';
 	import AgencyForm from '#lib/components/agency/AgencyForm.svelte';
-	import { tg, max, channel, address, directions } from '#lib/agency.ts';
+	import { tg, max, channel, maxChannel, address, directions } from '#lib/agency.ts';
 	import type { LayoutProps } from './$types';
 
 	// Общий каркас сайта агентства «Фальков»: закреплённая шапка, форма заявки, футер.
@@ -62,7 +62,8 @@
 			<b>Связаться</b>
 			<a href={tg} target="_blank" rel="noopener">Написать в Telegram</a>
 			<a href={max} target="_blank" rel="noopener">Написать в Макс</a>
-			<a href={channel} target="_blank" rel="noopener">Канал с кейсами @falkov_agency</a>
+			<a href={channel} target="_blank" rel="noopener">Кейсы в Telegram @falkov_agency</a>
+			<a href={maxChannel} target="_blank" rel="noopener">Кейсы в Максе</a>
 			<a href="#zayavka">Форма заявки</a>
 		</div>
 	</div>
