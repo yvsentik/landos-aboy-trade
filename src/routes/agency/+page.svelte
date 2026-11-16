@@ -119,7 +119,7 @@
 					<video bind:this={video} src={a('/video/podhod.mp4')} poster={a('/video/podhod.jpg')} controls={started} playsinline preload="none"></video>
 					{#if !started}
 						<button type="button" class="playbtn" onclick={play} aria-label="Смотреть видео о бесплатном аудите">
-							<span><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M8 5.500v13a1 1 0 0 0 1.500.900l11-6.500a1 1 0 0 0 0-1.800l-11-6.500A1 1 0 0 0 8 5.500z" /></svg></span>
+							<span><svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.540 6.347c1.295.712 1.295 2.573 0 3.286L7.280 19.990c-1.250.687-2.779-.217-2.779-1.643V5.653Z" /></svg></span>
 						</button>
 					{/if}
 				</div>
@@ -266,9 +266,9 @@
 	figure { margin: 0; }
 	.vid { position: relative; }
 	.playbtn { position: absolute; inset: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; border-radius: 10px; }
-	.playbtn span { width: 132px; height: 132px; border-radius: 50%; background: rgb(236 239 244 / 0.45); border: 4px solid rgb(255 255 255 / 0.9); display: grid; place-items: center; transition: background 0.15s, transform 0.15s; }
+	.playbtn span { width: 92px; height: 92px; border-radius: 50%; background: rgb(236 239 244 / 0.45); border: 3px solid rgb(255 255 255 / 0.9); display: grid; place-items: center; transition: background 0.15s, transform 0.15s; }
 	.playbtn:hover span { background: rgb(236 239 244 / 0.7); transform: scale(1.06); }
-	.playbtn svg { width: 64px; height: 64px; margin-left: 6px; }
+	.playbtn svg { display: block; width: 40px; height: 40px; }
 	video { width: 100%; aspect-ratio: 640 / 350; display: block; border-radius: 10px; background: #000; }
 	figcaption { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; margin-bottom: -12px; padding-left: 14px; font-weight: 700; font-size: 14px; }
 	.sticker { background: var(--pink); color: #fff; padding: 7px 14px; border-radius: 7px; transform: rotate(-4deg); box-shadow: 0 6px 18px rgb(0 0 0 / 0.3); }
@@ -361,8 +361,8 @@
 		.banner { padding: 22px 18px; margin-top: 16px; gap: 24px; }
 		.btxt p { font-size: 16px; }
 		figcaption { font-size: 13px; padding-left: 8px; }
-		.playbtn span { width: 96px; height: 96px; }
-		.playbtn svg { width: 46px; height: 46px; }
+		.playbtn span { width: 68px; height: 68px; }
+		.playbtn svg { width: 30px; height: 30px; }
 		.clients { display: grid; gap: 14px; padding-top: 22px; }
 		.track img { height: 34px; margin-right: 36px; }
 		.prow { grid-template-columns: 1fr auto; gap: 6px 10px; padding: 10px 14px; }
