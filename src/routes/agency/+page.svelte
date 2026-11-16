@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { asset, resolve } from '$app/paths';
 	import AgencyForm from '#lib/components/agency/AgencyForm.svelte';
+	import AgencyModal from '#lib/components/agency/AgencyModal.svelte';
 	import { channel, maxChannel } from '#lib/agency.ts';
 
 	// Главная сайта SEO-агентства «Фальков» (шапка и футер – в +layout.svelte). Стиль okonti.ru: белый фон, плоские синие кнопки, фото.
@@ -56,14 +57,14 @@
 		},
 		{
 			name: 'SEO-продвижение в Яндексе',
-			lines: ['Результат в среднем за месяц', 'Техническая оптимизация под Яндекс', 'Продвижение в ответах Алисы AI', 'Оптимизация карточки в Яндекс Картах'],
+			lines: ['ТОП сайта в среднем за 1 месяц', 'Техническая оптимизация под Яндекс', 'Продвижение в ответах Алисы AI', 'Оптимизация карточки в Яндекс Картах'],
 			price: 'от 55 000 ₽',
 			per: 'в месяц',
 			more: false
 		},
 		{
 			name: 'SEO-продвижение в Google',
-			lines: ['Результат в среднем за 3 месяца', 'Правки строго по официальным критериям Google', 'Продвижение в Google Gemini и AI-ответах'],
+			lines: ['ТОП сайта в среднем за 3 месяца', 'Правки строго по официальным критериям Google', 'Продвижение в Google Gemini и AI-ответах'],
 			price: 'от 70 000 ₽',
 			per: 'в месяц',
 			more: false
@@ -77,6 +78,15 @@
 	];
 
 	let allPos = $state(false);
+	let modal = $state(false);
+
+	const faq = [
+		['Сколько стоит продвижение?', 'Продвижение в Яндексе – от 55 000 ₽ в месяц, в Google – от 70 000 ₽ в месяц. SEO-аудит бесплатный. Точную сумму называем после аудита: она зависит от ниши и состояния сайта.'],
+		['Когда будет результат?', 'В Яндексе сайт выходит в ТОП в среднем за 1 месяц, в Google – в среднем за 3 месяца. Первые изменения позиций видны уже во время бесплатного аудита.'],
+		['Что входит в бесплатный аудит?', 'Собираем семантическое ядро, находим запросы, по которым сайт ещё не продвинут, считаем потенциал по трафику и заявкам, проводим техническую диагностику и отдаём план работ.'],
+		['Как проверить ваши результаты?', 'Позиции наших проектов можно проверить самому: откройте Яндекс или Google и введите запросы из таблицы на этой странице. Полные разборы с цифрами и скриншотами лежат в наших каналах в Telegram и Максе.'],
+		['Вы работали с моей нишей?', 'Скорее всего, да: у нас больше 50 кейсов в медицине, услугах, производстве, строительстве, юриспруденции и интернет-магазинах. Напишите нам свою нишу, пришлём подходящие примеры.']
+	];
 
 	let video = $state<HTMLVideoElement>();
 	let started = $state(false);
@@ -208,9 +218,9 @@
 						<ul>{#each sv.lines as l}<li>{l}</li>{/each}</ul>
 						<b class="price">{sv.price}{#if sv.per}<span> {sv.per}</span>{/if}</b>
 						{#if sv.more}
-							<a class="btn btn-primary" href="#free">Подробнее о SEO-аудите</a>
+							<a class="btn btn-primary" href={resolve('/agency/seo-audit')}>Подробнее о SEO-аудите</a>
 						{:else}
-							<a class="btn btn-outline" href="#free">Начать с бесплатного аудита</a>
+							<button type="button" class="btn btn-outline" onclick={() => (modal = true)}>Начать с бесплатного аудита</button>
 						{/if}
 					</div>
 				{/each}
@@ -246,7 +256,21 @@
 			<a class="btn btn-primary wide" href={resolve('/agency/keysy')}>Читать ещё кейсы</a>
 		</div>
 	</section>
+
+	<!-- Частые вопросы -->
+	<section id="faq">
+		<div class="wrap">
+			<h2>Частые вопросы</h2>
+			<div class="faq">
+				{#each faq as [q, ans]}
+					<details><summary>{q}</summary><p>{ans}</p></details>
+				{/each}
+			</div>
+		</div>
+	</section>
 </main>
+
+<AgencyModal bind:open={modal} />
 
 <style>
 	section { padding-top: 64px; }
@@ -322,7 +346,7 @@
 	.price span { margin-left: 6px; font-size: 16px; font-weight: 600; color: var(--muted); }
 	.ser ul { margin: 4px 0 0; padding-left: 18px; display: grid; gap: 6px; }
 	.price { margin-top: auto; padding-top: 14px; font-size: 28px; font-weight: 800; color: var(--navy); }
-	.ser .btn { margin-top: 6px; }
+	.ser .btn { margin-top: 6px; font: inherit; font-weight: 600; cursor: pointer; }
 	.ser .btn-outline { background: #fff; }
 
 	.free { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
@@ -330,6 +354,14 @@
 	.fcard span { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--green); color: var(--green); font-weight: 700; display: grid; place-items: center; }
 	.fcard h3 { font-size: 20px; }
 	.fcard p { color: var(--muted); }
+
+	.faq { margin-top: 24px; border: 1px solid var(--line); border-radius: 12px; }
+	details + details { border-top: 1px solid var(--line); }
+	summary { cursor: pointer; list-style: none; padding: 18px 56px 18px 22px; font-weight: 700; font-size: 18px; position: relative; }
+	summary::-webkit-details-marker { display: none; }
+	summary::after { content: '+'; position: absolute; right: 22px; top: 50%; translate: 0 -50%; font-size: 26px; font-weight: 400; color: var(--blue); }
+	details[open] summary::after { content: '–'; }
+	details p { padding: 0 22px 20px; color: var(--muted); max-width: 900px; }
 
 	.tgband { background: var(--navy); color: #fff; border-radius: 16px; padding: 36px 44px; display: flex; align-items: center; gap: 36px; }
 	.tnums { display: flex; gap: 36px; flex: none; }
@@ -357,7 +389,7 @@
 	@media (max-width: 640px) {
 		section { padding-top: 44px; }
 		.pq span { font-size: 13px; padding: 2px 8px; }
-		section { scroll-margin-top: 110px; }
+		section { scroll-margin-top: 125px; }
 		.banner { padding: 22px 18px; margin-top: 16px; gap: 24px; }
 		.btxt p { font-size: 16px; }
 		figcaption { font-size: 13px; padding-left: 8px; }
