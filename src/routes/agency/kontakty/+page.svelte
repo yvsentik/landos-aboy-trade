@@ -5,6 +5,12 @@
 	// Контакты агентства: мессенджеры, канал, адрес офиса и фото.
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const pic = (f: string) => asset(`/img/agency/${f}` as any);
+	const photos = [
+		['2354-2.jpg', 'Офис агентства в Петербурге'],
+		['2342-1.jpg', 'Встреча перед стартом проекта'],
+		['2339-1.jpg', 'Среда, десять вечера'],
+		['2349-1.jpg', 'Клиенты, с которыми давно дружим']
+	];
 </script>
 
 <svelte:head>
@@ -28,11 +34,18 @@
 				<a class="card" href={maxChannel} target="_blank" rel="noopener"><b>Кейсы в Максе</b><span>SEO КЕЙСЫ Falkov</span></a>
 				<div class="card"><b>Офис</b><span>{address}</span></div>
 			</div>
-			<div class="photos">
-				<img src={pic('2354-2.jpg')} alt="Офис агентства" loading="lazy" />
-				<img src={pic('2349-1.jpg')} alt="Основатель агентства с клиентами" loading="lazy" />
-			</div>
 		</div>
+
+		<section class="meet">
+			<h2>Работаем лично: встречаемся и показываем</h2>
+			<p>Ковид доказал, что агентство спокойно живёт онлайн. Но если есть возможность встретиться с клиентом лично – я её не упускаю. Ничего не продаёт наши услуги лучше, чем разговор с глазу на глаз: можно рассказать про кейс и тут же показать его внутрянку с личного компьютера.</p>
+			<p>Офис – {address}. Просьба написать за день до приезда.</p>
+			<div class="photos">
+				{#each photos as [img, cap]}
+					<figure><img src={pic(img)} alt={cap} loading="lazy" /><figcaption>{cap}</figcaption></figure>
+				{/each}
+			</div>
+		</section>
 	</div>
 </main>
 
@@ -43,21 +56,27 @@
 	h1 { font-size: clamp(28px, 3.6vw, 44px); font-weight: 800; text-transform: uppercase; line-height: 1.1; }
 	.phero p:last-child { font-size: 18px; }
 
-	.grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 24px; margin-top: 24px; align-items: start; }
-	.cards { display: grid; gap: 12px; }
+	.grid { margin-top: 24px; }
+	.cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
 	.card { display: grid; gap: 4px; border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
 	a.card:hover { border-color: var(--blue); }
 	.card b { font-size: 20px; }
 	.card span { color: var(--blue); font-weight: 600; }
 	div.card span { color: var(--muted); }
-	.photos { display: grid; grid-template-columns: 1fr 1.6fr; gap: 12px; align-items: start; }
-	.photos img { width: 100%; height: auto; border-radius: 12px; }
+	.meet { padding-top: 56px; display: grid; gap: 12px; }
+	.meet h2 { font-size: clamp(24px, 3vw, 32px); }
+	.meet p { max-width: 900px; font-size: 17px; }
+	.photos { margin-top: 12px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+	figure { margin: 0; display: grid; gap: 8px; align-content: start; }
+	.photos img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; }
+	figcaption { color: var(--muted); font-size: 14px; }
 
 	@media (max-width: 1000px) {
-		.grid { grid-template-columns: 1fr; }
+		.cards { grid-template-columns: 1fr 1fr; }
+		.photos { grid-template-columns: 1fr 1fr; }
 	}
 	@media (max-width: 640px) {
 		.phero { padding: 22px 18px; margin-top: 16px; }
-		.photos { grid-template-columns: 1fr; }
+		.meet { padding-top: 40px; }
 	}
 </style>

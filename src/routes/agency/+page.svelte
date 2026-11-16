@@ -4,7 +4,7 @@
 	import { channel, maxChannel } from '#lib/agency.ts';
 
 	// Главная сайта SEO-агентства «Фальков» (шапка и футер – в +layout.svelte). Стиль okonti.ru: белый фон, плоские синие кнопки, фото.
-	// Логика: оффер + видео → клиенты (слайдер) → услуги → бесплатный старт → кейсы → Telegram-канал.
+	// Логика: оффер + видео → клиенты → с чего начать → каналы → позиции → услуги → форма → кейсы.
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const a = (f: string) => asset(f as any);
 	const pic = (f: string) => a(`/img/agency/${f}`);
@@ -101,7 +101,7 @@
 {#snippet go()}<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#fff" /><path fill="#4285f4" d="M19.6 12.2c0-.6 0-1.100-.100-1.600H12v3h4.300c-.2 1-.7 1.800-1.600 2.400v2h2.600c1.500-1.400 2.300-3.400 2.300-5.800z" /><path fill="#34a853" d="M12 20c2.200 0 4-.7 5.300-1.900l-2.600-2c-.7.5-1.600.8-2.700.8-2.100 0-3.800-1.400-4.500-3.300H4.900v2.100C6.200 18.300 8.900 20 12 20z" /><path fill="#fbbc05" d="M7.500 13.600c-.2-.5-.3-1-.3-1.600s.1-1.100.3-1.600V8.300H4.900C4.300 9.400 4 10.700 4 12s.3 2.600.9 3.700z" /><path fill="#ea4335" d="M12 7.200c1.200 0 2.200.4 3.100 1.200l2.300-2.300C16 4.800 14.200 4 12 4 8.900 4 6.200 5.700 4.900 8.300l2.600 2.100C8.200 8.600 9.900 7.200 12 7.200z" /></svg>{/snippet}
 
 <main id="top">
-	<!-- 1. Оффер + видео руководителя -->
+	<!-- Оффер + видео руководителя -->
 	<div class="wrap">
 		<div class="banner">
 			<div class="btxt">
@@ -133,7 +133,7 @@
 		</div>
 	</div>
 
-	<!-- 2. Клиенты: слайдер логотипов -->
+	<!-- Клиенты: слайдер логотипов -->
 	<div class="wrap clients">
 		<b>Среди клиентов:</b>
 		<div class="marquee">
@@ -145,29 +145,7 @@
 		</div>
 	</div>
 
-	<!-- 3. Услуги -->
-	<section id="services">
-		<div class="wrap">
-			<h2>Наши услуги</h2>
-			<div class="series">
-				{#each services as sv}
-					<div class="ser">
-						<h3>{sv.name}</h3>
-						<ul>{#each sv.lines as l}<li>{l}</li>{/each}</ul>
-						<b class="price">{sv.price}{#if sv.per}<span> {sv.per}</span>{/if}</b>
-						{#if sv.more}
-							<a class="btn btn-primary" href="#free">Подробнее о SEO-аудите</a>
-						{:else}
-							<a class="btn btn-outline" href="#free">Начать с бесплатного аудита</a>
-						{/if}
-					</div>
-				{/each}
-			</div>
-			<a class="btn btn-outline wide" href={resolve('/agency/uslugi')}>Все услуги и цены</a>
-		</div>
-	</section>
-
-	<!-- 4. Бесплатный старт -->
+	<!-- Бесплатный старт -->
 	<section id="free">
 		<div class="wrap">
 			<h2>С чего начать сотрудничество?</h2>
@@ -177,11 +155,27 @@
 					<div class="fcard"><span>{i + 1}</span><h3>{f.name}</h3><p>{f.text}</p></div>
 				{/each}
 			</div>
-			<div class="fform"><AgencyForm /></div>
 		</div>
 	</section>
 
-	<!-- 5. Позиции, которые можно проверить в поиске -->
+	<!-- Telegram-канал -->
+	<section>
+		<div class="wrap">
+			<div class="tgband">
+				<div class="tnums">
+					<div><b>1 000+</b><span>подписчиков</span></div>
+					<div><b>50+</b><span>кейсов</span></div>
+				</div>
+				<p>в наших каналах в Telegram и Максе. Разбираем проекты клиентов с цифрами и скриншотами.</p>
+				<div class="subs">
+					<a class="btn btn-white" href={channel} target="_blank" rel="noopener">Подписаться в Telegram</a>
+					<a class="btn line" href={maxChannel} target="_blank" rel="noopener">Подписаться в Максе</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Позиции, которые можно проверить в поиске -->
 	<section id="positions">
 		<div class="wrap">
 			<div class="phead">
@@ -209,7 +203,33 @@
 		</div>
 	</section>
 
-	<!-- 6. Кейсы: посты из канала -->
+	<!-- Услуги -->
+	<section id="services">
+		<div class="wrap">
+			<h2>Наши услуги</h2>
+			<div class="series">
+				{#each services as sv}
+					<div class="ser">
+						<h3>{sv.name}</h3>
+						<ul>{#each sv.lines as l}<li>{l}</li>{/each}</ul>
+						<b class="price">{sv.price}{#if sv.per}<span> {sv.per}</span>{/if}</b>
+						{#if sv.more}
+							<a class="btn btn-primary" href="#free">Подробнее о SEO-аудите</a>
+						{:else}
+							<a class="btn btn-outline" href="#free">Начать с бесплатного аудита</a>
+						{/if}
+					</div>
+				{/each}
+			</div>
+		</div>
+	</section>
+
+	<!-- Форма заявки -->
+	<section>
+		<div class="wrap"><AgencyForm title="Пришлите сайт для аудита" /></div>
+	</section>
+
+	<!-- Кейсы: посты из канала -->
 	<section id="cases">
 		<div class="wrap">
 			<h2>Кейсы</h2>
@@ -232,23 +252,6 @@
 			<a class="btn btn-primary wide" href={resolve('/agency/keysy')}>Читать ещё кейсы</a>
 		</div>
 	</section>
-
-	<!-- 7. Telegram-канал -->
-	<section>
-		<div class="wrap">
-			<div class="tgband">
-				<div class="tnums">
-					<div><b>1 000+</b><span>подписчиков</span></div>
-					<div><b>50+</b><span>кейсов</span></div>
-				</div>
-				<p>в нашем канале. Разбираем проекты клиентов с цифрами и скриншотами.</p>
-				<div class="subs">
-					<a class="btn btn-white" href={channel} target="_blank" rel="noopener">Подписаться в Telegram</a>
-					<a class="btn line" href={maxChannel} target="_blank" rel="noopener">Подписаться в Максе</a>
-				</div>
-			</div>
-		</div>
-	</section>
 </main>
 
 <style>
@@ -259,7 +262,7 @@
 	.btn { border-radius: 8px; }
 
 	.banner { margin-top: 28px; background: var(--navy); color: #fff; border-radius: 16px; padding: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-	.city { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; padding: 6px 14px 6px 8px; border: 1px solid rgb(255 255 255 / 0.45); border-radius: 999px; }
+	.city { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; padding: 6px 14px 6px 8px; background: rgb(240 243 248 / 0.16); border-radius: 999px; }
 	.city svg { width: 38px; height: 38px; }
 	.btxt { display: grid; gap: 18px; justify-items: start; }
 	h1 { font-size: clamp(28px, 3.6vw, 46px); font-weight: 800; text-transform: uppercase; line-height: 1.1; }
@@ -271,12 +274,12 @@
 	figure { margin: 0; }
 	.vid { position: relative; }
 	.playbtn { position: absolute; inset: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; border-radius: 10px; }
-	.playbtn span { width: 132px; height: 132px; border-radius: 50%; background: rgb(229 25 125 / 0.4); border: 4px solid rgb(255 255 255 / 0.85); display: grid; place-items: center; transition: background 0.15s, transform 0.15s; }
-	.playbtn:hover span { background: rgb(229 25 125 / 0.8); transform: scale(1.06); }
+	.playbtn span { width: 132px; height: 132px; border-radius: 50%; background: rgb(236 239 244 / 0.45); border: 4px solid rgb(255 255 255 / 0.9); display: grid; place-items: center; transition: background 0.15s, transform 0.15s; }
+	.playbtn:hover span { background: rgb(236 239 244 / 0.7); transform: scale(1.06); }
 	.playbtn svg { width: 64px; height: 64px; margin-left: 6px; }
 	video { width: 100%; aspect-ratio: 640 / 350; display: block; border-radius: 10px; background: #000; }
 	figcaption { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; margin-bottom: -12px; padding-left: 14px; font-weight: 700; font-size: 14px; }
-	.sticker { background: #fff; color: var(--navy); padding: 7px 14px; border-radius: 7px; transform: rotate(-4deg); box-shadow: 0 6px 18px rgb(0 0 0 / 0.3); }
+	.sticker { background: var(--pink); color: #fff; padding: 7px 14px; border-radius: 7px; transform: rotate(-4deg); box-shadow: 0 6px 18px rgb(0 0 0 / 0.3); }
 	.arr { width: 34px; height: 34px; flex: none; transform: translateY(-8px); }
 
 	.clients { display: flex; align-items: center; gap: 28px; padding-top: 28px; }
@@ -345,7 +348,6 @@
 	.subs { flex: none; margin-left: auto; display: grid; gap: 8px; }
 	button.wide { font: inherit; font-weight: 600; cursor: pointer; }
 
-	.fform { margin-top: 16px; }
 
 	@media (max-width: 820px) {
 		.series, .free { grid-template-columns: 1fr; }

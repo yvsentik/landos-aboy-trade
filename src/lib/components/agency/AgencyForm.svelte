@@ -1,6 +1,6 @@
 <script lang="ts">
 	// Форма заявки агентства: адрес сайта + телефон. Пока никуда не отправляет.
-	let { title = 'Пришлите сайт, с него и начнём', id = 'zayavka' }: { title?: string; id?: string } = $props();
+	let { title = 'Пришлите сайт для аудита', id = 'zayavka' }: { title?: string; id?: string } = $props();
 
 	let sent = $state(false);
 	const submit = (e: SubmitEvent) => {
