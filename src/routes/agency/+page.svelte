@@ -8,26 +8,48 @@
 	const a = (f: string) => asset(f as any);
 	const pic = (f: string) => a(`/img/agency/${f}`);
 
-	const tel = 'tel:+79939823204';
+	const max = 'https://max.ru/u/f9LHodD0cOIG4smr9o8DyMktNa2hXIrOl2NdQxp8bTuRZ3l21vfOUwr8syE';
 	const tg = 'https://t.me/falkov_marketing';
 	const channel = 'https://t.me/falkov_agency';
 
 	const nav = [
 		['Услуги', '#services'],
-		['Бесплатно', '#free'],
+		['С чего начать', '#free'],
+		['Позиции', '#positions'],
 		['Кейсы', '#cases']
 	];
 
 	const logos = ['rosneft.svg', 'tatneft.svg', 'ekoniva.svg', 'korrus.svg', 'aravia.svg', 'psy-chat.svg', 'sotovik.svg'];
 
-	const positions = [
-		{ logo: 'ekoniva.svg', name: 'ЭкоНива-Техника', site: 'ekoniva-tekhnika.com', niche: 'Дилер сельхозтехники', top: 551, q: ['кормосмеситель', 'техника джон дир'] },
-		{ logo: 'shinokoff.png', name: 'Шиномонтажникоф', site: 'shinokoff.ru', niche: 'Выездной автосервис', top: 230, q: ['шиномонтаж выездной', 'доставка бензина'] },
-		{ logo: 'sotovik.svg', name: 'SOTOViK', site: 'spb.sotovik.shop', niche: 'Магазин электроники', top: 213, q: ['купить в спб айфон', 'купить макбук в спб'] },
-		{ logo: 'korrus.svg', name: 'Коррус-Техникс', site: 'korrus.ru', niche: 'Дорожная техника', top: 154, q: ['каток бомаг', 'купить каток бомаг'] },
-		{ logo: 'lodki-rf.png', name: 'Триера', site: 'lodki-rf.ru', niche: 'Производство лодок', top: 119, q: ['триера лодки', 'триера официальный сайт'] },
-		{ logo: 'psy-chat.svg', name: 'Psy-Chat', site: 'psy-chat.ru', niche: 'Онлайн-психологи', top: 78, q: ['бесплатный онлайн психолог', 'психолог чат'] }
+	type Eng = { city: string; top: number; q: string[] };
+	const positions: { logo: string; name: string; site: string; y: Eng; g: Eng }[] = [
+		{
+			logo: 'ekoniva.svg', name: 'ЭкоНива-Техника', site: 'ekoniva-tekhnika.com',
+			y: { city: 'Москва', top: 551, q: ['кормосмеситель', 'техника джон дир', 'погрузчик сани'] },
+			g: { city: 'Москва', top: 492, q: ['комбайн ловол', 'грейдер прицепной', 'устройство комбайна'] }
+		},
+		{
+			logo: 'shinokoff.png', name: 'Шиномонтажникоф', site: 'shinokoff.ru',
+			y: { city: 'Санкт-Петербург', top: 230, q: ['шиномонтаж выездной', 'доставка бензина', 'мобильная заправка'] },
+			g: { city: 'Санкт-Петербург', top: 204, q: ['мобильная заправка спб', 'мобильная заправка бензином спб'] }
+		},
+		{
+			logo: 'sotovik.svg', name: 'SOTOViK', site: 'spb.sotovik.shop',
+			y: { city: 'Санкт-Петербург', top: 213, q: ['купить в спб айфон', 'купить макбук в спб', 'спб айфон'] },
+			g: { city: 'Санкт-Петербург', top: 213, q: ['купить в спб айфон', 'купить макбук в спб', 'спб айфон'] }
+		},
+		{
+			logo: 'psy-chat.svg', name: 'Psy-Chat', site: 'psy-chat.ru',
+			y: { city: 'Москва', top: 78, q: ['бесплатный онлайн психолог', 'консультация психолога бесплатно'] },
+			g: { city: 'Москва', top: 3504, q: ['семейный психолог', 'кпт терапевт', 'помощь онлайн психолога'] }
+		},
+		{
+			logo: 'lodki-rf.png', name: 'Триера', site: 'lodki-rf.ru',
+			y: { city: 'Москва', top: 119, q: ['триера лодки', 'триера официальный сайт'] },
+			g: { city: 'Москва', top: 169, q: ['триера лодки', 'официальный сайт триера'] }
+		}
 	];
+	let eng = $state<'y' | 'g'>('y');
 
 	const cases = [
 		{ img: '2318-1.jpg', post: 2318, big: '2 700', unit: 'посетителей в месяц с нуля', name: 'Юридические услуги' },
@@ -89,23 +111,21 @@
 	<meta name="description" content="Выводим сайты в ТОП Яндекса и Google. Начинаем с бесплатного аудита: показываем результат до договора. 50+ кейсов в Telegram-канале." />
 </svelte:head>
 
-<div class="mbar">
-	<a href={tel}><Icon name="phone" size={20} />Позвонить</a>
-	<a href={tg}><Icon name="chat" size={20} />Написать</a>
-</div>
+{#snippet ya()}<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#fc3f1d" /><path fill="#fff" d="M13.6 19.5h2.3V4.5h-3.4c-3.4 0-5.2 1.7-5.2 4.3 0 2 .9 3.2 2.6 4.4l-3 6.3h2.5l3.3-6.9-1.1-.8c-1.4-.9-2-1.7-2-3.2 0-1.400.9-2.300 2.800-2.300h1.2z" /></svg>{/snippet}
+{#snippet go()}<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#fff" /><path fill="#4285f4" d="M19.6 12.2c0-.6 0-1.100-.100-1.600H12v3h4.300c-.2 1-.7 1.800-1.600 2.400v2h2.600c1.500-1.400 2.300-3.400 2.300-5.800z" /><path fill="#34a853" d="M12 20c2.200 0 4-.7 5.300-1.900l-2.600-2c-.7.5-1.600.8-2.700.8-2.100 0-3.800-1.400-4.500-3.300H4.900v2.100C6.200 18.300 8.900 20 12 20z" /><path fill="#fbbc05" d="M7.500 13.600c-.2-.5-.3-1-.3-1.600s.1-1.100.3-1.600V8.300H4.900C4.300 9.400 4 10.700 4 12s.3 2.600.9 3.700z" /><path fill="#ea4335" d="M12 7.200c1.200 0 2.200.4 3.100 1.200l2.300-2.300C16 4.800 14.200 4 12 4 8.900 4 6.200 5.700 4.900 8.300l2.600 2.100C8.200 8.600 9.900 7.200 12 7.200z" /></svg>{/snippet}
+{#snippet tgi()}<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#29a9eb" /><path fill="#fff" d="M5.400 11.700l11.300-4.400c.5-.2 1 .1.800.9l-1.900 9c-.1.600-.5.800-1 .5l-2.900-2.100-1.400 1.300c-.2.2-.3.300-.6.300l.2-3 5.400-4.900c.2-.2 0-.3-.3-.1l-6.700 4.200-2.900-.9c-.6-.2-.6-.6 0-.8z" /></svg>{/snippet}
 
 <header>
 	<div class="wrap main">
 		<a class="logo" href="#top"><span class="mark"></span><span><b>ФАЛЬКОВ</b><small>SEO-агентство</small></span></a>
+		<nav>{#each nav as [label, href]}<a {href}>{label}</a>{/each}</nav>
 		<div class="acts">
-			<a href={tel}><Icon name="phone" size={22} />Позвонить</a>
-			<a href={tg}><Icon name="chat" size={22} />Написать</a>
-		</div>
+		<span class="lbl">Написать:</span>
+		<a href={tg} target="_blank" rel="noopener">{@render tgi()}Telegram</a>
+		<a href={max} target="_blank" rel="noopener"><img src={a('/img/icons/max.png')} alt="" />Макс</a>
+		<a href="#free"><Icon name="send" size={20} /><span class="lg">Форма заявки</span><span class="sm">Заявка</span></a>
 	</div>
-	<nav class="wrap">
-		{#each nav as [label, href]}<a {href}>{label}</a>{/each}
-		<span>Санкт-Петербург, пр. Энергетиков, 10</span>
-	</nav>
+	</div>
 </header>
 
 <main id="top">
@@ -116,9 +136,9 @@
 				<h1>SEO-продвижение сайтов</h1>
 				<p>
 					Выводим в ТОП
-					<span class="se"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#fc3f1d" /><path fill="#fff" d="M13.6 19.5h2.3V4.5h-3.4c-3.4 0-5.2 1.7-5.2 4.3 0 2 .9 3.2 2.6 4.4l-3 6.3h2.5l3.3-6.9-1.1-.8c-1.4-.9-2-1.7-2-3.2 0-1.400.9-2.300 2.800-2.300h1.2z" /></svg>Яндекса</span>
+					<span class="se">{@render ya()}Яндекса</span>
 					и
-					<span class="se"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#fff" /><path fill="#4285f4" d="M19.6 12.2c0-.6 0-1.100-.100-1.600H12v3h4.300c-.2 1-.7 1.800-1.600 2.400v2h2.600c1.500-1.400 2.300-3.400 2.300-5.800z" /><path fill="#34a853" d="M12 20c2.200 0 4-.7 5.300-1.900l-2.600-2c-.7.5-1.600.8-2.700.8-2.100 0-3.800-1.400-4.500-3.300H4.900v2.100C6.200 18.300 8.900 20 12 20z" /><path fill="#fbbc05" d="M7.500 13.600c-.2-.5-.3-1-.3-1.600s.1-1.100.3-1.600V8.300H4.900C4.300 9.400 4 10.700 4 12s.3 2.600.9 3.700z" /><path fill="#ea4335" d="M12 7.200c1.200 0 2.200.4 3.100 1.200l2.300-2.300C16 4.800 14.200 4 12 4 8.900 4 6.200 5.700 4.900 8.300l2.600 2.100C8.200 8.600 9.900 7.200 12 7.200z" /></svg>Google.</span>
+					<span class="se">{@render go()}Google.</span>
 					Начинаем с бесплатного аудита и показываем результат до договора.
 				</p>
 				<div class="ctas">
@@ -198,23 +218,38 @@
 		</div>
 	</section>
 
-	<!-- 5. Кейсы: позиции с сайтами клиентов и посты из канала -->
-	<section id="cases">
+	<!-- 5. Позиции, которые можно проверить в поиске -->
+	<section id="positions">
 		<div class="wrap">
-			<h2>Кейсы</h2>
+			<div class="phead">
+				<h2>Проверьте реальные позиции наших проектов</h2>
+				<div class="switch" role="tablist" aria-label="Поисковая система">
+					<button type="button" role="tab" aria-selected={eng === 'y'} class:on={eng === 'y'} onclick={() => (eng = 'y')}>{@render ya()}Яндекс</button>
+					<button type="button" role="tab" aria-selected={eng === 'g'} class:on={eng === 'g'} onclick={() => (eng = 'g')}>{@render go()}Google</button>
+				</div>
+			</div>
+			<p class="phint">Откройте {eng === 'y' ? 'Яндекс' : 'Google'}, выберите город и введите запрос.</p>
 			<div class="ptable" class:open={allPos}>
 				{#each positions as p}
+					{@const e = p[eng]}
 					<div class="prow">
-						<img src={pic(p.logo)} alt={p.name} />
-						<div class="pname"><b>{p.name}</b><span>{p.niche}</span><a href="https://{p.site}" target="_blank" rel="noopener">{p.site}</a></div>
-						<div class="pq"><small>Введите в поиске</small>{#each p.q as q}<span>{q}</span>{/each}</div>
-						<div class="ptop"><b>{p.top}</b><span>запросов в ТОП-5</span></div>
+						<img src={pic(p.logo)} alt="" />
+						<div class="pname"><b>{p.name}</b><a href="https://{p.site}" target="_blank" rel="noopener">{p.site}</a></div>
+						<div class="pq"><i>{e.city}</i>{#each e.q as q}<span>{q}</span>{/each}</div>
+						<div class="ptop"><b>{e.top.toLocaleString('ru-RU')}</b><span>в ТОП-5</span></div>
 					</div>
 				{/each}
 			</div>
 			{#if !allPos}
 				<button type="button" class="btn btn-outline wide pmore" onclick={() => (allPos = true)}>Показать все {positions.length} проектов</button>
 			{/if}
+		</div>
+	</section>
+
+	<!-- 6. Кейсы: посты из канала -->
+	<section id="cases">
+		<div class="wrap">
+			<h2>Кейсы</h2>
 			<div class="cases">
 				{#each cases as c}
 					<a class="case" href="{channel}/{c.post}" target="_blank" rel="noopener">
@@ -231,7 +266,7 @@
 		</div>
 	</section>
 
-	<!-- 6. Telegram-канал -->
+	<!-- 7. Telegram-канал -->
 	<section>
 		<div class="wrap">
 			<div class="tgband">
@@ -256,27 +291,27 @@
 
 <style>
 	section { padding-top: 64px; }
-	section { scroll-margin-top: 8px; }
+	section { scroll-margin-top: 70px; }
 	.sub { margin-top: 10px; font-size: clamp(18px, 2vw, 22px); font-weight: 600; color: var(--navy); }
 	h2 { font-size: clamp(24px, 3vw, 32px); }
 	.btn { border-radius: 8px; }
 
-	.mbar { display: none; position: sticky; top: 0; z-index: 30; background: var(--blue); grid-template-columns: repeat(2, 1fr); }
-	.mbar a { display: flex; align-items: center; justify-content: center; gap: 7px; color: #fff; font-weight: 600; font-size: 16px; padding: 14px 5px; }
-	.mbar a + a { border-left: 1px solid rgb(255 255 255 / 0.25); }
-
-	header { border-bottom: 1px solid var(--line); }
-	.main { display: flex; align-items: center; gap: 20px; padding-top: 16px; padding-bottom: 14px; }
-	.logo { display: flex; align-items: center; gap: 10px; }
-	.mark { width: 42px; height: 42px; border: 5px solid var(--navy); background: var(--green); box-shadow: inset 0 0 0 4px #fff; }
-	.logo b { display: block; color: var(--navy); font-size: 22px; font-weight: 800; line-height: 1; }
-	.logo small { color: var(--navy); font-weight: 700; text-transform: uppercase; font-size: 12px; }
-	.acts { margin-left: auto; display: flex; background: var(--blue); border-radius: 9px; padding: 5px; }
-	.acts a { display: flex; gap: 9px; align-items: center; color: #fff; font-weight: 600; font-size: 18px; padding: 14px 20px; border-radius: 7px; }
-	.acts a:hover { background: var(--blue-d); }
-	nav { display: flex; gap: 32px; padding-bottom: 14px; font-weight: 500; }
+	header { position: sticky; top: 0; z-index: 30; background: #fff; border-bottom: 1px solid var(--line); }
+	.main { display: flex; align-items: center; gap: 28px; padding-top: 10px; padding-bottom: 10px; }
+	.logo { display: flex; align-items: center; gap: 10px; flex: none; }
+	.mark { width: 38px; height: 38px; border: 5px solid var(--navy); background: var(--green); box-shadow: inset 0 0 0 4px #fff; }
+	.logo b { display: block; color: var(--navy); font-size: 20px; font-weight: 800; line-height: 1; }
+	.logo small { color: var(--navy); font-weight: 700; text-transform: uppercase; font-size: 11px; }
+	nav { display: flex; gap: 24px; font-weight: 500; white-space: nowrap; }
 	nav a:hover { color: var(--blue); }
-	nav span { margin-left: auto; color: var(--muted); font-size: 14px; }
+	.acts { margin-left: auto; display: flex; align-items: center; gap: 8px; flex: none; }
+	.lbl { font-weight: 700; color: var(--navy); margin-right: 2px; }
+	.sm { display: none; }
+	.acts a { display: flex; gap: 8px; align-items: center; font-weight: 600; padding: 9px 14px; border-radius: 8px; border: 1px solid var(--line); background: #fff; white-space: nowrap; }
+	.acts a:hover { border-color: var(--blue); }
+	.acts a:last-child { background: var(--blue); border-color: var(--blue); color: #fff; }
+	.acts a:last-child:hover { background: var(--blue-d); }
+	.acts svg, .acts img { width: 22px; height: 22px; flex: none; }
 
 	.banner { margin-top: 28px; background: var(--navy); color: #fff; border-radius: 16px; padding: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
 	.btxt { display: grid; gap: 18px; justify-items: start; }
@@ -293,9 +328,9 @@
 	.playbtn:hover span { background: rgb(229 25 125 / 0.8); transform: scale(1.06); }
 	.playbtn svg { width: 64px; height: 64px; margin-left: 6px; }
 	video { width: 100%; aspect-ratio: 640 / 350; display: block; border-radius: 10px; background: #000; }
-	figcaption { position: relative; z-index: 2; display: flex; align-items: center; gap: 12px; margin-bottom: -14px; padding-left: 14px; font-weight: 700; font-size: 20px; }
-	.sticker { background: var(--pink); padding: 10px 18px; border-radius: 8px; transform: rotate(-4deg); box-shadow: 0 6px 18px rgb(0 0 0 / 0.3); }
-	.arr { width: 40px; height: 40px; flex: none; transform: translateY(-6px); }
+	figcaption { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; margin-bottom: -12px; padding-left: 14px; font-weight: 700; font-size: 14px; }
+	.sticker { background: #fff; color: var(--navy); padding: 7px 14px; border-radius: 7px; transform: rotate(-4deg); box-shadow: 0 6px 18px rgb(0 0 0 / 0.3); }
+	.arr { width: 34px; height: 34px; flex: none; transform: translateY(-8px); }
 
 	.clients { display: flex; align-items: center; gap: 28px; padding-top: 28px; }
 	.clients b { flex: none; color: var(--navy); font-size: 22px; }
@@ -306,20 +341,26 @@
 	@keyframes slide { to { transform: translateX(-50%); } }
 	@media (prefers-reduced-motion: reduce) { .track { animation: none; } .marquee { overflow-x: auto; } }
 
-	.ptable { margin-top: 24px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
-	.prow { display: grid; grid-template-columns: 110px 1.1fr 2fr 170px; gap: 20px; align-items: center; padding: 16px 20px; }
+	.phead { display: flex; align-items: center; justify-content: space-between; gap: 16px 24px; flex-wrap: wrap; }
+	.switch { display: flex; padding: 4px; background: var(--soft-2); border: 1px solid var(--line); border-radius: 10px; }
+	.switch button { font: inherit; font-weight: 600; cursor: pointer; border: 0; background: none; color: inherit; display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 7px; }
+	.switch button.on { background: #fff; box-shadow: 0 1px 4px rgb(0 0 0 / 0.14); }
+	.switch svg { width: 20px; height: 20px; }
+	.phint { color: var(--muted); margin-top: 8px; }
+	.ptable { margin-top: 16px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+	.prow { display: grid; grid-template-columns: 96px 210px 1fr auto; gap: 20px; align-items: center; padding: 9px 20px; }
 	.prow + .prow { border-top: 1px solid var(--line); }
-	.prow img { max-height: 32px; max-width: 100px; width: auto; }
+	.prow img { max-height: 28px; max-width: 96px; width: auto; }
 	.pmore { display: none; }
+	.pname { line-height: 1.3; }
 	.pname b { display: block; }
-	.pname span { display: block; color: var(--muted); font-size: 14px; }
-	.pname a { color: var(--blue); font-size: 14px; }
+	.pname a { color: var(--blue); font-size: 13px; }
 	.pname a:hover { text-decoration: underline; }
-	.pq { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-	.pq small { flex: 1 1 100%; color: var(--muted); font-size: 13px; font-weight: 600; }
-	.pq span { background: var(--soft-2); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; font-size: 14px; }
-	.ptop { text-align: right; }
-	.ptop b { display: block; font-size: 28px; font-weight: 800; color: var(--blue); line-height: 1; }
+	.pq { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+	.pq i { font-style: normal; color: var(--muted); font-size: 13px; margin-right: 4px; }
+	.pq span { background: var(--soft-2); border: 1px solid var(--line); border-radius: 6px; padding: 3px 9px; font-size: 14px; }
+	.ptop { text-align: right; white-space: nowrap; }
+	.ptop b { font-size: 22px; font-weight: 800; color: var(--blue); margin-right: 6px; }
 	.ptop span { color: var(--muted); font-size: 13px; }
 
 	.cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
@@ -368,10 +409,27 @@
 	footer a { color: #fff; }
 	footer a:first-of-type { margin-left: auto; }
 
+	@media (max-width: 1180px) {
+		nav { display: none; }
+	}
+
+	@media (max-width: 820px) {
+		.lg { display: none; }
+		.sm { display: inline; }
+		.main { gap: 12px; }
+		.series, .free { grid-template-columns: 1fr; }
+		.acts a { padding: 9px 10px; }
+	}
+
+	@media (max-width: 720px) {
+		.logo { display: none; }
+		.acts { margin: 0; width: 100%; }
+		.acts a { flex: 1; justify-content: center; }
+	}
+
 	@media (max-width: 1000px) {
-		nav span { display: none; }
 		.banner { grid-template-columns: 1fr; padding: 28px; }
-		.prow { grid-template-columns: 90px 1fr 130px; }
+		.prow { grid-template-columns: 96px 1fr auto; row-gap: 6px; }
 		.pq { grid-column: 1 / -1; order: 3; }
 		.cases { grid-template-columns: 1fr 1fr; }
 		.tgband { flex-wrap: wrap; padding: 28px; gap: 20px; }
@@ -381,24 +439,27 @@
 
 	@media (max-width: 640px) {
 		section { padding-top: 44px; }
-		.mbar { display: grid; }
-		.acts { display: none; }
-		nav { gap: 20px; overflow-x: auto; scrollbar-width: none; white-space: nowrap; font-size: 15px; padding-bottom: 12px; }
+		.main { flex-wrap: wrap; gap: 8px; padding-top: 8px; padding-bottom: 8px; }
+		.logo { display: none; }
+		.acts { margin: 0; width: 100%; gap: 6px; }
+		.lbl { font-size: 13px; }
+		.lg { display: none; }
+		.sm { display: inline; }
+		.acts a { flex: 1; min-width: 0; justify-content: center; padding: 8px 4px; font-size: 13px; gap: 5px; }
+		.pq span { font-size: 13px; padding: 2px 8px; }
+		.acts svg, .acts img { width: 18px; height: 18px; }
 		section { scroll-margin-top: 62px; }
 		.banner { padding: 22px 18px; margin-top: 16px; gap: 24px; }
 		.btxt p { font-size: 16px; }
-		figcaption { font-size: 16px; padding-left: 8px; }
-		.sticker { padding: 8px 14px; }
-		.arr { width: 32px; height: 32px; }
+		figcaption { font-size: 13px; padding-left: 8px; }
 		.playbtn span { width: 96px; height: 96px; }
 		.playbtn svg { width: 46px; height: 46px; }
 		.clients { display: grid; gap: 14px; padding-top: 22px; }
 		.track img { height: 34px; margin-right: 36px; }
-		.prow { grid-template-columns: 1fr auto; gap: 10px; padding: 14px; }
+		.prow { grid-template-columns: 1fr auto; gap: 6px 10px; padding: 10px 14px; }
 		.prow img { display: none; }
 		.ptable:not(.open) .prow:nth-child(n + 4) { display: none; }
 		.pmore { display: flex; }
-		.ptop b { font-size: 24px; }
 		.cases, .series, .free { grid-template-columns: 1fr; }
 		.tgband { padding: 22px 18px; }
 		.tnums b { font-size: 36px; }
