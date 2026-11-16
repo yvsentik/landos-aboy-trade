@@ -23,7 +23,7 @@
 
 <header>
 	<div class="wrap main">
-		<a class="logo" href={home}>SEO-агентство СПб</a>
+		<a class="logo" href={home} aria-label="falkov – на главную">falkov<small>маркетинг</small></a>
 		<nav>{#each nav as [label, href]}<a {href} class:on={here(href)}>{label}</a>{/each}</nav>
 		<div class="acts">
 			<span class="lbl">Написать:</span>
@@ -45,7 +45,7 @@
 <footer>
 	<div class="wrap cols">
 		<div class="about">
-			<a class="flogo" href={home}>SEO-агентство СПб</a>
+			<a class="flogo" href={home}>falkov</a>
 			<p>SEO-агентство. Выводим сайты в ТОП Яндекса и Google и показываем результат до договора.</p>
 			<p class="addr">{address}</p>
 		</div>
@@ -73,7 +73,8 @@
 <style>
 	header { position: sticky; top: 0; z-index: 30; background: #fff; border-bottom: 1px solid var(--line); }
 	.main { display: flex; align-items: center; gap: 28px; padding-top: 8px; padding-bottom: 8px; }
-	.logo { flex: none; color: var(--navy); font-size: 20px; font-weight: 800; white-space: nowrap; }
+	.logo { flex: none; display: flex; align-items: baseline; gap: 6px; color: #111; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; white-space: nowrap; }
+	.logo small { font-size: 12px; font-weight: 600; letter-spacing: 0; color: var(--muted); }
 	nav { display: flex; gap: 24px; font-weight: 600; white-space: nowrap; }
 	nav a:hover, nav a.on { color: var(--blue); }
 
@@ -104,9 +105,10 @@
 		.cols { grid-template-columns: 1fr 1fr; }
 	}
 	@media (max-width: 640px) {
-		.logo { font-size: 14px; }
+		.logo { font-size: 20px; }
+		.logo small { font-size: 10px; }
 		.main { gap: 8px 10px; }
-		nav { order: 0; width: auto; margin-left: auto; gap: 9px; font-size: 12.5px; }
+		nav { order: 0; width: auto; margin-left: auto; gap: 10px; font-size: 13px; }
 		.acts { order: 3; margin: 0; width: 100%; gap: 6px; padding: 5px 5px 5px 10px; }
 		.lbl { font-size: 12px; margin-right: 0; }
 		.acts a { flex: 1; min-width: 0; justify-content: center; padding: 8px 2px; font-size: 12px; gap: 4px; }
