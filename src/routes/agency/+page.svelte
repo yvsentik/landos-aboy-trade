@@ -1,23 +1,14 @@
 <script lang="ts">
-	import { asset } from '$app/paths';
-	import Icon from '#lib/components/Icon.svelte';
+	import { asset, resolve } from '$app/paths';
+	import AgencyForm from '#lib/components/agency/AgencyForm.svelte';
+	import { channel } from '#lib/agency.ts';
 
-	// Лендинг SEO-агентства «Фальков». Стиль okonti.ru: белый фон, плоские синие кнопки, фото.
+	// Главная сайта SEO-агентства «Фальков» (шапка и футер – в +layout.svelte). Стиль okonti.ru: белый фон, плоские синие кнопки, фото.
 	// Логика: оффер + видео → клиенты (слайдер) → услуги → бесплатный старт → кейсы → Telegram-канал.
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const a = (f: string) => asset(f as any);
 	const pic = (f: string) => a(`/img/agency/${f}`);
 
-	const max = 'https://max.ru/u/f9LHodD0cOIG4smr9o8DyMktNa2hXIrOl2NdQxp8bTuRZ3l21vfOUwr8syE';
-	const tg = 'https://t.me/falkov_marketing';
-	const channel = 'https://t.me/falkov_agency';
-
-	const nav = [
-		['Услуги', '#services'],
-		['С чего начать', '#free'],
-		['Позиции', '#positions'],
-		['Кейсы', '#cases']
-	];
 
 	const logos = ['rosneft.svg', 'tatneft.svg', 'ekoniva.svg', 'korrus.svg', 'aravia.svg', 'psy-chat.svg', 'sotovik.svg'];
 
@@ -99,11 +90,6 @@
 		video?.play();
 	};
 
-	let sent = $state(false);
-	const submit = (e: SubmitEvent) => {
-		e.preventDefault();
-		sent = true; // TODO: отправка заявки в CRM / Telegram
-	};
 </script>
 
 <svelte:head>
@@ -113,26 +99,13 @@
 
 {#snippet ya()}<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#fc3f1d" /><path fill="#fff" d="M13.6 19.5h2.3V4.5h-3.4c-3.4 0-5.2 1.7-5.2 4.3 0 2 .9 3.2 2.6 4.4l-3 6.3h2.5l3.3-6.9-1.1-.8c-1.4-.9-2-1.7-2-3.2 0-1.400.9-2.300 2.800-2.300h1.2z" /></svg>{/snippet}
 {#snippet go()}<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#fff" /><path fill="#4285f4" d="M19.6 12.2c0-.6 0-1.100-.100-1.600H12v3h4.300c-.2 1-.7 1.800-1.600 2.400v2h2.600c1.500-1.400 2.300-3.400 2.300-5.800z" /><path fill="#34a853" d="M12 20c2.200 0 4-.7 5.300-1.900l-2.600-2c-.7.5-1.600.8-2.700.8-2.100 0-3.800-1.400-4.500-3.300H4.900v2.100C6.200 18.300 8.900 20 12 20z" /><path fill="#fbbc05" d="M7.500 13.600c-.2-.5-.3-1-.3-1.600s.1-1.100.3-1.600V8.300H4.900C4.300 9.400 4 10.700 4 12s.3 2.600.9 3.700z" /><path fill="#ea4335" d="M12 7.200c1.200 0 2.200.4 3.100 1.200l2.300-2.300C16 4.800 14.200 4 12 4 8.900 4 6.200 5.700 4.900 8.300l2.600 2.100C8.200 8.600 9.900 7.200 12 7.200z" /></svg>{/snippet}
-{#snippet tgi()}<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#29a9eb" /><path fill="#fff" d="M5.400 11.700l11.300-4.400c.5-.2 1 .1.800.9l-1.900 9c-.1.600-.5.800-1 .5l-2.900-2.100-1.400 1.300c-.2.2-.3.300-.6.300l.2-3 5.400-4.900c.2-.2 0-.3-.3-.1l-6.700 4.200-2.900-.9c-.6-.2-.6-.6 0-.8z" /></svg>{/snippet}
-
-<header>
-	<div class="wrap main">
-		<a class="logo" href="#top"><span class="mark"></span><span><b>ФАЛЬКОВ</b><small>SEO-агентство</small></span></a>
-		<nav>{#each nav as [label, href]}<a {href}>{label}</a>{/each}</nav>
-		<div class="acts">
-		<span class="lbl">Написать:</span>
-		<a href={tg} target="_blank" rel="noopener">{@render tgi()}Telegram</a>
-		<a href={max} target="_blank" rel="noopener"><img src={a('/img/icons/max.png')} alt="" />Макс</a>
-		<a href="#free"><Icon name="send" size={20} /><span class="lg">Форма заявки</span><span class="sm">Заявка</span></a>
-	</div>
-	</div>
-</header>
 
 <main id="top">
 	<!-- 1. Оффер + видео руководителя -->
 	<div class="wrap">
 		<div class="banner">
 			<div class="btxt">
+				<span class="city"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 2v5M22 4h4M24 7l-3 16h6zM20 23h8v8h-8zM17 31h14v7H17zM3 45h42v-5l-6-3H9l-6 3z" /></svg>Агентство из Санкт-Петербурга</span>
 				<h1>SEO-продвижение сайтов</h1>
 				<p>
 					Выводим в ТОП
@@ -142,7 +115,7 @@
 					Начинаем с бесплатного аудита и показываем результат до договора.
 				</p>
 				<div class="ctas">
-					<a class="btn btn-white" href="#free">Получить бесплатный аудит</a>
+					<a class="btn btn-white" href="#zayavka">Получить бесплатный аудит</a>
 					<a class="btn line" href="#cases">Смотреть кейсы</a>
 				</div>
 			</div>
@@ -190,6 +163,7 @@
 					</div>
 				{/each}
 			</div>
+			<a class="btn btn-outline wide" href={resolve('/agency/uslugi')}>Все услуги и цены</a>
 		</div>
 	</section>
 
@@ -203,18 +177,7 @@
 					<div class="fcard"><span>{i + 1}</span><h3>{f.name}</h3><p>{f.text}</p></div>
 				{/each}
 			</div>
-			<div class="offer">
-				<h3>Пришлите сайт, с него и начнём</h3>
-				{#if sent}
-					<p class="ok">Заявка принята. Ответим сегодня.</p>
-				{:else}
-					<form onsubmit={submit}>
-						<input class="field" required placeholder="Адрес сайта" />
-						<input class="field" required type="tel" placeholder="Телефон" />
-						<button class="btn btn-primary" type="submit">Получить бесплатный аудит</button>
-					</form>
-				{/if}
-			</div>
+			<div class="fform"><AgencyForm /></div>
 		</div>
 	</section>
 
@@ -263,6 +226,7 @@
 					</a>
 				{/each}
 			</div>
+			<a class="btn btn-primary wide" href={resolve('/agency/keysy')}>Читать ещё кейсы</a>
 		</div>
 	</section>
 
@@ -281,14 +245,6 @@
 	</section>
 </main>
 
-<footer>
-	<div class="wrap">
-		<b>ФАЛЬКОВ</b>
-		<span>SEO-агентство · Санкт-Петербург, пр. Энергетиков, 10</span>
-		<a href={channel}>@falkov_agency</a>
-	</div>
-</footer>
-
 <style>
 	section { padding-top: 64px; }
 	section { scroll-margin-top: 70px; }
@@ -296,24 +252,9 @@
 	h2 { font-size: clamp(24px, 3vw, 32px); }
 	.btn { border-radius: 8px; }
 
-	header { position: sticky; top: 0; z-index: 30; background: #fff; border-bottom: 1px solid var(--line); }
-	.main { display: flex; align-items: center; gap: 28px; padding-top: 10px; padding-bottom: 10px; }
-	.logo { display: flex; align-items: center; gap: 10px; flex: none; }
-	.mark { width: 38px; height: 38px; border: 5px solid var(--navy); background: var(--green); box-shadow: inset 0 0 0 4px #fff; }
-	.logo b { display: block; color: var(--navy); font-size: 20px; font-weight: 800; line-height: 1; }
-	.logo small { color: var(--navy); font-weight: 700; text-transform: uppercase; font-size: 11px; }
-	nav { display: flex; gap: 24px; font-weight: 500; white-space: nowrap; }
-	nav a:hover { color: var(--blue); }
-	.acts { margin-left: auto; display: flex; align-items: center; gap: 8px; flex: none; }
-	.lbl { font-weight: 700; color: var(--navy); margin-right: 2px; }
-	.sm { display: none; }
-	.acts a { display: flex; gap: 8px; align-items: center; font-weight: 600; padding: 9px 14px; border-radius: 8px; border: 1px solid var(--line); background: #fff; white-space: nowrap; }
-	.acts a:hover { border-color: var(--blue); }
-	.acts a:last-child { background: var(--blue); border-color: var(--blue); color: #fff; }
-	.acts a:last-child:hover { background: var(--blue-d); }
-	.acts svg, .acts img { width: 22px; height: 22px; flex: none; }
-
 	.banner { margin-top: 28px; background: var(--navy); color: #fff; border-radius: 16px; padding: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+	.city { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; padding: 6px 14px 6px 8px; border: 1px solid rgb(255 255 255 / 0.45); border-radius: 999px; }
+	.city svg { width: 38px; height: 38px; }
 	.btxt { display: grid; gap: 18px; justify-items: start; }
 	h1 { font-size: clamp(28px, 3.6vw, 46px); font-weight: 800; text-transform: uppercase; line-height: 1.1; }
 	.btxt p { font-size: 18px; }
@@ -398,33 +339,10 @@
 	.tgband .btn { flex: none; margin-left: auto; }
 	button.wide { font: inherit; font-weight: 600; cursor: pointer; }
 
-	.offer { margin-top: 16px; background: var(--soft); border-radius: 16px; padding: 32px; display: grid; grid-template-columns: 1fr 1.6fr; gap: 32px; align-items: center; }
-	.offer h3 { font-size: 24px; font-weight: 700; }
-	form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; }
-	.ok { font-weight: 700; font-size: 18px; color: var(--navy); }
-
-	footer { margin-top: 64px; background: var(--navy); color: #c9d6f2; padding: 28px 0; font-size: 14px; }
-	footer .wrap { display: flex; gap: 24px; flex-wrap: wrap; align-items: center; }
-	footer b { color: #fff; font-size: 18px; }
-	footer a { color: #fff; }
-	footer a:first-of-type { margin-left: auto; }
-
-	@media (max-width: 1180px) {
-		nav { display: none; }
-	}
+	.fform { margin-top: 16px; }
 
 	@media (max-width: 820px) {
-		.lg { display: none; }
-		.sm { display: inline; }
-		.main { gap: 12px; }
 		.series, .free { grid-template-columns: 1fr; }
-		.acts a { padding: 9px 10px; }
-	}
-
-	@media (max-width: 720px) {
-		.logo { display: none; }
-		.acts { margin: 0; width: 100%; }
-		.acts a { flex: 1; justify-content: center; }
 	}
 
 	@media (max-width: 1000px) {
@@ -434,21 +352,12 @@
 		.cases { grid-template-columns: 1fr 1fr; }
 		.tgband { flex-wrap: wrap; padding: 28px; gap: 20px; }
 		.tgband .btn { margin-left: 0; }
-		.offer { grid-template-columns: 1fr; }
 	}
 
 	@media (max-width: 640px) {
 		section { padding-top: 44px; }
-		.main { flex-wrap: wrap; gap: 8px; padding-top: 8px; padding-bottom: 8px; }
-		.logo { display: none; }
-		.acts { margin: 0; width: 100%; gap: 6px; }
-		.lbl { font-size: 13px; }
-		.lg { display: none; }
-		.sm { display: inline; }
-		.acts a { flex: 1; min-width: 0; justify-content: center; padding: 8px 4px; font-size: 13px; gap: 5px; }
 		.pq span { font-size: 13px; padding: 2px 8px; }
-		.acts svg, .acts img { width: 18px; height: 18px; }
-		section { scroll-margin-top: 62px; }
+		section { scroll-margin-top: 110px; }
 		.banner { padding: 22px 18px; margin-top: 16px; gap: 24px; }
 		.btxt p { font-size: 16px; }
 		figcaption { font-size: 13px; padding-left: 8px; }
@@ -464,8 +373,5 @@
 		.tgband { padding: 22px 18px; }
 		.tnums b { font-size: 36px; }
 		.tgband .btn { width: 100%; }
-		form { grid-template-columns: 1fr; }
-		.offer { padding: 20px; }
-		footer a:first-of-type { margin-left: 0; }
 	}
 </style>
