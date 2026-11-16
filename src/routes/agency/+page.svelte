@@ -33,11 +33,6 @@
 			logo: 'psy-chat.svg', name: 'Psy-Chat', site: 'psy-chat.ru',
 			y: { city: 'Москва', top: 78, q: ['бесплатный онлайн психолог', 'консультация психолога бесплатно'] },
 			g: { city: 'Москва', top: 3504, q: ['семейный психолог', 'кпт терапевт', 'помощь онлайн психолога'] }
-		},
-		{
-			logo: 'lodki-rf.png', name: 'Триера', site: 'lodki-rf.ru',
-			y: { city: 'Москва', top: 119, q: ['триера лодки', 'триера официальный сайт'] },
-			g: { city: 'Москва', top: 169, q: ['триера лодки', 'официальный сайт триера'] }
 		}
 	];
 	let eng = $state<'y' | 'g'>('y');
@@ -105,7 +100,6 @@
 	<div class="wrap">
 		<div class="banner">
 			<div class="btxt">
-				<span class="city"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.200" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 2v5M22 4h4M24 7l-3 16h6zM20 23h8v8h-8zM17 31h14v7H17zM3 45h42v-5l-6-3H9l-6 3z" /></svg>Агентство из Санкт-Петербурга</span>
 				<h1>SEO-продвижение сайтов</h1>
 				<p>
 					Выводим в ТОП
@@ -262,8 +256,6 @@
 	.btn { border-radius: 8px; }
 
 	.banner { margin-top: 28px; background: var(--navy); color: #fff; border-radius: 16px; padding: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-	.city { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; padding: 6px 14px 6px 8px; background: rgb(240 243 248 / 0.16); border-radius: 999px; }
-	.city svg { width: 38px; height: 38px; }
 	.btxt { display: grid; gap: 18px; justify-items: start; }
 	h1 { font-size: clamp(28px, 3.6vw, 46px); font-weight: 800; text-transform: uppercase; line-height: 1.1; }
 	.btxt p { font-size: 18px; }
