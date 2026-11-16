@@ -2,10 +2,9 @@
 	import { asset, resolve } from '$app/paths';
 	import { cases, channel } from '#lib/agency.ts';
 
-	// Кейсы агентства: 20 проектов с цифрами. У шести есть графики из постов канала.
+	// Кейсы агентства: проекты с цифрами, скриншоты и ссылки на посты в канале @falkov_agency.
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const pic = (f: string) => asset(`/img/agency/${f}` as any);
-	const post = (img: string) => `${channel}/${img.split('-')[0]}`;
 </script>
 
 <svelte:head>
@@ -28,15 +27,17 @@
 					<b class="cname">{c.name}</b>
 					<div class="chead"><b class="big">{c.big}</b><span>{c.title}</span></div>
 					<p>{c.text}</p>
-					<div class="cstats">
-						{#each c.stats as [v, l]}<div><b>{v}</b><span>{l}</span></div>{/each}
-					</div>
-					{#if c.img}
-						<a class="shot" href={post(c.img)} target="_blank" rel="noopener">
-							<img src={pic(c.img)} alt="График: {c.name}" loading="lazy" />
-							<span>Читать кейс в Telegram →</span>
-						</a>
+					{#if c.stats}
+						<div class="cstats">
+							{#each c.stats as [v, l]}<div><b>{v}</b><span>{l}</span></div>{/each}
+						</div>
 					{/if}
+					{#if c.img}<img class="shot" src={pic(c.img)} alt="Скриншот: {c.name}" loading="lazy" />{/if}
+					<div class="links">
+						{#if c.post}<a class="btn btn-primary" href="{channel}/{c.post}" target="_blank" rel="noopener">Читать кейс в Telegram</a>{/if}
+						{#if c.maxPost}<a class="btn btn-outline" href={c.maxPost} target="_blank" rel="noopener">Читать кейс в Максе</a>{/if}
+						{#if c.site}<a class="btn btn-outline" href="https://{c.site}" target="_blank" rel="noopener">Открыть сайт</a>{/if}
+					</div>
 				</article>
 			{/each}
 		</div>
@@ -69,12 +70,12 @@
 	.big { font-size: 34px; font-weight: 800; color: var(--blue); line-height: 1; }
 	.chead span { font-weight: 600; font-size: 17px; }
 	article p { color: var(--muted); font-size: 15px; }
-	.cstats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); }
+	.cstats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
 	.cstats b { display: block; color: var(--navy); }
 	.cstats span { color: var(--muted); font-size: 13px; }
-	.shot { display: grid; gap: 8px; }
-	.shot img { width: 100%; border: 1px solid var(--line); border-radius: 8px; }
-	.shot span { color: var(--blue); font-weight: 600; font-size: 14px; }
+	.shot { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; object-position: top left; border: 1px solid var(--line); border-radius: 8px; }
+	.links { margin-top: auto; padding-top: 6px; display: flex; gap: 8px; flex-wrap: wrap; }
+	.links .btn { flex: 1; padding: 10px 12px; font-size: 14px; white-space: nowrap; }
 
 	.tgband { margin-top: 56px; background: var(--navy); color: #fff; border-radius: 16px; padding: 36px 44px; display: flex; align-items: center; gap: 36px; }
 	.tnums { display: flex; gap: 36px; flex: none; }
