@@ -1,3 +1,5 @@
+import { goal } from './metrika.ts';
+
 // Отправка заявок с сайта на наш сервер (/api/lead), оттуда – в Битрикс24.
 const UTM_KEY = 'utm';
 const UTM_FIELDS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
@@ -70,7 +72,12 @@ export async function sendLead(lead: Lead): Promise<LeadResult> {
 			body: JSON.stringify({ ...lead, page: location.href, utm: utm() })
 		});
 		const j = await r.json().catch(() => ({}));
-		if (r.ok && j.ok === true) return { ok: true };
+		if (r.ok && j.ok === true) {
+			// цели Метрики: общая и по типу формы
+			goal('lead_sent', { form: lead.form });
+			goal(`lead_${lead.form}`, { total: lead.total });
+			return { ok: true };
+		}
 		const e = j.error === 'phone' || j.error === 'rate' ? j.error : 'crm';
 		return { ok: false, error: e };
 	} catch {
