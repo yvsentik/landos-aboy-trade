@@ -33,7 +33,7 @@
 		.offer { grid-template-columns: 1fr; }
 	}
 	@media (max-width: 640px) {
-		.offer { padding: 20px; scroll-margin-top: 120px; }
+		.offer { padding: 20px; scroll-margin-top: 130px; }
 		form { grid-template-columns: 1fr; }
 	}
 </style>

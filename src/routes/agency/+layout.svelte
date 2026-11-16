@@ -13,6 +13,7 @@
 	const a = (f: string) => asset(f as any);
 	const home = resolve('/agency');
 	const nav: [string, string][] = [
+		['SEO-аудит', resolve('/agency/seo-audit')],
 		['Услуги', resolve('/agency/uslugi')],
 		['Кейсы', resolve('/agency/keysy')],
 		['Контакты', resolve('/agency/kontakty')]
@@ -56,7 +57,7 @@
 		</div>
 		<div>
 			<b>Услуги</b>
-			{#each directions as d}<a href={nav[0][1]}>{d.name}</a>{/each}
+			{#each directions as d}<a href={nav[1][1]}>{d.name}</a>{/each}
 		</div>
 		<div>
 			<b>Связаться</b>
