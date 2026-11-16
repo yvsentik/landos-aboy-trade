@@ -24,7 +24,7 @@
 			{#each cases as c}
 				<article>
 					<div class="ctop"><span class="ctag">{c.tag}</span><span>{c.geo}</span></div>
-					<b class="cname">{c.name}</b>
+					<div class="cn">{#if c.logo}<img src={pic(c.logo)} alt="" />{/if}<b class="cname">{c.name}</b></div>
 					<div class="chead"><b class="big">{c.big}</b><span>{c.title}</span></div>
 					<p>{c.text}</p>
 					{#if c.stats}
@@ -68,6 +68,8 @@
 	article { border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 	.ctop { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--muted); }
 	.ctag { color: var(--navy); font-weight: 600; }
+	.cn { display: flex; align-items: center; gap: 12px; min-height: 36px; }
+	.cn img { max-height: 34px; max-width: 110px; width: auto; flex: none; }
 	.cname { font-size: 15px; overflow-wrap: anywhere; }
 	.chead { display: grid; gap: 4px; }
 	.big { font-size: 34px; font-weight: 800; color: var(--blue); line-height: 1; }
