@@ -72,7 +72,6 @@
 			<b>Разделы</b>
 			<a href={home}>Главная</a>
 			{#each nav as [label, href]}<a {href}>{label}</a>{/each}
-			<a href={resolve('/agency/kontakty')}>Контакты</a>
 			<a href={resolve('/agency/spb')}>SEO-продвижение в Санкт-Петербурге</a>
 			<a href={resolve('/agency/msk')}>SEO-продвижение в Москве</a>
 		</div>

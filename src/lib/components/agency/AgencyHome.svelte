@@ -48,8 +48,8 @@
 		}
 	];
 	let eng = $state<'y' | 'g'>('y');
-	// На странице города показываем только проекты этого города
-	const rows = $derived(c ? positions.filter((p) => p.y.city === c.name) : positions);
+	// На странице города проекты этого города идут первыми
+	const rows = $derived(c ? [...positions].sort((a, b) => Number(b.y.city === c.name) - Number(a.y.city === c.name)) : positions);
 
 	const allCases = [
 		{ img: '2318-1.jpg', post: 2318, big: '2 700', unit: 'посетителей в месяц с нуля', name: 'Юридические услуги' },
@@ -260,7 +260,7 @@
 					<div>
 						<h2>Офис в Санкт-Петербурге</h2>
 						<p>{address}. Встречаемся лично и показываем кейсы с экрана. Напишите за день до приезда.</p>
-						<a class="btn btn-outline" href={resolve('/agency/kontakty')}>Контакты</a>
+						<button type="button" class="btn btn-outline" onclick={() => ask()}>Договориться о встрече</button>
 					</div>
 				</div>
 			</div>
@@ -358,6 +358,7 @@
 	.office img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px; }
 	.office div { display: grid; gap: 12px; justify-items: start; }
 	.office p { font-size: 17px; }
+	.office .btn { font: inherit; font-weight: 600; cursor: pointer; }
 
 	.faq { margin-top: 24px; border: 1px solid var(--line); border-radius: 12px; }
 	details + details { border-top: 1px solid var(--line); }
