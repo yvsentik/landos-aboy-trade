@@ -7,6 +7,7 @@
 	import Icon from '#lib/components/Icon.svelte';
 	import AgencyForm from '#lib/components/agency/AgencyForm.svelte';
 	import AgencyModal from '#lib/components/agency/AgencyModal.svelte';
+	import CaptchaGate from '#lib/components/agency/CaptchaGate.svelte';
 	import { ask } from '#lib/agencyModal.svelte.ts';
 	import { afterNavigate } from '$app/navigation';
 	import { tg, max, channel, maxChannel, address, addressMsk, directions, ag } from '#lib/agency.ts';
@@ -68,6 +69,7 @@
 </section>
 
 <AgencyModal />
+<CaptchaGate />
 
 <footer>
 	<div class="wrap cols">
