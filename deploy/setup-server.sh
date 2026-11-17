@@ -1,11 +1,12 @@
 #!/bin/bash
 # Разовая настройка сервера (Ubuntu/Debian) под лендинг landos-aboy-trade.
 # Запуск от root:  DOMAIN=example.ru BITRIX_WEBHOOK=https://.../rest/ID/KEY/ bash setup-server.sh
-# Без DOMAIN сайт работает только по HTTP на IP. Без BITRIX_WEBHOOK остаётся прежний ключ (если был).
+# Без DOMAIN сайт работает только по HTTP на IP. Без BITRIX_WEBHOOK / SMARTCAPTCHA_SERVER_KEY остаются прежние ключи (если были).
 set -euo pipefail
 
 DOMAIN=${DOMAIN:-}
 BITRIX_WEBHOOK=${BITRIX_WEBHOOK:-}
+SMARTCAPTCHA_SERVER_KEY=${SMARTCAPTCHA_SERVER_KEY:-}
 REPO=https://github.com/yvsentik/landos-aboy-trade.git
 SRC=/opt/landos
 WEB=/var/www/landos
@@ -52,6 +53,13 @@ server {
     index index.html;
 
     # Заявки с сайта → сервис lead-api → Битрикс24
+    # Проверка капчи (Яндекс SmartCaptcha) – тот же сервис
+    location = /api/captcha {
+        proxy_pass http://127.0.0.1:8787;
+        proxy_set_header X-Real-IP $remote_addr;
+        client_max_body_size 16k;
+    }
+
     location = /api/lead {
         proxy_pass http://127.0.0.1:8787;
         proxy_set_header X-Real-IP $remote_addr;
@@ -106,10 +114,16 @@ systemctl enable --now landos-deploy.timer
 
 # 6.1 Сервис заявок lead-api (код – server/lead-api.mjs из репозитория)
 mkdir -p /etc/landos
-if [ -n "$BITRIX_WEBHOOK" ]; then
-  ( umask 077; printf 'BITRIX_WEBHOOK=%s\n' "$BITRIX_WEBHOOK" > /etc/landos/lead-api.env )
-fi
-[ -f /etc/landos/lead-api.env ] || : > /etc/landos/lead-api.env
+( umask 077; [ -f /etc/landos/lead-api.env ] || : > /etc/landos/lead-api.env )
+# Обновить одну переменную в файле ключей, не трогая остальные
+set_env() {
+  [ -n "$2" ] || return 0
+  grep -v "^$1=" /etc/landos/lead-api.env > /etc/landos/lead-api.env.tmp || true
+  printf '%s=%s\n' "$1" "$2" >> /etc/landos/lead-api.env.tmp
+  mv /etc/landos/lead-api.env.tmp /etc/landos/lead-api.env
+}
+set_env BITRIX_WEBHOOK "$BITRIX_WEBHOOK"
+set_env SMARTCAPTCHA_SERVER_KEY "$SMARTCAPTCHA_SERVER_KEY"
 chmod 600 /etc/landos/lead-api.env
 cat > /etc/systemd/system/landos-lead-api.service <<'UNIT'
 [Unit]
