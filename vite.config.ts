@@ -11,7 +11,7 @@ export default defineConfig({
 					filename.split(/[/\\]/).includes('node_modules') ? undefined : true
 			},
 
-			// Статическая сборка в build/ – сайт живёт в корне домена falkov-agency.ru
+			// Статическая сборка в build/ – сайт живёт в корне домена falkov-marketing.ru
 			adapter: adapter({ fallback: '404.html' }),
 			paths: { relative: false }
 		})

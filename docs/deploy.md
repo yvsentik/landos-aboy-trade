@@ -1,4 +1,4 @@
-# Выкладка сайта агентства на falkov-agency.ru
+# Выкладка сайта агентства на falkov-marketing.ru
 
 Инструкция для сессии Claude Code на компьютере Константина, где есть вход по SSH-ключу
 на `root@91.236.199.84`. Облачная сессия, которая делала сайт, на этот сервер зайти не может.
@@ -24,7 +24,7 @@ npm run build   # результат: build/
 - `root@91.236.199.84` (Selectel). SSH иногда рвётся на старте соединения: команды повторять.
 - Перед контейнерами стоит nginx-proxy с Let's Encrypt.
 - Там же живут CRM (`falkov-crm`, `/root/crm`), kalispera и редиректы. **Их не трогать**,
-  кроме одного: редирект `falkov-agency.ru → marketingovoe-agentstvo-spb.ru` нужно снять –
+  кроме одного: редирект `falkov-marketing.ru → marketingovoe-agentstvo-spb.ru` нужно снять –
   Константин попросил об этом прямо (17.11.2026).
 
 ## Шаги
@@ -39,25 +39,25 @@ npm run build   # результат: build/
    ```
    Из вывода понять: какие переменные задают домен и сертификат у `falkov-crm`
    (обычно `VIRTUAL_HOST`, `LETSENCRYPT_HOST`), в какой docker-сети он стоит и какой
-   контейнер сейчас отвечает за `falkov-agency.ru` (редирект).
+   контейнер сейчас отвечает за `falkov-marketing.ru` (редирект).
 
 2. **Залить статику.**
    ```sh
-   ssh root@91.236.199.84 'mkdir -p /root/falkov-agency/site'
-   rsync -az --delete build/ root@91.236.199.84:/root/falkov-agency/site/
+   ssh root@91.236.199.84 'mkdir -p /root/falkov-marketing/site'
+   rsync -az --delete build/ root@91.236.199.84:/root/falkov-marketing/site/
    ```
 
-3. **Снять редирект** с `falkov-agency.ru` и `www.falkov-agency.ru` в том контейнере или
+3. **Снять редирект** с `falkov-marketing.ru` и `www.falkov-marketing.ru` в том контейнере или
    конфиге, где он найден на шаге 1. Остальные редиректы оставить как есть.
 
 4. **Поднять контейнер со статикой** по образцу `falkov-crm`: та же сеть, те же имена
    переменных. Если это стандартная связка nginx-proxy + acme-companion, получится так:
    ```sh
-   docker run -d --name falkov-agency --restart unless-stopped \
+   docker run -d --name falkov-marketing --restart unless-stopped \
      --network <сеть как у falkov-crm> \
-     -e VIRTUAL_HOST=falkov-agency.ru,www.falkov-agency.ru \
-     -e LETSENCRYPT_HOST=falkov-agency.ru,www.falkov-agency.ru \
-     -v /root/falkov-agency/site:/usr/share/nginx/html:ro \
+     -e VIRTUAL_HOST=falkov-marketing.ru,www.falkov-marketing.ru \
+     -e LETSENCRYPT_HOST=falkov-marketing.ru,www.falkov-marketing.ru \
+     -v /root/falkov-marketing/site:/usr/share/nginx/html:ro \
      nginx:alpine
    ```
    Стандартный конфиг `nginx:alpine` отдаёт `index.html` из папок, этого достаточно:
@@ -65,7 +65,7 @@ npm run build   # результат: build/
    `error_page 404 /404.html;`.
 
 5. **Проверить** в браузере через Claude in Chrome (без curl):
-   `https://falkov-agency.ru/`, `/seo-audit/`, `/uslugi/`, `/keysy/`, `/spb/`, `/msk/`.
+   `https://falkov-marketing.ru/`, `/seo-audit/`, `/uslugi/`, `/keysy/`, `/spb/`, `/msk/`.
    На главной: открывается окно по кнопке «Форма заявки», переключатель Яндекс / Google
    меняет запросы, видео запускается.
 
