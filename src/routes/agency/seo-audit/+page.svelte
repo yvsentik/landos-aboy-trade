@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { asset, resolve } from '$app/paths';
+	import { resolve } from '$app/paths';
+	import AgencyVideo from '#lib/components/agency/AgencyVideo.svelte';
 	import { ask } from '#lib/agencyModal.svelte.ts';
 
 	// Бесплатный SEO-аудит: скелет страницы по видео руководителя агентства.
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const a = (f: string) => asset(f as any);
 
 	const gets = [
 		['Семантическое ядро', 'Собираем запросы, по которым вас ищут клиенты.'],
@@ -16,7 +15,7 @@
 	const reasons = [
 		['50+ кейсов в канале', 'В Telegram-канале больше 50 кейсов, на деле их больше. Напишите нам свою нишу: скорее всего, мы с ней уже работали и пришлём примеры.'],
 		['Рост виден уже на тесте', 'Во время бесплатного теста мы используем все безопасные методы, чтобы показать рост трафика. Ждать результата полгода для этого не нужно.'],
-		['Понятно, что мы делаем', 'Показываем примеры ТЗ для вас и ваших разработчиков. Каждую правку объясняем: зачем она и что даст.']
+		['Прозрачный процесс работ', 'До договора показываем примеры технических заданий для вас и ваших разработчиков. Каждая правка сопровождается обоснованием: какую задачу она решает и какой результат даёт.']
 	];
 
 	const steps = [
@@ -35,14 +34,16 @@
 
 <main>
 	<div class="wrap">
-		<div class="phero">
-			<div class="ptxt">
-				<p class="crumbs"><a href={resolve('/agency')}>Главная</a> / SEO-аудит</p>
+		<div class="banner">
+			<div class="btxt">
 				<h1>Бесплатный SEO-аудит сайта</h1>
 				<p>Показываем рост на вашем сайте до договора. Вы платите, когда увидели результат.</p>
-				<button type="button" class="btn btn-white" onclick={() => ask()}>Получить бесплатный аудит</button>
+				<div class="ctas">
+					<button type="button" class="btn btn-white" onclick={() => ask()}>Получить бесплатный аудит</button>
+					<a class="btn line" href={resolve('/agency/keysy')}>Смотреть кейсы</a>
+				</div>
 			</div>
-			<video src={a('/video/podhod.mp4')} poster={a('/video/podhod.jpg')} controls playsinline preload="none"></video>
+			<AgencyVideo label="Как проходит аудит" />
 		</div>
 
 		<section>
@@ -60,17 +61,27 @@
 		</section>
 
 		<section>
+			<h2>Почему это бесплатно</h2>
+			<div class="why">
+				<div class="vs">
+					<div class="them"><small>Обычное агентство</small><b>Зарабатывает с первого месяца</b><p>Договор и оплата идут вперёд. Результата вы ждёте несколько месяцев и рискуете бюджетом.</p></div>
+					<div class="us"><small>Мы</small><b>Зарабатываем на долгом сотрудничестве</b><p>Сначала показываем рост на вашем сайте. Если результат есть, вы остаётесь с нами надолго, и это окупает бесплатный старт.</p></div>
+				</div>
+				<ul class="facts">
+					<li><b>0 ₽</b><span>стоит аудит и тест</span></li>
+					<li><b>До договора</b><span>вы видите рост позиций</span></li>
+					<li><b>Без обязательств</b><span>решение о работе принимаете вы</span></li>
+				</ul>
+				<p class="office">Офис в Санкт-Петербурге, пр. Энергетиков, 10. Можно приехать и посмотреть кейсы с экрана: напишите за день, договоримся о времени.</p>
+			</div>
+		</section>
+
+		<section>
 			<h2>Как проходит аудит</h2>
 			<ol class="steps">
 				{#each steps as [name, text], i}<li><span class="n">{i + 1}</span><div><h3>{name}</h3><p>{text}</p></div></li>{/each}
 			</ol>
-		</section>
-
-		<section class="why">
-			<h2>Почему это бесплатно</h2>
-			<p>Многие агентства хотят заработать на клиенте в первый же месяц. Мы зарабатываем на долгом сотрудничестве. Если покажем результат на бесплатном аудите, вы останетесь с нами надолго. Поэтому нам выгодно начать с работы, а деньги обсудить потом.</p>
-			<p>Офис в Санкт-Петербурге, пр. Энергетиков, 10. Можно приехать и посмотреть кейсы с экрана: напишите за день, договоримся о времени.</p>
-			<div class="ctas">
+			<div class="ctas end">
 				<button type="button" class="btn btn-primary" onclick={() => ask()}>Получить бесплатный аудит</button>
 				<a class="btn btn-outline" href={resolve('/agency/keysy')}>Смотреть кейсы</a>
 			</div>
@@ -79,13 +90,11 @@
 </main>
 
 <style>
-	.phero { margin-top: 28px; background: var(--navy); color: #fff; border-radius: 16px; padding: 40px 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-	.ptxt { display: grid; gap: 14px; justify-items: start; }
-	.crumbs { font-size: 14px; opacity: 0.8; }
-	.crumbs a:hover { text-decoration: underline; }
-	h1 { font-size: clamp(28px, 3.4vw, 44px); font-weight: 800; text-transform: uppercase; line-height: 1.1; }
-	.ptxt p:not(.crumbs) { font-size: 18px; }
-	video { width: 100%; aspect-ratio: 640 / 350; display: block; border-radius: 10px; background: #000; }
+	.banner { margin-top: 28px; background: var(--navy); color: #fff; border-radius: 16px; padding: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+	.btxt { display: grid; gap: 18px; justify-items: start; }
+	h1 { font-size: clamp(28px, 3.6vw, 46px); font-weight: 800; text-transform: uppercase; line-height: 1.1; }
+	.btxt p { font-size: 18px; }
+	.line { color: #fff; border: 2px solid #fff; background: none; }
 	.btn { border-radius: 8px; cursor: pointer; font: inherit; font-weight: 600; }
 
 	section { padding-top: 56px; }
@@ -101,17 +110,34 @@
 	.steps li { display: flex; gap: 16px; align-items: flex-start; padding: 18px 22px; }
 	.steps li + li { border-top: 1px solid var(--line); }
 	.steps div { display: grid; gap: 4px; }
-	.why { display: grid; gap: 12px; }
-	.why p { max-width: 900px; font-size: 17px; }
-	.ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+	.why { margin-top: 24px; display: grid; gap: 16px; }
+	.vs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+	.vs div { border-radius: 14px; padding: 24px; display: grid; gap: 8px; align-content: start; }
+	.vs small { font-weight: 700; font-size: 14px; }
+	.vs b { font-size: 22px; line-height: 1.2; }
+	.them { background: var(--soft-2); border: 1px solid var(--line); color: var(--muted); }
+	.them b { color: inherit; }
+	.us { background: var(--navy); color: #fff; }
+	.us small { color: #fff; background: var(--pink); justify-self: start; padding: 3px 10px; border-radius: 6px; }
+	.us p { opacity: 0.9; }
+	.facts { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+	.facts li { border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; display: grid; gap: 2px; }
+	.facts b { font-size: 24px; font-weight: 800; color: var(--blue); }
+	.facts span { color: var(--muted); }
+	.office { color: var(--muted); max-width: 900px; }
+	.ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+	.end { margin-top: 20px; }
 
 	@media (max-width: 1000px) {
-		.phero { grid-template-columns: 1fr; padding: 28px; gap: 24px; }
+		.banner { grid-template-columns: 1fr; padding: 28px; }
+		.vs { grid-template-columns: 1fr; }
 		.gets { grid-template-columns: 1fr 1fr; }
 		.reasons { grid-template-columns: 1fr; }
 	}
 	@media (max-width: 640px) {
-		.phero { padding: 22px 18px; margin-top: 16px; }
+		.banner { padding: 22px 18px; margin-top: 16px; gap: 24px; }
+		.btxt p { font-size: 16px; }
+		.facts { grid-template-columns: 1fr; gap: 10px; }
 		section { padding-top: 40px; }
 		.gets { grid-template-columns: 1fr; }
 		.steps li { padding: 14px; gap: 12px; }
