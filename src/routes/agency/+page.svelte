@@ -3,6 +3,7 @@
 	import AgencyForm from '#lib/components/agency/AgencyForm.svelte';
 	import { ask } from '#lib/agencyModal.svelte.ts';
 	import ChannelBand from '#lib/components/agency/ChannelBand.svelte';
+	import AgencyVideo from '#lib/components/agency/AgencyVideo.svelte';
 	import { channel, maxChannel } from '#lib/agency.ts';
 
 	// Главная сайта SEO-агентства «Фальков» (шапка и футер – в +layout.svelte). Стиль okonti.ru: белый фон, плоские синие кнопки, фото.
@@ -88,12 +89,6 @@
 		['Вы работали с моей нишей?', 'Скорее всего, да: у нас больше 50 кейсов в медицине, услугах, производстве, строительстве, юриспруденции и интернет-магазинах. Напишите нам свою нишу, пришлём подходящие примеры.']
 	];
 
-	let video = $state<HTMLVideoElement>();
-	let started = $state(false);
-	const play = () => {
-		started = true;
-		video?.play();
-	};
 
 </script>
 
@@ -123,17 +118,7 @@
 					<a class="btn line" href="#cases">Смотреть кейсы</a>
 				</div>
 			</div>
-			<figure>
-				<figcaption><span class="sticker">О бесплатном аудите сайта</span><svg class="arr" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8c22 0 38 12 40 40" /><path d="M34 40l14 9 6-16" /></svg></figcaption>
-				<div class="vid">
-					<video bind:this={video} src={a('/video/podhod.mp4')} poster={a('/video/podhod.jpg')} controls={started} playsinline preload="none"></video>
-					{#if !started}
-						<button type="button" class="playbtn" onclick={play} aria-label="Смотреть видео о бесплатном аудите">
-							<span><svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.540 6.347c1.295.712 1.295 2.573 0 3.286L7.280 19.990c-1.250.687-2.779-.217-2.779-1.643V5.653Z" /></svg></span>
-						</button>
-					{/if}
-				</div>
-			</figure>
+			<AgencyVideo />
 		</div>
 	</div>
 
@@ -274,16 +259,6 @@
 	.ctas { display: flex; gap: 12px; flex-wrap: wrap; }
 	.ctas .btn { font: inherit; font-weight: 600; cursor: pointer; }
 	.line { color: #fff; border: 2px solid #fff; background: none; }
-	figure { margin: 0; }
-	.vid { position: relative; }
-	.playbtn { position: absolute; inset: 0; border: 0; background: none; cursor: pointer; display: grid; place-items: center; border-radius: 10px; }
-	.playbtn span { width: 92px; height: 92px; border-radius: 50%; background: rgb(236 239 244 / 0.45); border: 3px solid rgb(255 255 255 / 0.9); display: grid; place-items: center; transition: background 0.15s, transform 0.15s; }
-	.playbtn:hover span { background: rgb(236 239 244 / 0.7); transform: scale(1.06); }
-	.playbtn svg { display: block; width: 40px; height: 40px; }
-	video { width: 100%; aspect-ratio: 640 / 350; display: block; border-radius: 10px; background: #000; }
-	figcaption { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; margin-bottom: -12px; padding-left: 14px; font-weight: 700; font-size: 14px; }
-	.sticker { background: var(--pink); color: #fff; padding: 7px 14px; border-radius: 7px; transform: rotate(-4deg); box-shadow: 0 6px 18px rgb(0 0 0 / 0.3); }
-	.arr { width: 34px; height: 34px; flex: none; transform: translateY(-8px); }
 
 	.clients { display: flex; align-items: center; gap: 28px; padding-top: 28px; }
 	.marquee { flex: 1; min-width: 0; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
@@ -370,9 +345,6 @@
 		section { scroll-margin-top: 125px; }
 		.banner { padding: 22px 18px; margin-top: 16px; gap: 24px; }
 		.btxt p { font-size: 16px; }
-		figcaption { font-size: 13px; padding-left: 8px; }
-		.playbtn span { width: 68px; height: 68px; }
-		.playbtn svg { width: 30px; height: 30px; }
 		.clients { display: none; }
 		.track img { height: 34px; margin-right: 36px; }
 		.prow { grid-template-columns: 1fr auto; gap: 6px 10px; padding: 10px 14px; }
