@@ -2,6 +2,7 @@
 	import Header from '#lib/components/Header.svelte';
 	import Footer from '#lib/components/Footer.svelte';
 	import FloatChat from '#lib/components/FloatChat.svelte';
+	import CaptchaGate from '#lib/components/CaptchaGate.svelte';
 	import { onMount } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
 	import { shop } from '#lib/shop.svelte.ts';
@@ -45,3 +46,4 @@
 {@render children()}
 <Footer />
 <FloatChat />
+<CaptchaGate />

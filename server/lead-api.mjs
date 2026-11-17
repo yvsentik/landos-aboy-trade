@@ -2,6 +2,7 @@
 // CRM работает в простом режиме (без лидов), поэтому сразу создаём сделку в нужной воронке.
 // Без зависимостей: Node 18+ (встроенный fetch). Слушает только 127.0.0.1, наружу – через nginx /api/lead.
 // Адрес вебхука берётся из переменной окружения BITRIX_WEBHOOK (файл /etc/landos/lead-api.env), в репозитории его нет.
+// Там же серверный ключ Яндекс SmartCaptcha – SMARTCAPTCHA_SERVER_KEY (проверка капчи: POST /api/captcha).
 import { createServer } from 'node:http';
 
 const PORT = Number(process.env.PORT || 8787);
@@ -10,6 +11,7 @@ const SITE = 'fotooboi.oboitrade.ru';
 // Воронка и стадия сделки: 6 – «Лендинг фрески + фотообои», C6:NEW – «Новая»
 const CATEGORY = Number(process.env.BITRIX_DEAL_CATEGORY || 6);
 const STAGE = process.env.BITRIX_DEAL_STAGE || `C${CATEGORY}:NEW`;
+const CAPTCHA_KEY = process.env.SMARTCAPTCHA_SERVER_KEY || '';
 
 if (!WEBHOOK) {
 	console.error('BITRIX_WEBHOOK не задан – заявки не будут уходить в CRM');
@@ -173,8 +175,28 @@ function send(res, code, body) {
 	res.end(JSON.stringify(body));
 }
 
+// Проверка токена Яндекс SmartCaptcha. Если сервис недоступен – пропускаем (не теряем клиентов).
+async function checkCaptcha(token, ip) {
+	if (!CAPTCHA_KEY) return { ok: true, skipped: true };
+	try {
+		const body = new URLSearchParams({ secret: CAPTCHA_KEY, token: String(token || ''), ip });
+		const r = await fetch('https://smartcaptcha.yandexcloud.net/validate', {
+			method: 'POST',
+			body,
+			signal: AbortSignal.timeout(5000)
+		});
+		if (r.status !== 200) return { ok: true, skipped: true };
+		const j = await r.json();
+		return { ok: j.status === 'ok' };
+	} catch (e) {
+		console.error('SmartCaptcha недоступна', e?.message);
+		return { ok: true, skipped: true };
+	}
+}
+
 createServer(async (req, res) => {
-	if (req.method !== 'POST' || !req.url?.startsWith('/api/lead')) return send(res, 404, { ok: false });
+	const isCaptcha = req.url?.startsWith('/api/captcha');
+	if (req.method !== 'POST' || !(isCaptcha || req.url?.startsWith('/api/lead'))) return send(res, 404, { ok: false });
 
 	let raw = '';
 	for await (const chunk of req) {
@@ -189,10 +211,16 @@ createServer(async (req, res) => {
 		return send(res, 400, { ok: false, error: 'json' });
 	}
 
+	const ip = String(req.headers['x-real-ip'] || req.socket.remoteAddress || '');
+
+	if (isCaptcha) {
+		const r = await checkCaptcha(d.token, ip);
+		return send(res, r.ok ? 200 : 403, { ok: r.ok });
+	}
+
 	// Ловушка для ботов: скрытое поле должно быть пустым
 	if (d.website) return send(res, 200, { ok: true });
 
-	const ip = String(req.headers['x-real-ip'] || req.socket.remoteAddress || '');
 	if (limited(ip)) return send(res, 429, { ok: false, error: 'rate' });
 
 	let lead;
