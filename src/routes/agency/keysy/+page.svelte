@@ -6,6 +6,7 @@
 	// Кейсы агентства: проекты с цифрами, скриншоты и ссылки на посты в канале @falkov_agency.
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const pic = (f: string) => asset(`/img/agency/${f}` as any);
+	let all = $state(false); // на телефоне сначала видны 6 кейсов
 </script>
 
 <svelte:head>
@@ -21,7 +22,7 @@
 			<p>Названия клиентов обезличены там, где действует NDA.</p>
 		</div>
 
-		<div class="cases">
+		<div class="cases" class:all>
 			{#each cases as c}
 				<article>
 					<div class="ctop"><span class="ctag">{c.tag}</span><span>{c.geo}</span></div>
@@ -43,6 +44,9 @@
 			{/each}
 		</div>
 
+		{#if !all}
+			<button type="button" class="btn btn-primary more" onclick={() => (all = true)}>Показать все {cases.length} кейса</button>
+		{/if}
 		<div class="bandw"><ChannelBand /></div>
 	</div>
 </main>
@@ -74,6 +78,7 @@
 	.links .btn { flex: 1 1 100%; min-height: 0; padding: 9px 10px; font-size: 14px; white-space: nowrap; gap: 8px; }
 	.links svg, .links img { width: 22px; height: 22px; flex: none; }
 
+	.more { display: none; width: 100%; margin-top: 14px; font: inherit; font-weight: 600; cursor: pointer; }
 	.bandw { margin-top: 56px; }
 
 	@media (max-width: 1000px) {
@@ -82,6 +87,8 @@
 	@media (max-width: 640px) {
 		.phero { padding: 22px 18px; margin-top: 16px; }
 		.cases { grid-template-columns: 1fr; }
+		.cases:not(.all) article:nth-child(n + 7) { display: none; }
+		.more { display: flex; }
 		.bandw { margin-top: 40px; }
 	}
 </style>
