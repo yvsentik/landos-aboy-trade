@@ -1,5 +1,7 @@
 <script lang="ts">
 	import '../app.css';
+	import fontCyr from '@fontsource-variable/montserrat/files/montserrat-cyrillic-wght-normal.woff2?url';
+	import fontLat from '@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2?url';
 	import { asset } from '$app/paths';
 	import { page } from '$app/state';
 	import Icon from '#lib/components/Icon.svelte';
@@ -40,6 +42,11 @@
 		return () => io.disconnect();
 	});
 </script>
+
+<svelte:head>
+	<link rel="preload" as="font" type="font/woff2" href={fontCyr} crossorigin="anonymous" />
+	<link rel="preload" as="font" type="font/woff2" href={fontLat} crossorigin="anonymous" />
+</svelte:head>
 
 <header>
 	<div class="wrap main">
