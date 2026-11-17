@@ -10,38 +10,55 @@
 			rel="stylesheet"
 		/>
 		%sveltekit.head%
-		<!-- Yandex.Metrika counter (не грузим на отдельном лендинге /agency) -->
+		<!-- Капча для заходов из поисковиков (Яндекс SmartCaptcha) -->
+		<script type="text/javascript">
+			// Клиентский ключ SmartCaptcha. Пустой – капча выключена.
+			window.__captchaKey = '';
+			window.__captchaNeeded = (function () {
+				if (!window.__captchaKey || location.pathname.startsWith('/agency')) return false;
+				try {
+					if (Number(localStorage.getItem('cpt_ok')) > Date.now()) return false;
+				} catch (e) {}
+				var host = '';
+				try {
+					host = new URL(document.referrer).hostname;
+				} catch (e) {}
+				return /(^|\.)(yandex|ya|google|bing|mail|rambler|duckduckgo|yahoo)\./i.test(host);
+			})();
+		</script>
+		<!-- Yandex.Metrika counter (не грузим на отдельном лендинге /agency; до прохождения капчи – не запускаем) -->
 		<script type="text/javascript">
 			if (!location.pathname.startsWith('/agency')) {
-				(function (m, e, t, r, i, k, a) {
-					m[i] =
-						m[i] ||
-						function () {
-							(m[i].a = m[i].a || []).push(arguments);
-						};
-					m[i].l = 1 * new Date();
+				window.ym =
+					window.ym ||
+					function () {
+						(window.ym.a = window.ym.a || []).push(arguments);
+					};
+				window.ym.l = 1 * new Date();
+				window.__ymStart = function () {
+					if (window.__ymStarted) return;
+					window.__ymStarted = true;
+					var r = 'https://mc.yandex.ru/metrika/tag.js?id=114270840';
 					for (var j = 0; j < document.scripts.length; j++) {
-						if (document.scripts[j].src === r) {
-							return;
-						}
+						if (document.scripts[j].src === r) return;
 					}
-					(k = e.createElement(t)),
-						(a = e.getElementsByTagName(t)[0]),
-						(k.async = 1),
-						(k.src = r),
-						a.parentNode.insertBefore(k, a);
-				})(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=114270840', 'ym');
-
-				ym(114270840, 'init', {
-					ssr: true,
-					webvisor: true,
-					clickmap: true,
-					ecommerce: 'dataLayer',
-					referrer: document.referrer,
-					url: location.href,
-					accurateTrackBounce: true,
-					trackLinks: true
-				});
+					var k = document.createElement('script'),
+						a = document.getElementsByTagName('script')[0];
+					k.async = 1;
+					k.src = r;
+					a.parentNode.insertBefore(k, a);
+					ym(114270840, 'init', {
+						ssr: true,
+						webvisor: true,
+						clickmap: true,
+						ecommerce: 'dataLayer',
+						referrer: document.referrer,
+						url: location.href,
+						accurateTrackBounce: true,
+						trackLinks: true
+					});
+				};
+				if (!window.__captchaNeeded) window.__ymStart();
 			}
 		</script>
 		<!-- /Yandex.Metrika counter -->
