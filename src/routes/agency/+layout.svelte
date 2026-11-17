@@ -18,8 +18,7 @@
 	const nav: [string, string][] = [
 		['SEO-аудит', resolve('/agency/seo-audit')],
 		['Услуги', resolve('/agency/uslugi')],
-		['Кейсы', resolve('/agency/keysy')],
-		['Контакты', resolve('/agency/kontakty')]
+		['Кейсы', resolve('/agency/keysy')]
 	];
 	const here = (href: string) => page.url.pathname.startsWith(href);
 	const isMsk = $derived(page.url.pathname.startsWith(resolve('/agency/msk')));
@@ -73,6 +72,7 @@
 			<b>Разделы</b>
 			<a href={home}>Главная</a>
 			{#each nav as [label, href]}<a {href}>{label}</a>{/each}
+			<a href={resolve('/agency/kontakty')}>Контакты</a>
 			<a href={resolve('/agency/spb')}>SEO-продвижение в Санкт-Петербурге</a>
 			<a href={resolve('/agency/msk')}>SEO-продвижение в Москве</a>
 		</div>
