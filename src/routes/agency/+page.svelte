@@ -33,7 +33,7 @@
 		},
 		{
 			logo: 'psy-chat.svg', name: 'Psy-Chat', site: 'psy-chat.ru',
-			y: { city: 'Москва', top: 78, q: ['бесплатный онлайн психолог', 'консультация психолога бесплатно'] },
+			y: { city: 'Москва', top: 970, q: ['бесплатный онлайн психолог', 'консультация психолога бесплатно'] },
 			g: { city: 'Москва', top: 3504, q: ['семейный психолог', 'кпт терапевт', 'помощь онлайн психолога'] }
 		}
 	];
@@ -139,7 +139,6 @@
 
 	<!-- Клиенты: слайдер логотипов -->
 	<div class="wrap clients">
-		<b>Среди клиентов:</b>
 		<div class="marquee">
 			<div class="track">
 				{#each [0, 1] as copy}
@@ -287,7 +286,6 @@
 	.arr { width: 34px; height: 34px; flex: none; transform: translateY(-8px); }
 
 	.clients { display: flex; align-items: center; gap: 28px; padding-top: 28px; }
-	.clients b { flex: none; color: var(--navy); font-size: 22px; }
 	.marquee { flex: 1; min-width: 0; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
 	.track { display: flex; align-items: center; width: max-content; animation: slide 30s linear infinite; }
 	.marquee:hover .track { animation-play-state: paused; }
