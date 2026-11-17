@@ -211,7 +211,7 @@
 				<div class="vars">
 					<span class="cur"><img src={p.img} alt="Арт. {p.art}" /></span>
 					{#each data.colors as c}
-						<a href={resolve('/(site)/catalog/[slug]', { slug: c.slug })} title="Арт. {c.art}"><img src={c.img} alt="Арт. {c.art}" /></a>
+						<a href={resolve('/(site)/catalog/[slug]', { slug: c.slug })} title="Арт. {c.art}"><img loading="lazy" src={c.img} alt="Арт. {c.art}" /></a>
 					{/each}
 				</div>
 			{/if}

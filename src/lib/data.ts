@@ -3,7 +3,7 @@ import { asset } from '$app/paths';
 
 /** Наши фото производства из static/img/prod */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const prod = (name: string) => asset(`/img/prod/${name}.jpg` as any);
+export const prod = (name: string) => asset(`/img/prod/${name}.webp` as any);
 
 export const production = [
 	{ photo: 'print-table', title: 'Печать', text: 'Широкоформатная печать латексными чернилами' },
@@ -26,9 +26,9 @@ export const brand = {
 
 export const catalogSize = '100\u00a0000+';
 
-/** Фото Unsplash (бесплатная лицензия). Заменить на свои интерьеры с вашими обоями. */
-export const img = (id: string, w = 800) =>
-	`https://images.unsplash.com/photo-${id}?w=${w}&q=70&auto=format&fit=crop`;
+/** Фото интерьеров (Unsplash, бесплатная лицензия) – лежат у нас в static/img/int, чтобы не грузить из-за границы. */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const img = (id: string, _w = 800) => `/img/int/${id}.webp`;
 
 export type Utp = { icon: string; title: string; text: string };
 

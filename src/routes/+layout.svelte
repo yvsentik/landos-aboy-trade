@@ -1,4 +1,5 @@
 <script lang="ts">
+	import '@fontsource-variable/montserrat/wght.css';
 	import '../app.css';
 	import { asset } from '$app/paths';
 
