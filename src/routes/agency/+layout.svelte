@@ -119,7 +119,11 @@
 	.copy { margin-top: 32px; padding-top: 20px; border-top: 1px solid rgb(255 255 255 / 0.18); font-size: 13px; }
 
 	@media (max-width: 1180px) {
-		nav { gap: 18px; }
+		nav { gap: 16px; }
+		.main { gap: 16px; }
+		.lg { display: none; }
+		.sm { display: inline; }
+		.logo small { display: none; }
 	}
 	@media (max-width: 1000px) {
 		.main { flex-wrap: wrap; gap: 8px 20px; }
