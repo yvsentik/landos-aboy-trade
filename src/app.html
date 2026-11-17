@@ -16,6 +16,8 @@
 			window.__captchaKey = 'ysc1_Pndp9i8f6YUSGFaXhaZnN2nfwzThljxN1WhObWQc563cab0a';
 			window.__captchaNeeded = (function () {
 				if (!window.__captchaKey || location.pathname.startsWith('/agency')) return false;
+				// проверка вручную: ?captcha_test=1 – показать капчу всегда
+				if (location.search.indexOf('captcha_test=1') !== -1) return true;
 				try {
 					if (Number(localStorage.getItem('cpt_ok')) > Date.now()) return false;
 				} catch (e) {}
