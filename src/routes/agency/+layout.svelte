@@ -22,6 +22,7 @@
 		['Контакты', resolve('/agency/kontakty')]
 	];
 	const here = (href: string) => page.url.pathname.startsWith(href);
+	const isMsk = $derived(page.url.pathname.startsWith(resolve('/agency/msk')));
 
 	// Плавное появление блоков при прокрутке (без скриптов блоки просто видны).
 	afterNavigate(() => {
@@ -66,12 +67,14 @@
 		<div class="about">
 			<a class="flogo" href={home}>falkov</a>
 			<p>SEO-агентство. Выводим сайты в ТОП Яндекса и Google и показываем результат до договора.</p>
-			<p class="addr">{address}</p>
+			{#if !isMsk}<p class="addr">{address}</p>{/if}
 		</div>
 		<div>
 			<b>Разделы</b>
 			<a href={home}>Главная</a>
 			{#each nav as [label, href]}<a {href}>{label}</a>{/each}
+			<a href={resolve('/agency/spb')}>SEO-продвижение в Санкт-Петербурге</a>
+			<a href={resolve('/agency/msk')}>SEO-продвижение в Москве</a>
 		</div>
 		<div>
 			<b>Услуги</b>
