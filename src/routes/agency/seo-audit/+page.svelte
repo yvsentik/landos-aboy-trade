@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
+	import { ag } from '#lib/agency.ts';
 	import AgencyVideo from '#lib/components/agency/AgencyVideo.svelte';
 	import { ask } from '#lib/agencyModal.svelte.ts';
 
@@ -40,7 +40,7 @@
 				<p>Показываем рост на вашем сайте до договора. Вы платите, когда увидели результат.</p>
 				<div class="ctas">
 					<button type="button" class="btn btn-white" onclick={() => ask()}>Получить бесплатный аудит</button>
-					<a class="btn line" href={resolve('/agency/keysy')}>Смотреть кейсы</a>
+					<a class="btn line" href={ag('/keysy')}>Смотреть кейсы</a>
 				</div>
 			</div>
 			<AgencyVideo label="Как проходит аудит" />
@@ -83,7 +83,7 @@
 			</ol>
 			<div class="ctas end">
 				<button type="button" class="btn btn-primary" onclick={() => ask()}>Получить бесплатный аудит</button>
-				<a class="btn btn-outline" href={resolve('/agency/keysy')}>Смотреть кейсы</a>
+				<a class="btn btn-outline" href={ag('/keysy')}>Смотреть кейсы</a>
 			</div>
 		</section>
 	</div>

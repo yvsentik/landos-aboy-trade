@@ -1,3 +1,10 @@
+import { resolve } from '$app/paths';
+
+// Ссылка на страницу агентства. В общей сборке сайт живёт в /agency/, в отдельной (SITE=agency) – в корне.
+const root = import.meta.env.VITE_SITE === 'agency' ? '' : '/agency';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const ag = (path = ''): string => resolve((root + path || '/') as any);
+
 // Данные лендинга SEO-агентства (/agency/): услуги и кейсы с marketingovoe-agentstvo-spb.ru
 
 export type Direction = { n: string; name: string; sub: string; text: string; points: string[]; stat?: [string, string] };

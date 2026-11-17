@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { asset, resolve } from '$app/paths';
+	import '../../app.css';
+	import { asset } from '$app/paths';
 	import { page } from '$app/state';
 	import Icon from '#lib/components/Icon.svelte';
 	import AgencyForm from '#lib/components/agency/AgencyForm.svelte';
 	import AgencyModal from '#lib/components/agency/AgencyModal.svelte';
 	import { ask } from '#lib/agencyModal.svelte.ts';
 	import { afterNavigate } from '$app/navigation';
-	import { tg, max, channel, maxChannel, address, addressMsk, directions } from '#lib/agency.ts';
+	import { tg, max, channel, maxChannel, address, addressMsk, directions, ag } from '#lib/agency.ts';
 	import type { LayoutProps } from './$types';
 
 	// Общий каркас сайта агентства «Фальков»: закреплённая шапка, форма заявки, футер.
@@ -14,14 +15,14 @@
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const a = (f: string) => asset(f as any);
-	const home = resolve('/agency');
+	const home = ag();
 	const nav: [string, string][] = [
-		['SEO-аудит', resolve('/agency/seo-audit')],
-		['Услуги', resolve('/agency/uslugi')],
-		['Кейсы', resolve('/agency/keysy')]
+		['SEO-аудит', ag('/seo-audit')],
+		['Услуги', ag('/uslugi')],
+		['Кейсы', ag('/keysy')]
 	];
 	const here = (href: string) => page.url.pathname.startsWith(href);
-	const isMsk = $derived(page.url.pathname.startsWith(resolve('/agency/msk')));
+	const isMsk = $derived(page.url.pathname.startsWith(ag('/msk')));
 
 	// Плавное появление блоков при прокрутке (без скриптов блоки просто видны).
 	afterNavigate(() => {
@@ -72,8 +73,8 @@
 			<b>Разделы</b>
 			<a href={home}>Главная</a>
 			{#each nav as [label, href]}<a {href}>{label}</a>{/each}
-			<a href={resolve('/agency/spb')}>SEO-продвижение в Санкт-Петербурге</a>
-			<a href={resolve('/agency/msk')}>SEO-продвижение в Москве</a>
+			<a href={ag('/spb')}>SEO-продвижение в Санкт-Петербурге</a>
+			<a href={ag('/msk')}>SEO-продвижение в Москве</a>
 		</div>
 		<div>
 			<b>Услуги</b>

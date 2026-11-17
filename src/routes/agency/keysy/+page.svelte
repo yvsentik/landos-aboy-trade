@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { asset, resolve } from '$app/paths';
-	import { cases, channel, maxChannel } from '#lib/agency.ts';
+	import { asset } from '$app/paths';
+	import { cases, channel, maxChannel, ag } from '#lib/agency.ts';
 	import ChannelBand from '#lib/components/agency/ChannelBand.svelte';
 
 	// Кейсы агентства: проекты с цифрами, скриншоты и ссылки на посты в канале @falkov_agency.
@@ -17,7 +17,7 @@
 <main>
 	<div class="wrap">
 		<div class="phero">
-			<p class="crumbs"><a href={resolve('/agency')}>Главная</a> / Кейсы</p>
+			<p class="crumbs"><a href={ag()}>Главная</a> / Кейсы</p>
 			<h1>Кейсы: проекты и результаты в цифрах</h1>
 			<p>Названия клиентов обезличены там, где действует NDA.</p>
 		</div>

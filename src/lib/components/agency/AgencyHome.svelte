@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { asset, resolve } from '$app/paths';
+	import { asset } from '$app/paths';
 	import AgencyForm from '#lib/components/agency/AgencyForm.svelte';
 	import { ask } from '#lib/agencyModal.svelte.ts';
 	import ChannelBand from '#lib/components/agency/ChannelBand.svelte';
 	import AgencyVideo from '#lib/components/agency/AgencyVideo.svelte';
-	import { channel, maxChannel, address, addressMsk } from '#lib/agency.ts';
+	import { channel, maxChannel, address, addressMsk, ag } from '#lib/agency.ts';
 
 	// city – вариант страницы под город: тексты, порядок проектов и кейсов, блок офиса.
 	let { city }: { city?: 'spb' | 'msk' } = $props();
@@ -208,7 +208,7 @@
 						<ul>{#each sv.lines as l}<li>{l}</li>{/each}</ul>
 						<b class="price">{sv.price}{#if sv.per}<span> {sv.per}</span>{/if}</b>
 						{#if sv.more}
-							<a class="btn btn-primary" href={resolve('/agency/seo-audit')}>Подробнее о SEO-аудите</a>
+							<a class="btn btn-primary" href={ag('/seo-audit')}>Подробнее о SEO-аудите</a>
 						{:else}
 							<button type="button" class="btn btn-outline" onclick={() => ask()}>Начать с бесплатного аудита</button>
 						{/if}
@@ -243,7 +243,7 @@
 					</div>
 				{/each}
 			</div>
-			<a class="btn btn-primary wide" href={resolve('/agency/keysy')}>Читать ещё кейсы</a>
+			<a class="btn btn-primary wide" href={ag('/keysy')}>Читать ещё кейсы</a>
 		</div>
 	</section>
 

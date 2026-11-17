@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
-	import { directions } from '#lib/agency.ts';
+	import { directions, ag } from '#lib/agency.ts';
 
 	// Услуги агентства: шесть направлений кратко.
 </script>
@@ -13,7 +12,7 @@
 <main>
 	<div class="wrap">
 		<div class="phero">
-			<p class="crumbs"><a href={resolve('/agency')}>Главная</a> / Услуги</p>
+			<p class="crumbs"><a href={ag()}>Главная</a> / Услуги</p>
 			<h1>Услуги</h1>
 			<p>Подбираем то, что подходит вашему бизнесу: одно направление или весь маркетинг под ключ.</p>
 		</div>
