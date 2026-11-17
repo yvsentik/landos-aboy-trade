@@ -10,14 +10,14 @@
 			rel="stylesheet"
 		/>
 		%sveltekit.head%
-		<!-- Капча для новых посетителей (Яндекс SmartCaptcha) -->
+		<!-- Своя капча «выберите похожий цвет» для новых посетителей -->
 		<script type="text/javascript">
-			// Клиентский ключ SmartCaptcha. Пустой – капча выключена.
-			window.__captchaKey = 'ysc1_Pndp9i8f6YUSGFaXhaZnN2nfwzThljxN1WhObWQc563cab0a';
+			// false – капча выключена.
+			window.__captchaOn = true;
 			// Капча для каждого нового посетителя (кроме поисковых роботов и лендинга /agency).
 			// Прошёл – 30 дней не спрашиваем.
 			window.__captchaNeeded = (function () {
-				if (!window.__captchaKey || location.pathname.startsWith('/agency')) return false;
+				if (!window.__captchaOn || location.pathname.startsWith('/agency')) return false;
 				// поисковые и служебные роботы индексируют сайт без капчи
 				if (/bot|crawl|spider|slurp|yandex(?!browser)|googlebot|bingpreview|lighthouse|pagespeed/i.test(navigator.userAgent))
 					return false;

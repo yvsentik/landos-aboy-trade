@@ -2,25 +2,17 @@
 	import { onMount } from 'svelte';
 	import { asset } from '$app/paths';
 
-	// Яндекс SmartCaptcha для первого захода из поисковика.
-	// Ключ и решение «показывать или нет» задаются в app.html (window.__captchaKey / __captchaNeeded).
+	// Своя капча «выберите похожий цвет» для новых посетителей.
+	// Решение «показывать или нет» – в app.html (window.__captchaNeeded).
 	// Прошёл – 30 дней не показываем; Метрика стартует только после прохождения.
-	type W = Window & {
-		__captchaKey?: string;
-		__captchaNeeded?: boolean;
-		__ymStart?: () => void;
-		smartCaptcha?: {
-			render: (el: HTMLElement, o: Record<string, unknown>) => number;
-			reset: (id?: number) => void;
-		};
-		__onCaptchaLoad?: () => void;
-	};
+	type W = Window & { __captchaNeeded?: boolean; __ymStart?: () => void };
+	type Ch = { target: string; options: string[]; token: string };
 
 	const DAYS = 30;
 	let show = $state(false);
-	let box = $state<HTMLDivElement>();
-	let checking = $state(false);
-	let widget: number | undefined;
+	let ch = $state<Ch | null>(null);
+	let busy = $state(false);
+	let wrong = $state(false);
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const logo = asset('/img/icons/oboitrade-logo.png' as any);
 
@@ -35,44 +27,41 @@
 		(window as W).__ymStart?.();
 	}
 
-	async function onToken(token: string) {
-		checking = true;
+	async function load() {
+		try {
+			const r = await fetch('/api/captcha', { cache: 'no-store' });
+			if (!r.ok) return pass(); // сервер недоступен – не держим человека перед закрытой дверью
+			ch = await r.json();
+		} catch {
+			pass();
+		}
+	}
+
+	async function choose(i: number) {
+		if (!ch || busy) return;
+		busy = true;
 		try {
 			const r = await fetch('/api/captcha', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ token })
+				body: JSON.stringify({ token: ch.token, choice: i })
 			});
-			// сервер недоступен – пропускаем, чтобы не терять клиентов
 			if (r.ok || r.status >= 500 || r.status === 404) pass();
-			else (window as W).smartCaptcha?.reset(widget); // токен не принят – пройти ещё раз
+			else {
+				wrong = true;
+				await load();
+			}
 		} catch {
 			pass();
 		}
-		checking = false;
+		busy = false;
 	}
 
 	onMount(() => {
-		const w = window as W;
-		if (!w.__captchaNeeded || !w.__captchaKey) return;
+		if (!(window as W).__captchaNeeded) return;
 		show = true;
 		document.documentElement.style.overflow = 'hidden';
-
-		const render = () => {
-			if (!box || !w.smartCaptcha) return;
-			widget = w.smartCaptcha.render(box, {
-				sitekey: w.__captchaKey,
-				hl: 'ru',
-				callback: onToken
-			});
-		};
-		w.__onCaptchaLoad = render;
-		const s = document.createElement('script');
-		s.src = 'https://smartcaptcha.yandexcloud.net/captcha.js?render=onload&onload=__onCaptchaLoad';
-		s.defer = true;
-		// капча не загрузилась (блокировщик, сеть) – не держим человека перед закрытой дверью
-		s.onerror = pass;
-		document.head.appendChild(s);
+		load();
 	});
 </script>
 
@@ -81,9 +70,27 @@
 		<div class="card">
 			<img src={logo} alt="Обоитрейд" width="214" height="40" />
 			<h2>Подтвердите, что вы не робот</h2>
-			<p>Одна проверка – и вы на сайте. Повторно спрашивать не будем.</p>
-			<div class="cap" bind:this={box}></div>
-			{#if checking}<p class="small">Проверяем…</p>{/if}
+			<p>Выберите цвет, самый похожий на образец.</p>
+			{#if ch}
+				<div class="target" style:background={ch.target} aria-label="Образец цвета"></div>
+				<div class="opts">
+					{#each ch.options as c, i (c + i)}
+						<button
+							type="button"
+							style:background={c}
+							disabled={busy}
+							aria-label={`Вариант ${i + 1}`}
+							onclick={() => choose(i)}
+						></button>
+					{/each}
+				</div>
+			{:else}
+				<p class="small">Загружаем…</p>
+			{/if}
+			{#if wrong}<p class="err">Не тот цвет, попробуйте ещё раз.</p>{/if}
+			<p class="small">
+				Не получается? Позвоните <a href="tel:+79933434080">+7 (993) 343-40-80</a>
+			</p>
 		</div>
 	</div>
 {/if}
@@ -105,7 +112,7 @@
 		padding: 28px 24px;
 		width: min(420px, 100%);
 		display: grid;
-		gap: 12px;
+		gap: 14px;
 		justify-items: center;
 		text-align: center;
 	}
@@ -125,14 +132,45 @@
 		font-size: 15px;
 	}
 
-	.cap {
-		min-height: 102px;
-		width: 100%;
+	.target {
+		width: 120px;
+		height: 120px;
+		border-radius: 50%;
+		box-shadow: 0 6px 20px rgb(0 0 0 / 0.18);
+	}
+
+	.opts {
 		display: grid;
-		place-items: center;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 12px;
+		width: 100%;
+	}
+
+	.opts button {
+		aspect-ratio: 1;
+		border-radius: 14px;
+		border: 3px solid #fff;
+		box-shadow: 0 0 0 1px #d6dbe6;
+		cursor: pointer;
+		transition: transform 0.15s;
+	}
+
+	.opts button:hover:not(:disabled) {
+		transform: scale(1.06);
+		box-shadow: 0 0 0 2px var(--navy);
+	}
+
+	.err {
+		color: #d0263a;
+		font-weight: 600;
 	}
 
 	.small {
 		font-size: 13px;
+	}
+
+	.small a {
+		color: var(--navy);
+		font-weight: 600;
 	}
 </style>
