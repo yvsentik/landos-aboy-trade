@@ -35,8 +35,8 @@
 					{/if}
 					{#if c.img}<img class="shot" src={pic(c.img)} alt="Скриншот: {c.name}" loading="lazy" />{/if}
 					<div class="links">
-						{#if c.post}<a class="btn btn-primary" href="{channel}/{c.post}" target="_blank" rel="noopener">Читать кейс в Telegram</a>{/if}
-						{#if c.post}<a class="btn btn-outline" href={c.maxPost ?? maxChannel} target="_blank" rel="noopener">Читать кейс в Максе</a>{/if}
+						{#if c.post}<a class="btn btn-primary" href="{channel}/{c.post}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#fff" /><path fill="#29a9eb" d="M5.400 11.700l11.300-4.400c.5-.2 1 .1.800.9l-1.900 9c-.1.600-.5.800-1 .5l-2.900-2.100-1.400 1.300c-.2.2-.3.300-.6.300l.2-3 5.400-4.900c.2-.2 0-.3-.3-.1l-6.700 4.200-2.900-.9c-.6-.2-.6-.6 0-.8z" /></svg>Читать кейс в Telegram</a>{/if}
+						{#if c.post}<a class="btn btn-outline" href={c.maxPost ?? maxChannel} target="_blank" rel="noopener"><img src={asset('/img/icons/max.png' as any)} alt="" />Читать кейс в Максе</a>{/if}
 						{#if c.site}<a class="btn btn-outline" href="https://{c.site}" target="_blank" rel="noopener">Открыть сайт</a>{/if}
 					</div>
 				</article>
@@ -71,7 +71,8 @@
 	.cstats span { color: var(--muted); font-size: 13px; }
 	.shot { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; object-position: top left; border: 1px solid var(--line); border-radius: 8px; }
 	.links { margin-top: auto; padding-top: 6px; display: flex; gap: 8px; flex-wrap: wrap; }
-	.links .btn { flex: 1; padding: 10px 12px; font-size: 14px; white-space: nowrap; }
+	.links .btn { flex: 1 1 100%; min-height: 0; padding: 9px 10px; font-size: 14px; white-space: nowrap; gap: 8px; }
+	.links svg, .links img { width: 22px; height: 22px; flex: none; }
 
 	.bandw { margin-top: 56px; }
 
