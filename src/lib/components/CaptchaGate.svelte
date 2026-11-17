@@ -13,6 +13,21 @@
 	let ch = $state<Ch | null>(null);
 	let busy = $state(false);
 	let wrong = $state(false);
+	let left = $state(5);
+	let wait = $state(0);
+	let timer: ReturnType<typeof setInterval>;
+
+	function block(sec: number) {
+		wait = sec;
+		clearInterval(timer);
+		timer = setInterval(() => {
+			if (--wait <= 0) {
+				clearInterval(timer);
+				wrong = false;
+				load();
+			}
+		}, 1000);
+	}
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const logo = asset('/img/icons/oboitrade-logo.png' as any);
 
@@ -48,8 +63,13 @@
 			});
 			if (r.ok || r.status >= 500 || r.status === 404) pass();
 			else {
+				const d = await r.json().catch(() => ({}));
 				wrong = true;
-				await load();
+				left = d.left ?? left;
+				if (d.wait > 0) {
+					ch = null;
+					block(d.wait);
+				} else await load();
 			}
 		} catch {
 			pass();
@@ -71,7 +91,9 @@
 			<img src={logo} alt="Обоитрейд" width="214" height="40" />
 			<h2>Подтвердите, что вы не робот</h2>
 			<p>Выберите цвет, самый похожий на образец.</p>
-			{#if ch}
+			{#if wait > 0}
+				<p class="err">Слишком много попыток. Попробуйте через {wait} сек.</p>
+			{:else if ch}
 				<div class="target" style:background={ch.target} aria-label="Образец цвета"></div>
 				<div class="opts">
 					{#each ch.options as c, i (c + i)}
@@ -87,7 +109,7 @@
 			{:else}
 				<p class="small">Загружаем…</p>
 			{/if}
-			{#if wrong}<p class="err">Не тот цвет, попробуйте ещё раз.</p>{/if}
+			{#if wrong && !wait}<p class="err">Не тот цвет, попробуйте ещё раз (осталось попыток: {left}).</p>{/if}
 			<p class="small">
 				Не получается? Позвоните <a href="tel:+79933434080">+7 (993) 343-40-80</a>
 			</p>

@@ -209,7 +209,8 @@ function makeChallenge() {
 	const fam = pick(FAMILIES);
 	const target = hsl2hex(fam.h, rnd(70, 85), rnd(45, 55));
 	// правильный: тот же цвет, заметно другой оттенок
-	const close = hsl2hex(fam.h + rnd(-10, 10), rnd(55, 90), rnd(30, 42) + (Math.random() < 0.5 ? 0 : 26));
+	// мягко: оттенок почти тот же, чуть темнее или светлее
+	const close = hsl2hex(fam.h + rnd(-6, 6), rnd(65, 85), (Math.random() < 0.5 ? rnd(38, 43) : rnd(57, 62)));
 	// неправильные: цвета не ближе 70° по кругу, иногда чёрный/белый/серый
 	const far = FAMILIES.filter((f) => {
 		const d = Math.abs(f.h - fam.h) % 360;
@@ -249,12 +250,15 @@ function checkAnswer(token, choice) {
 
 // Не больше 30 попыток капчи с одного IP за 10 минут
 const capHits = new Map();
+// Неудачные попытки по IP: { n – ошибок подряд, lvl – сколько раз уже блокировали, until }
+const capFails = new Map();
+
 function capLimited(ip) {
 	const now = Date.now();
 	const list = (capHits.get(ip) || []).filter((t) => now - t < 10 * 60 * 1000);
 	list.push(now);
 	capHits.set(ip, list);
-	return list.length > 30;
+	return list.length > 60;
 }
 
 createServer(async (req, res) => {
@@ -281,9 +285,25 @@ createServer(async (req, res) => {
 	const ip = String(req.headers['x-real-ip'] || req.socket.remoteAddress || '');
 
 	if (isCaptcha) {
-		if (capLimited(ip)) return send(res, 429, { ok: false, error: 'rate' });
+		if (capLimited(ip)) return send(res, 429, { ok: false, error: 'rate', wait: 60 });
+		const f = capFails.get(ip) || { n: 0, lvl: 0, until: 0 };
+		if (Date.now() < f.until) return send(res, 429, { ok: false, wait: Math.ceil((f.until - Date.now()) / 1000) });
 		const ok = checkAnswer(d.token, d.choice);
-		return send(res, ok ? 200 : 403, { ok });
+		if (ok) {
+			capFails.delete(ip);
+			return send(res, 200, { ok });
+		}
+		// 5 ошибок подряд – пауза 1 мин, дальше 2, 4, 8… (не больше часа)
+		f.n++;
+		let wait = 0;
+		if (f.n >= 5) {
+			f.n = 0;
+			f.lvl++;
+			wait = Math.min(60 * 2 ** (f.lvl - 1), 3600);
+			f.until = Date.now() + wait * 1000;
+		}
+		capFails.set(ip, f);
+		return send(res, 403, { ok, wait, left: wait ? 5 : 5 - f.n });
 	}
 
 	// Ловушка для ботов: скрытое поле должно быть пустым
