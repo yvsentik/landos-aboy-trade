@@ -308,3 +308,4 @@ export const channel = 'https://t.me/falkov_agency';
 export const max = 'https://max.ru/u/f9LHodD0cOIG4smr9o8DyMktNa2hXIrOl2NdQxp8bTuRZ3l21vfOUwr8syE';
 export const maxChannel = 'https://max.ru/channel_marketing_spb';
 export const address = 'Санкт-Петербург, пр. Энергетиков, 10';
+export const addressMsk = 'Москва, ул. Ленинская Слобода, 26, стр. 5';
