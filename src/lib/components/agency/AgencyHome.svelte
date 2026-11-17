@@ -4,13 +4,13 @@
 	import { ask } from '#lib/agencyModal.svelte.ts';
 	import ChannelBand from '#lib/components/agency/ChannelBand.svelte';
 	import AgencyVideo from '#lib/components/agency/AgencyVideo.svelte';
-	import { channel, maxChannel, address } from '#lib/agency.ts';
+	import { channel, maxChannel, address, addressMsk } from '#lib/agency.ts';
 
 	// city – вариант страницы под город: тексты, порядок проектов и кейсов, блок офиса.
 	let { city }: { city?: 'spb' | 'msk' } = $props();
 	const C = {
-		spb: { where: 'в Санкт-Петербурге', by: 'по Санкт-Петербургу', name: 'Санкт-Петербург' },
-		msk: { where: 'в Москве', by: 'по Москве', name: 'Москва' }
+		spb: { where: 'в Санкт-Петербурге', by: 'по Санкт-Петербургу', name: 'Санкт-Петербург', addr: address, photo: '2354-2.jpg' },
+		msk: { where: 'в Москве', by: 'по Москве', name: 'Москва', addr: addressMsk, photo: 'office-msk.jpg' }
 	};
 	const c = $derived(city ? C[city] : undefined);
 	const title = $derived(c ? `SEO-продвижение сайтов ${c.where}` : 'SEO-продвижение сайтов');
@@ -102,11 +102,7 @@
 		['Вы работали с моей нишей?', 'Скорее всего, да: у нас больше 50 кейсов в медицине, услугах, производстве, строительстве, юриспруденции и интернет-магазинах. Напишите нам свою нишу, пришлём подходящие примеры.']
 	];
 	const faq = $derived<[string, string][]>(
-		city === 'spb'
-			? [...baseFaq, ['Можно приехать к вам в офис?', `Да. Офис находится по адресу: ${address}. Напишите за день до приезда, договоримся о времени и покажем кейсы с экрана.`]]
-			: city === 'msk'
-				? [...baseFaq, ['У вас есть офис в Москве?', 'Офиса в Москве у нас нет, агентство находится в Санкт-Петербурге. С московскими клиентами работаем удалённо: созвоны, общий чат и отчёты с цифрами. Многие наши кейсы сделаны по Москве.']]
-				: baseFaq
+		c ? [...baseFaq, [`Можно приехать к вам в офис ${c.where}?`, `Да. Офис находится по адресу: ${c.addr}. Напишите за день до приезда, договоримся о времени и покажем кейсы с экрана.`]] : baseFaq
 	);
 
 
@@ -251,15 +247,15 @@
 		</div>
 	</section>
 
-	{#if city === 'spb'}
-		<!-- Офис: только на странице Санкт-Петербурга -->
+	{#if c}
+		<!-- Офис: на страницах городов -->
 		<section>
 			<div class="wrap">
 				<div class="office">
-					<img src={pic('2354-2.jpg')} alt="Офис агентства в Санкт-Петербурге" loading="lazy" />
+					<img src={pic(c.photo)} alt="Офис агентства {c.where}" loading="lazy" />
 					<div>
-						<h2>Офис в Санкт-Петербурге</h2>
-						<p>{address}. Встречаемся лично и показываем кейсы с экрана. Напишите за день до приезда.</p>
+						<h2>Офис {c.where}</h2>
+						<p>{c.addr}. Встречаемся лично и показываем кейсы с экрана. Напишите за день до приезда.</p>
 						<button type="button" class="btn btn-outline" onclick={() => ask()}>Договориться о встрече</button>
 					</div>
 				</div>

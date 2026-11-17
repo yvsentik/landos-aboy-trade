@@ -6,7 +6,7 @@
 	import AgencyModal from '#lib/components/agency/AgencyModal.svelte';
 	import { ask } from '#lib/agencyModal.svelte.ts';
 	import { afterNavigate } from '$app/navigation';
-	import { tg, max, channel, maxChannel, address, directions } from '#lib/agency.ts';
+	import { tg, max, channel, maxChannel, address, addressMsk, directions } from '#lib/agency.ts';
 	import type { LayoutProps } from './$types';
 
 	// Общий каркас сайта агентства «Фальков»: закреплённая шапка, форма заявки, футер.
@@ -66,7 +66,7 @@
 		<div class="about">
 			<a class="flogo" href={home}>falkov</a>
 			<p>SEO-агентство. Выводим сайты в ТОП Яндекса и Google и показываем результат до договора.</p>
-			{#if !isMsk}<p class="addr">{address}</p>{/if}
+			<p class="addr">{isMsk ? addressMsk : address}</p>
 		</div>
 		<div>
 			<b>Разделы</b>
