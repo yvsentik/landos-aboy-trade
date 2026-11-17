@@ -10,22 +10,21 @@
 			rel="stylesheet"
 		/>
 		%sveltekit.head%
-		<!-- Капча для заходов из поисковиков (Яндекс SmartCaptcha) -->
+		<!-- Капча для новых посетителей (Яндекс SmartCaptcha) -->
 		<script type="text/javascript">
 			// Клиентский ключ SmartCaptcha. Пустой – капча выключена.
 			window.__captchaKey = 'ysc1_Pndp9i8f6YUSGFaXhaZnN2nfwzThljxN1WhObWQc563cab0a';
+			// Капча для каждого нового посетителя (кроме поисковых роботов и лендинга /agency).
+			// Прошёл – 30 дней не спрашиваем.
 			window.__captchaNeeded = (function () {
 				if (!window.__captchaKey || location.pathname.startsWith('/agency')) return false;
-				// проверка вручную: ?captcha_test=1 – показать капчу всегда
-				if (location.search.indexOf('captcha_test=1') !== -1) return true;
+				// поисковые и служебные роботы индексируют сайт без капчи
+				if (/bot|crawl|spider|slurp|yandex(?!browser)|googlebot|bingpreview|lighthouse|pagespeed/i.test(navigator.userAgent))
+					return false;
 				try {
 					if (Number(localStorage.getItem('cpt_ok')) > Date.now()) return false;
 				} catch (e) {}
-				var host = '';
-				try {
-					host = new URL(document.referrer).hostname;
-				} catch (e) {}
-				return /(^|\.)(yandex|ya|google|bing|mail|rambler|duckduckgo|yahoo)\./i.test(host);
+				return true;
 			})();
 		</script>
 		<!-- Yandex.Metrika counter (не грузим на отдельном лендинге /agency; до прохождения капчи – не запускаем) -->
