@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goal } from '#lib/metrika.ts';
 	// Форма заявки агентства: адрес сайта + телефон. Пока никуда не отправляет.
 	let { title = 'Пришлите сайт для аудита', id = 'zayavka' }: { title?: string; id?: string } = $props();
 
@@ -6,6 +7,7 @@
 	const submit = (e: SubmitEvent) => {
 		e.preventDefault();
 		sent = true; // TODO: отправка заявки в CRM / Telegram
+		goal('lead_sent');
 	};
 </script>
 

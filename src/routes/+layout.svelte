@@ -10,6 +10,7 @@
 	import CaptchaGate from '#lib/components/agency/CaptchaGate.svelte';
 	import { ask } from '#lib/agencyModal.svelte.ts';
 	import { afterNavigate } from '$app/navigation';
+	import { hit, goal } from '#lib/metrika.ts';
 	import { tg, max, channel, maxChannel, address, addressMsk, directions, ag } from '#lib/agency.ts';
 	import type { LayoutProps } from './$types';
 
@@ -28,6 +29,19 @@
 	const isMsk = $derived(page.url.pathname.startsWith(ag('/msk')));
 
 	// Плавное появление блоков при прокрутке (без скриптов блоки просто видны).
+	// Метрика: просмотр при переходе внутри сайта и цели на клики по мессенджерам
+	afterNavigate((nav) => {
+		if (nav.from && nav.to && nav.from.url.href !== nav.to.url.href) hit(nav.to.url.href, nav.from.url.href);
+	});
+	const onClick = (e: MouseEvent) => {
+		const link = (e.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null;
+		if (!link) return;
+		const name = /(^|\.)t\.me$/.test(link.hostname) ? 'click_telegram' : /(^|\.)max\.ru$/.test(link.hostname) ? 'click_max' : '';
+		if (!name) return;
+		goal(name);
+		goal('click_contact');
+	};
+
 	afterNavigate(() => {
 		if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 		const io = new IntersectionObserver(
@@ -48,6 +62,8 @@
 	<link rel="preload" as="font" type="font/woff2" href={fontCyr} crossorigin="anonymous" />
 	<link rel="preload" as="font" type="font/woff2" href={fontLat} crossorigin="anonymous" />
 </svelte:head>
+
+<svelte:document onclick={onClick} />
 
 <header>
 	<div class="wrap main">

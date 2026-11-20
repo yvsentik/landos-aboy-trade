@@ -6,7 +6,7 @@
 	// но без сервера: сайт статический, задание и проверка живут в браузере.
 	// Решение «показывать или нет» – в app.html (window.__captchaNeeded).
 	// Прошёл – 30 дней не показываем. 5 ошибок подряд – пауза 1 мин, дальше вдвое дольше.
-	type W = Window & { __captchaNeeded?: boolean };
+	type W = Window & { __captchaNeeded?: boolean; __ymStart?: () => void };
 	type Fail = { n: number; lvl: number; until: number };
 
 	const DAYS = 30;
@@ -85,6 +85,7 @@
 		}
 		show = false;
 		document.documentElement.style.overflow = '';
+		(window as W).__ymStart?.(); // Метрика стартует только после капчи
 	}
 
 	function choose(i: number) {
